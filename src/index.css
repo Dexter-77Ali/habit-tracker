@@ -176,6 +176,11 @@
 
 html { font-size: 16px; }
 
+/* Phones (Pixel 8 Pro = 412px viewport): scale the whole rem-based UI down */
+@media (max-width: 480px) {
+  html { font-size: 13.5px; }
+}
+
 body {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   background: var(--bg);
@@ -184,6 +189,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   transition: background 0.3s, color 0.3s;
+  overflow-x: hidden; /* guard against any stray wide element on narrow phones */
   padding:
     env(safe-area-inset-top)
     env(safe-area-inset-right)

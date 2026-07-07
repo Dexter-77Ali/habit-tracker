@@ -23,6 +23,7 @@ Download the APK from [**Releases**](https://github.com/Dexter-77Ali/habit-track
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| v0.2.1 | 2026-07-08 | Phone-fit UI scaling (Pixel-sized screens), fixed level-up banner showing on every reload |
 | v0.2.0 | 2026-07-05 | Google sign-in, daily reminder notifications, tiered badges, completion effects, new terminal icon, FAB habit/task chooser, collapsible badges |
 | v0.1.0 | 2026-07-04 | First Capacitor build: full app + Supabase sync in a native shell |
 

@@ -7,7 +7,7 @@
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "vite build && vercel link --yes --project life-tracker --cwd dist && vercel deploy --prod --yes --cwd dist"
+    "deploy": "vite build && npx vercel link --yes --project life-tracker --cwd dist && npx vercel deploy --prod --yes --cwd dist"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.1",

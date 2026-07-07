@@ -205,21 +205,20 @@ export default function App() {
   // ------------------------------------------------------------------
   // Celebration detection
   // ------------------------------------------------------------------
-  const prevScores = useRef({
-    dayComplete: false, weekComplete: false, monthComplete: false,
-    streak: 0, level: 1, badgeCount: 0,
-  })
+  const prevScores = useRef(null) // null = first run: record without comparing (else every reload fires "level up")
 
   useEffect(() => {
     const prev = prevScores.current
     const next = {
       dayComplete, weekComplete, monthComplete, streak,
       level: level.level, levelTitle: level.title, levelIcon: level.icon,
-      newBadge: earnedBadges.length > prev.badgeCount ? earnedBadges[earnedBadges.length - 1]?.name : null,
+      newBadge: prev && earnedBadges.length > prev.badgeCount ? earnedBadges[earnedBadges.length - 1]?.name : null,
       badgeCount: earnedBadges.length,
     }
-    const msg = getTriggerCelebration(prev, next)
-    if (msg) setCelebration(msg)
+    if (prev) {
+      const msg = getTriggerCelebration(prev, next)
+      if (msg) setCelebration(msg)
+    }
     prevScores.current = next
   }, [dayComplete, weekComplete, monthComplete, streak, level.level, earnedBadges.length])
 
