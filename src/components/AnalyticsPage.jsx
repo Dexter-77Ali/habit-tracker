@@ -1,5 +1,5 @@
-import { getDateKey } from '../utils/dateUtils'
-import { calculateDailyXP } from '../utils/scoreUtils'
+import { getDateKey, dateFromKey } from '../utils/dateUtils'
+import { calculateDailyXP, isHabitScheduled } from '../utils/scoreUtils'
 
 export default function AnalyticsPage({ habits, tasks, logs, tagColors, allTags, includeWeekends }) {
   const today = getDateKey()
@@ -27,6 +27,35 @@ export default function AnalyticsPage({ habits, tasks, logs, tagColors, allTags,
     const xp = calculateDailyXP(logs, habits, dateKey, tasks)
     return { dateKey, earned: xp.earned, max: xp.max }
   })
+
+  // Per-habit completion rates (last 30 days)
+  const habitRates = habits.map(h => {
+    let scheduled = 0, completed = 0
+    trendDays.forEach(dk => {
+      if (h.createdAt > dk) return
+      if (!isHabitScheduled(h, dk)) return
+      scheduled++
+      if ((logs[dk] || {})[h.id]) completed++
+    })
+    const rate = scheduled > 0 ? Math.round((completed / scheduled) * 100) : 0
+    return { name: h.name, icon: h.icon, completed, scheduled, rate }
+  }).sort((a, b) => b.rate - a.rate)
+
+  // Weekly comparison
+  const thisWeekDays = []
+  const lastWeekDays = []
+  const dayOfWeek = now.getDay()
+  for (let i = 0; i <= dayOfWeek; i++) {
+    const d = new Date(); d.setDate(d.getDate() - (dayOfWeek - i))
+    thisWeekDays.push(getDateKey(d))
+  }
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(); d.setDate(d.getDate() - dayOfWeek - 7 + i)
+    lastWeekDays.push(getDateKey(d))
+  }
+  const thisWeekXP = thisWeekDays.reduce((s, dk) => s + calculateDailyXP(logs, habits, dk, tasks).earned, 0)
+  const lastWeekXP = lastWeekDays.reduce((s, dk) => s + calculateDailyXP(logs, habits, dk, tasks).earned, 0)
+  const weekDiff = lastWeekXP > 0 ? Math.round(((thisWeekXP - lastWeekXP) / lastWeekXP) * 100) : 0
 
   const getTagXPForDay = (tag, dateKey) => {
     const dayLog = logs[dateKey] || {}
@@ -72,6 +101,33 @@ export default function AnalyticsPage({ habits, tasks, logs, tagColors, allTags,
       <div className="analytics-page">
         <h2 className="analytics-title">Analytics</h2>
         <TrendChart data={trendData} />
+
+        <div className="analytics-section">
+          <h3>Weekly Comparison</h3>
+          <div className="week-comparison">
+            <div className="week-stat"><span className="week-label">This week</span><span className="week-value">{thisWeekXP} XP</span></div>
+            <div className="week-stat"><span className="week-label">Last week</span><span className="week-value">{lastWeekXP} XP</span></div>
+            <span className={`week-diff ${weekDiff >= 0 ? 'week-diff--up' : 'week-diff--down'}`}>{weekDiff >= 0 ? '+' : ''}{weekDiff}%</span>
+          </div>
+        </div>
+
+        {habitRates.length > 0 && (
+          <div className="analytics-section">
+            <h3>Habit Completion Rates — 30 Days</h3>
+            <ul className="habit-rates-list">
+              {habitRates.map(h => (
+                <li key={h.name} className="habit-rate-item">
+                  <span className="habit-rate-icon">{h.icon}</span>
+                  <span className="habit-rate-name">{h.name}</span>
+                  <div className="habit-rate-bar-track"><div className="habit-rate-bar-fill" style={{ width: `${h.rate}%` }} /></div>
+                  <span className="habit-rate-pct">{h.rate}%</span>
+                  <span className="habit-rate-count">{h.completed}/{h.scheduled}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="analytics-empty">
           <p>No tags found. Add tags to your habits and tasks to see category heatmaps.</p>
           <p>Edit a habit or task and type tags like "Cyber", "Health", "Admin" to get started.</p>
@@ -85,6 +141,42 @@ export default function AnalyticsPage({ habits, tasks, logs, tagColors, allTags,
       <h2 className="analytics-title">Category Analytics — {monthLabel}</h2>
 
       <TrendChart data={trendData} />
+
+      <div className="analytics-section">
+        <h3>Weekly Comparison</h3>
+        <div className="week-comparison">
+          <div className="week-stat">
+            <span className="week-label">This week</span>
+            <span className="week-value">{thisWeekXP} XP</span>
+          </div>
+          <div className="week-stat">
+            <span className="week-label">Last week</span>
+            <span className="week-value">{lastWeekXP} XP</span>
+          </div>
+          <span className={`week-diff ${weekDiff >= 0 ? 'week-diff--up' : 'week-diff--down'}`}>
+            {weekDiff >= 0 ? '+' : ''}{weekDiff}%
+          </span>
+        </div>
+      </div>
+
+      {habitRates.length > 0 && (
+        <div className="analytics-section">
+          <h3>Habit Completion Rates — 30 Days</h3>
+          <ul className="habit-rates-list">
+            {habitRates.map(h => (
+              <li key={h.name} className="habit-rate-item">
+                <span className="habit-rate-icon">{h.icon}</span>
+                <span className="habit-rate-name">{h.name}</span>
+                <div className="habit-rate-bar-track">
+                  <div className="habit-rate-bar-fill" style={{ width: `${h.rate}%` }} />
+                </div>
+                <span className="habit-rate-pct">{h.rate}%</span>
+                <span className="habit-rate-count">{h.completed}/{h.scheduled}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="analytics-cards">
         {tagStats.map(({ tag, monthEarned, monthMax, habitCount, taskCount, color }) => (

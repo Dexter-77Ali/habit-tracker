@@ -1,25 +1,21 @@
 import { useEffect } from 'react'
 
 export default function CelebrationBanner({ message, onDismiss }) {
-  // Auto-dismiss after 5 seconds
   useEffect(() => {
-    const timer = setTimeout(onDismiss, 5000)
+    const timer = setTimeout(onDismiss, 4000)
     return () => clearTimeout(timer)
   }, [message, onDismiss])
 
   return (
-    <div className="celebration-overlay" role="alert" aria-live="polite">
-      <div className="celebration-banner">
-        <div className="celebration-confetti" aria-hidden="true">
-          {['🎊', '⭐', '🎉', '✨', '🏆'].map((c, i) => (
-            <span key={i} className={`confetti-piece confetti-piece--${i + 1}`}>{c}</span>
-          ))}
-        </div>
-        <p className="celebration-message">{message}</p>
-        <button className="btn btn-ghost celebration-dismiss" onClick={onDismiss}>
-          Dismiss
-        </button>
+    <div className="celebration-toast" role="alert" aria-live="polite">
+      <div className="celebration-toast-accent" />
+      <div className="celebration-toast-content">
+        <span className="celebration-toast-icon">&gt;</span>
+        <p className="celebration-toast-message">{message}</p>
       </div>
+      <button className="celebration-toast-close" onClick={onDismiss} aria-label="Dismiss">
+        ✕
+      </button>
     </div>
   )
 }

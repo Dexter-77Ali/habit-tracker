@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import HabitItem from './HabitItem'
 import GroupHeader from './GroupHeader'
 
@@ -18,6 +18,15 @@ export default function HabitList({
       setQuickName('')
     }
   }
+
+  const handleListKeyDown = useCallback((e) => {
+    const list = e.currentTarget
+    const items = [...list.querySelectorAll('[role="option"]')]
+    const idx = items.indexOf(document.activeElement)
+    if (e.key === 'ArrowDown') { e.preventDefault(); items[Math.min(idx + 1, items.length - 1)]?.focus() }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); items[Math.max(idx - 1, 0)]?.focus() }
+    else if (e.key === ' ' && idx >= 0) { e.preventDefault(); items[idx].querySelector('.habit-checkbox')?.click() }
+  }, [])
 
   const completedCount = isFocusActive
     ? habits.filter((h) => !!todayLog[h.id]).length
@@ -57,7 +66,7 @@ export default function HabitList({
         <div className="quick-add-bar">
           <input
             className="quick-add-input"
-            placeholder="Type a habit name + Enter..."
+            placeholder="> enter habit name..."
             value={quickName}
             onChange={(e) => setQuickName(e.target.value)}
             onKeyDown={handleQuickAdd}
@@ -86,7 +95,7 @@ export default function HabitList({
               {sortedGroups.length > 0 && (
                 <div className="group-label-general">General</div>
               )}
-              <ul className="group-items-list">
+              <ul className="group-items-list" role="listbox" tabIndex={0} onKeyDown={handleListKeyDown}>
                 {ungrouped.map((habit) => (
                   <HabitItem
                     key={habit.id}
@@ -119,7 +128,7 @@ export default function HabitList({
                   onDelete={onDeleteGroup}
                 />
                 <div className={`group-items ${group.collapsed ? 'group-items--collapsed' : ''}`}>
-                  <ul className="group-items-list">
+                  <ul className="group-items-list" role="listbox" tabIndex={0} onKeyDown={handleListKeyDown}>
                     {items.map((habit) => (
                       <HabitItem
                         key={habit.id}

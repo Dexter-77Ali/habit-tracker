@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      disable: !!process.env.CAPACITOR, // SW inside Capacitor causes stale-bundle white screens
       registerType: 'autoUpdate',
       manifest: {
         name: 'Life Tracker',

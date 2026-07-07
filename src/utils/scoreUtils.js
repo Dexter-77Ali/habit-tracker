@@ -35,7 +35,7 @@ export function isHabitScheduled(habit, dateKey) {
  * habits use the logs map; tasks use their completedAt field.
  * Only counts habits that are scheduled for the given date (per frequency).
  */
-export function calculateDailyXP(logs, habits, dateKey, tasks = []) {
+export function calculateDailyXP(logs, habits, dateKey, tasks = [], groups = []) {
   const dayLog = logs[dateKey] || {}
 
   let habitEarned = 0
@@ -44,6 +44,18 @@ export function calculateDailyXP(logs, habits, dateKey, tasks = []) {
     if (h.createdAt <= dateKey && isHabitScheduled(h, dateKey)) {
       habitMax += h.xp
       if (dayLog[h.id]) habitEarned += h.xp
+    }
+  })
+
+  let comboBonus = 0
+  const combos = []
+  groups.forEach((g) => {
+    const members = habits.filter(h => h.groupId === g.id && h.createdAt <= dateKey && isHabitScheduled(h, dateKey))
+    if (members.length >= 2 && members.every(h => dayLog[h.id])) {
+      const groupXp = members.reduce((s, h) => s + h.xp, 0)
+      const bonus = Math.round(groupXp * 0.25)
+      comboBonus += bonus
+      combos.push({ groupId: g.id, groupName: g.name, bonus })
     }
   })
 
@@ -58,9 +70,11 @@ export function calculateDailyXP(logs, habits, dateKey, tasks = []) {
     habitEarned,
     habitMax,
     taskEarned,
-    earned: habitEarned + taskEarned,
+    comboBonus,
+    combos,
+    earned: habitEarned + comboBonus + taskEarned,
     max: habitMax + taskEarned,
-    totalEarned: habitEarned + taskEarned,
+    totalEarned: habitEarned + comboBonus + taskEarned,
     totalMax: habitMax,
   }
 }

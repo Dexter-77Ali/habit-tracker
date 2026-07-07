@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
+import { usePersistedStorage } from '../hooks/usePersistedStorage'
+import { PNG_ICONS } from '../utils/iconUtils'
+import IconDisplay from './IconDisplay'
 import TagInput from './TagInput'
 
 const EMOJI_OPTIONS = ['🏃', '📖', '💧', '🧘', '🍎', '✏️', '💊', '🛌', '🎯', '💪', '🧹', '🎵', '🌿', '🧠', '🚴', '🔧', '🐛', '📝', '📞', '🛒']
@@ -21,6 +24,8 @@ export default function AddEditModal({ item, mode = 'habit', onSave, onClose, gr
     frequencyDays: item?.frequencyDays || [1, 3, 5],
   })
   const [errors, setErrors] = useState({})
+  const [iconTab, setIconTab] = useState('emoji')
+  const [customIcons, setCustomIcons] = usePersistedStorage('ht_custom_icons', [])
 
   useEffect(() => { firstInput.current?.focus() }, [])
 
@@ -80,18 +85,73 @@ export default function AddEditModal({ item, mode = 'habit', onSave, onClose, gr
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label className="form-label">Icon</label>
-            <div className="emoji-grid">
-              {EMOJI_OPTIONS.map((emoji) => (
-                <button
-                  type="button"
-                  key={emoji}
-                  className={`emoji-btn ${form.icon === emoji ? 'emoji-btn--selected' : ''}`}
-                  onClick={() => setForm((prev) => ({ ...prev, icon: emoji }))}
-                >
-                  {emoji}
+            <div className="icon-picker-tabs">
+              {['emoji', 'icons', 'upload'].map(tab => (
+                <button type="button" key={tab} className={`icon-picker-tab ${iconTab === tab ? 'icon-picker-tab--active' : ''}`} onClick={() => setIconTab(tab)}>
+                  {tab === 'emoji' ? 'Emoji' : tab === 'icons' ? 'Icons' : 'Upload'}
                 </button>
               ))}
             </div>
+
+            {iconTab === 'emoji' && (
+              <div className="emoji-grid">
+                {EMOJI_OPTIONS.map((emoji) => (
+                  <button type="button" key={emoji} className={`emoji-btn ${form.icon === emoji ? 'emoji-btn--selected' : ''}`} onClick={() => setForm((prev) => ({ ...prev, icon: emoji }))}>
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {iconTab === 'icons' && (
+              <div className="emoji-grid icon-grid-scroll">
+                {PNG_ICONS.map((ic) => (
+                  <button type="button" key={ic.path} className={`emoji-btn ${form.icon === ic.path ? 'emoji-btn--selected' : ''}`} onClick={() => setForm((prev) => ({ ...prev, icon: ic.path }))} title={ic.name}>
+                    <img src={ic.path} width={24} height={24} alt={ic.name} />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {iconTab === 'upload' && (
+              <div>
+                <div className="emoji-grid icon-grid-scroll">
+                  {customIcons.map((ic) => (
+                    <button type="button" key={ic.id} className={`emoji-btn ${form.icon === ic.data ? 'emoji-btn--selected' : ''}`} onClick={() => setForm((prev) => ({ ...prev, icon: ic.data }))} title={ic.name}>
+                      <img src={ic.data} width={24} height={24} alt={ic.name} />
+                    </button>
+                  ))}
+                </div>
+                <label className="icon-upload-btn">
+                  + Upload icon
+                  <input type="file" accept="image/*" hidden onChange={(e) => {
+                    const file = e.target.files[0]
+                    if (!file) return
+                    if (!file.type.startsWith('image/') || file.size > 1_000_000) {
+                      setErrors(prev => ({ ...prev, icon: 'Images only, max 1 MB' }))
+                      e.target.value = ''
+                      return
+                    }
+                    setErrors(prev => ({ ...prev, icon: undefined }))
+                    const reader = new FileReader()
+                    reader.onload = () => {
+                      const dataUrl = reader.result
+                      setCustomIcons(prev => [...prev, { id: Date.now(), data: dataUrl, name: file.name }])
+                      setForm(prev => ({ ...prev, icon: dataUrl }))
+                    }
+                    reader.readAsDataURL(file)
+                    e.target.value = ''
+                  }} />
+                </label>
+                {errors.icon && <p className="form-error">{errors.icon}</p>}
+              </div>
+            )}
+
+            {form.icon && (
+              <div className="icon-preview">
+                Selected: <IconDisplay icon={form.icon} size={24} />
+              </div>
+            )}
           </div>
 
           <div className="form-group">

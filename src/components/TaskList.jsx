@@ -72,7 +72,7 @@ export default function TaskList({
         <div className="quick-add-bar">
           <input
             className="quick-add-input"
-            placeholder="Type a task name + Enter..."
+            placeholder="> enter task name..."
             value={quickName}
             onChange={(e) => setQuickName(e.target.value)}
             onKeyDown={handleQuickAdd}

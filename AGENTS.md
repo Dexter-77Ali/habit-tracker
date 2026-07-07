@@ -6,6 +6,7 @@
 - `react-markdown` + `remark-gfm` for markdown rendering in notes
 - Zero external UI libraries -- pure CSS, inline SVG icons
 - Dual persistence: `localStorage` (fast sync) + `IndexedDB` via `idb-keyval` (durable backup)
+- `@supabase/supabase-js` for backend auth + real-time sync (optional — app works offline without env vars)
 - `uuid` for ID generation
 - `idb-keyval` for IndexedDB wrapper
 - `vite-plugin-pwa` for PWA / service worker support
@@ -15,6 +16,31 @@
 ```bash
 npm install && npm run dev   # http://localhost:5173
 ```
+
+## How to deploy (Vercel static hosting)
+
+```bash
+npm run deploy   # build + link + deploy in one step
+```
+
+Live at https://life-tracker-dexter-a77.vercel.app (project `dexter-a77/life-tracker`). The `deploy` script re-links `dist/` to the project every time because `vite build` wipes `dist/.vercel` — deploying without the link step creates a NEW Vercel project named "dist". `.env.local` VITE_ vars are baked in at build time; anon key is public by design, RLS protects data. Deployment Protection is disabled (public URL).
+
+## How to build the Android APK (Capacitor 8)
+
+Requires: Temurin JDK 21 (`C:\Program Files\Eclipse Adoptium\jdk-21*`), Android SDK at `%LOCALAPPDATA%\Android\Sdk` (android-36). Rebuild loop after any code change:
+
+```powershell
+$env:CAPACITOR="1"; npm run build          # CAPACITOR flag disables the service worker (stale-cache white screens in WebView)
+npx cap sync android
+$env:JAVA_HOME = (Get-ChildItem "C:\Program Files\Eclipse Adoptium\jdk-21*" | Select-Object -First 1).FullName
+$env:PATH = "$env:JAVA_HOME\bin;$env:PATH" # must shadow the Java 8 JRE on PATH
+cd android; .\gradlew.bat assembleDebug    # APK: android\app\build\outputs\apk\debug\app-debug.apk
+```
+
+- `android/local.properties` must contain `sdk.dir=C:/Users/hussien/AppData/Local/Android/Sdk` (forward slashes)
+- App ID: `com.hussien.lifetracker` (permanent, set in capacitor.config.json)
+- Debug-signed APK sideloads fine on Android — no release keystore needed for personal use
+- Launcher icons/splash generated via `npx @capacitor/assets generate --android` from `assets/logo.svg`
 
 ---
 
@@ -32,19 +58,28 @@ src/
 ├── App.css                          # ALL component styles (single file)
 ├── index.css                        # CSS reset, variables, theme tokens, safe-area padding
 │
+├── lib/
+│   └── supabase.js                  # Supabase client init (returns null if no env vars)
+│
 ├── hooks/
 │   ├── useLocalStorage.js           # Legacy hook (kept for reference)
-│   └── usePersistedStorage.js       # Dual localStorage+IndexedDB hook (active)
+│   ├── usePersistedStorage.js       # Dual localStorage+IndexedDB hook + syncPush on write
+│   ├── useAuth.js                   # Supabase auth wrapper (signUp/signIn/signOut)
+│   ├── useSync.js                   # Real-time sync engine (pull/push/realtime)
+│   └── useUndoDelete.js             # Soft-delete with 5s undo window
 │
 ├── utils/
 │   ├── dateUtils.js                 # Date key helpers, week/month ranges
 │   ├── scoreUtils.js                # XP calculation, streak (with freeze support), celebrations
 │   ├── levelUtils.js                # Hacker level table + progress math
-│   └── rewardUtils.js               # Badge definitions, reward eligibility
+│   ├── rewardUtils.js               # Badge definitions, reward eligibility
+│   └── challengeUtils.js            # Daily challenge generation (deterministic, seeded by date)
 │
 └── components/
     ├── Sidebar.jsx                  # Left nav sidebar (Dashboard / Analytics)
-    ├── Header.jsx                   # Date, level badge, streak, theme/export/import, shortcuts btn
+    ├── Header.jsx                   # Date, level badge, streak, theme/export/import, shortcuts, sign-out, password change
+    ├── AuthPage.jsx                 # Login/signup page (terminal hacker aesthetic)
+    ├── DailyChallenges.jsx          # 3 daily challenges card with auto-completion detection
     ├── LevelBar.jsx                 # Full-width XP progress bar below header
     ├── BadgeShelf.jsx               # Grid of locked/unlocked achievement badges
     ├── CelebrationBanner.jsx        # Animated overlay toast (auto-dismiss 5s)
@@ -89,13 +124,15 @@ src/
 | `ht_tags_meta` | object   | `{ colors: { "tagName": "#hexColor" } }` |
 | `ht_goals`     | array    | `[{ id, name, icon, notes, deadline?, createdAt, completed, completedAt?, milestones[{ id, name, xp, description, dueDate?, priority, completed, completedAt? }], linkedHabitIds[], linkedTaskIds[] }]` |
 | `ht_streak_freezes` | object | `{ "YYYY-MM-DD": true }` -- days where streak is preserved without completing habits |
+| `ht_challenges` | object | `{ "YYYY-MM-DD": [completedChallengeIds] }` -- daily challenge completion tracking |
 
 To hard-reset all data: `localStorage.clear()` in browser console, then refresh. IndexedDB data will auto-restore on next load unless also cleared.
 
 ### Persistence Architecture (usePersistedStorage)
 
 - On load: reads localStorage synchronously. If empty, falls back to IndexedDB async recovery.
-- On write: writes localStorage synchronously, then IndexedDB async (fire-and-forget).
+- On write: writes localStorage synchronously, calls `syncPush(key, value)` for Supabase sync, then IndexedDB async (fire-and-forget).
+- Listens for `ht-sync-update` custom events from the sync engine to update React state when remote changes arrive.
 - Exports `useSaveIndicator()` hook that returns timestamp of last write (for save indicator UI).
 - If localStorage is wiped (browser cache clear), IndexedDB restores data automatically on next visit.
 
@@ -194,15 +231,21 @@ App.jsx (single source of truth)
 
 ### Sidebar
 ```
-currentPage: string, onNavigate: fn(page)
+currentPage: string, onNavigate: fn(page), onAddHabit: fn, onAddTask: fn, onOpenSettings: fn
 ```
+- Desktop (>768px): fixed left sidebar with Dashboard/Goals/Analytics
+- Mobile (≤768px): fixed bottom nav — Home, Goals, center FAB (+), Stats, More
+- FAB opens a 2-item chooser menu (New Habit / New Task); More opens the Header settings dropdown (state lifted to App)
 
 ### Header
 ```
 streak: number, dayComplete: bool, allTimeXP: number,
-onExport: fn, onImport: fn(event), theme: string, onToggleTheme: fn,
-shortcutsOpen: bool, onToggleShortcuts: fn
+onExport: fn, onImport: fn(event), theme: string, onSetTheme: fn(themeId),
+shortcutsOpen: bool, onToggleShortcuts: fn,
+user: object|null, onSignOut: fn|null
 ```
+- When `user` is set: shows email, "Change password" button, and "Sign out" in settings dropdown
+- `PasswordChange` sub-component uses `supabase.auth.updateUser({ password })` directly
 
 ### LevelBar
 ```
@@ -211,8 +254,12 @@ allTimeXP: number
 
 ### BadgeShelf
 ```
-profile: { allTimeXP, completedDays }, streak: number
+profile: { allTimeXP, completedDays }, streak: number, stats: object
 ```
+- Renders as a collapsed dropdown by default: header row with "🏅 Badges 3/18" count + chevron, tap to expand the grid
+
+### Header (settings state)
+- `settingsOpen` / `onSetSettingsOpen` are lifted to App.jsx so the mobile bottom-nav "More" button can open the same settings dropdown
 
 ### DateNav
 ```
@@ -477,13 +524,23 @@ Compares prev/next state objects. Triggers on:
 
 ## Reward System (rewardUtils.js)
 
-### Built-in Badges (auto-unlock, one-time)
-- First Blood: first perfect day
-- Consistent: 7-day streak
-- Addicted: 30-day streak
-- Centurion: 100 all-time XP
-- 1K Club: 1,000 all-time XP
-- Legend: 10,000 all-time XP
+### Tiered Badge Families (auto-unlock, computed — never persisted)
+7 families × 4 tiers (Bronze/Silver/Gold/Diamond) = 28 unlockable badges (`TOTAL_BADGES`):
+
+| Family | Metric | Bronze / Silver / Gold / Diamond |
+|--------|--------|-----------------------------------|
+| Streak | current streak | 7 / 30 / 100 / 365 |
+| XP Hoarder | allTimeXP | 1k / 10k / 100k / 1M |
+| Perfect Days | completedDays | 1 / 30 / 100 / 365 |
+| Task Slayer | tasksCompleted | 10 / 50 / 200 / 1000 |
+| Collector | totalHabits | 3 / 8 / 15 / 25 |
+| Challenger | challengesCompleted | 5 / 20 / 50 / 200 |
+| Firewall | badgeCount (meta) | 3 / 8 / 14 / 20 |
+
+- `getEarnedBadges(profile, streak, stats)` → flat list, one entry per earned tier (id `streak_gold`), keeps celebration badgeCount trigger working
+- `getBadgeProgress(...)` → per-family `{ value, tierIndex, tier, next }` for the shelf UI
+- `TIERS` exports tier colors (bronze #cd7f32, silver #c0c0c0, gold #ffd700, diamond #7df9ff)
+- BadgeShelf renders families with tier pips + progress-to-next; tier color on border/label
 
 ### Custom Rewards
 - Scope: daily / weekly / monthly
@@ -499,9 +556,14 @@ Returns `{ claimable: bool, reason: string, current?, needed? }`
 
 ## Theme System
 
-- CSS variables defined in `index.css` under `:root` / `[data-theme="dark"]` and `[data-theme="light"]`
-- Toggled via `document.documentElement.setAttribute('data-theme', theme)` in App.jsx useEffect
-- Setting persisted in `ht_settings.theme`
+- **5 themes**: Matrix (green hacker), Cyberpunk (pink/cyan neon), Midnight (purple), Crimson (red/orange), Arctic (light blue)
+- CSS variables defined in `index.css` under `[data-theme="matrix"]` (default/`:root`), `[data-theme="cyberpunk"]`, `[data-theme="midnight"]`, `[data-theme="crimson"]`, `[data-theme="arctic"]`
+- Applied via `document.documentElement.setAttribute('data-theme', settings.theme || 'matrix')` in App.jsx useEffect
+- Setting persisted in `ht_settings.theme` (default: `'matrix'`)
+- `cycleTheme()` cycles through all 5; `setTheme(t)` sets directly
+- Theme picker in Header settings dropdown: 5 color-coded `.theme-pill` buttons
+- Each theme defines: `--bg`, `--surface`, `--surface-2`, `--border`, `--text`, `--text-muted`, `--primary`, `--primary-light`, `--accent`, `--success`, `--gold`, `--orange`, `--danger`, `--cyan`, `--gradient-primary`, `--shadow-glow`, `--glow`, `--glow-border`
+- **Aesthetic**: Gamer/hacker HUD — sharp 3px radius, glow borders on cards, JetBrains Mono body font, Orbitron display font (`--font-display`), scanline overlay on progress bars, no glassmorphism (zero `backdrop-filter`)
 
 ---
 
@@ -656,6 +718,84 @@ HabitItem shows a frequency badge: `wkd` (weekdays), `3x` (3x-week), `alt` (ever
 
 ---
 
+## Supabase Backend (Optional)
+
+The app runs fully offline with localStorage + IndexedDB. When `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set in `.env.local`, the following layers activate:
+
+### Auth (`useAuth.js` + `AuthPage.jsx`)
+- Email/password signup + login via `supabase.auth.signUp` / `supabase.auth.signInWithPassword`
+- Google OAuth via `signInWithOAuth({ provider: 'google' })` — client created with `flowType: 'pkce'` (required for native)
+  - **Web**: standard redirect to `window.location.origin`
+  - **Native APK**: Google blocks OAuth in WebViews → `skipBrowserRedirect: true` + `@capacitor/browser` opens system browser → returns via deep link `com.hussien.lifetracker://auth-callback?code=...` → `appUrlOpen` listener in useAuth calls `exchangeCodeForSession(code)`. Intent filter registered in AndroidManifest.xml
+  - Requires Google provider enabled in Supabase dashboard (Google Cloud OAuth client ID/secret) and both redirect URLs allowlisted in Supabase Auth → URL Configuration
+- `onAuthStateChange` listener returns `user` object to App.jsx
+- AuthPage: terminal-aesthetic login/signup form, forces email lowercase, mobile-friendly input attributes, Google button below email form
+- Password change via `supabase.auth.updateUser({ password })` in Header settings dropdown
+- If no Supabase env vars → auth skipped, app runs local-only
+
+### Sync Engine (`useSync.js`)
+- **Pull on login**: fetches all `user_data` rows, writes to localStorage, fires `ht-sync-update` events
+- **First-device bootstrap**: if no remote data exists, pushes all local keys to Supabase
+- **Push on change**: `syncPush(key, value)` called from `usePersistedStorage` after every localStorage write. Debounced 1s per key, deduped via JSON comparison
+- **Realtime**: Supabase Realtime channel (`postgres_changes`) for cross-device sync within seconds
+- **HMR-safe**: shared state on `window.__htSync` survives Vite HMR module reloads
+- **Critical**: all `.upsert()` calls need `.then(() => {})` -- Supabase JS v2 query builders are lazy PromiseLike that don't send HTTP requests without `.then()` or `await`
+
+### Database (`supabase/migrations/001_initial.sql`)
+- Single `user_data` table: `(user_id UUID, key TEXT, value JSONB, updated_at TIMESTAMPTZ)`
+- Composite unique on `(user_id, key)`, RLS enabled (users read/write own rows only)
+- Realtime enabled
+
+### Env Setup
+- `.env.local` (gitignored): `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`
+- `.env.example`: template with placeholder values
+- `src/lib/supabase.js`: returns `null` if env vars missing → all sync/auth code no-ops
+
+---
+
+## Daily Reminder Notifications (APK only)
+
+- `src/utils/notificationUtils.js`: `scheduleDailyReminder(time)` — cancels + reschedules a repeating daily notification via `@capacitor/local-notifications`. No-op on web (`canNotify()` = native check). Guards malformed time strings (`/^\d{1,2}:\d{2}$/`) since the value can arrive from imported JSON.
+- Setting stored as `ht_settings.reminderTime` ("HH:MM" or null). App.jsx effect reschedules on change.
+- UI: time input + off button in Header settings dropdown (`.settings-reminder`), only rendered on native.
+- Android 13+ runtime permission requested by the plugin on first schedule.
+
+## Completion Juice
+
+- Checking a habit/task: `navigator.vibrate([15,30,25])` double-buzz (10ms on uncheck) + floating gold "+N XP" burst (`.xp-float`, 0.9s CSS animation) anchored to the checkbox (`position: relative` on `.habit-checkbox`).
+- Existing `justChecked` pop animation extended to 900ms to cover the float.
+
+## App Icon
+
+- **Master file: `public/favicon.svg`** (hacker terminal: green `>_` prompt + cursor + flame on dark). Copied verbatim to `public/icons/icon-192.svg`, `public/icons/icon-512.svg` (PWA manifest), and `assets/logo.svg` (Android source).
+- Android launcher icons/splash regenerate via `npx @capacitor/assets generate --android --iconBackgroundColor "#060a06"` (74 assets). Re-run after changing the master, then rebuild the APK.
+- `index.html` favicon link points at `/favicon.svg`.
+
+## Daily Challenges System
+
+- `challengeUtils.js`: `generateDailyChallenges(habits, logs, profile, dateKey)` returns 3 challenges seeded deterministically by date
+- Challenge types: "Complete N habits", "Earn N XP", "Complete all habits in group X"
+- `DailyChallenges.jsx`: card rendered above habit list, auto-detects completion from current state
+- Completion stored in `ht_challenges` persistence key: `{ "YYYY-MM-DD": [completedChallengeIds] }`
+- +20 XP bonus per completed challenge
+
+---
+
+## AI Copilot (Claude via Supabase)
+
+The AI copilot lives OUTSIDE the app: Claude (Cowork/Claude Code with the Supabase MCP, or claude.ai with the official Supabase connector) reads/writes `user_data` rows directly; the app's realtime sync makes changes appear on all devices in seconds. Zero app code, zero API cost (covered by the user's Claude Max plan).
+
+- **Recipe book: [docs/AI_COPILOT.md](docs/AI_COPILOT.md)** — tested SQL for add task/habit, complete task/habit, coaching snapshot; exact jsonb shapes; safety rules (UPDATE only, always bump `updated_at`, never DELETE rows).
+- User setup for phone: claude.ai → Settings → Connectors → Supabase (official) → create a claude.ai Project with AI_COPILOT.md as knowledge.
+- The in-app chat variant (Edge Function proxy + API credits) was designed but not built — see plan history if ever wanted.
+
+## Git / Release Workflow (standing rules)
+
+1. **After every change**: security-check the new code, update this file, then `git add -A && git commit && git push` (repo: github.com/Dexter-77Ali/habit-tracker, public).
+2. Before any push: scan the staged set for secrets (`git diff --cached | grep -iE 'sk-|apikey|secret'`) — `.env.local` is gitignored and must stay that way.
+3. APK changes: rebuild, copy to `Desktop\LifeTracker.apk`, then `gh release create vX.Y.Z <apk> --title ... --notes ...` and add a row to README's version table.
+4. `plans/`, `android/app/build/`, `android/.gradle/`, `android/local.properties`, `.vercel/`, `*.apk` are gitignored.
+
 ## Known Constraints / Things to Watch
 
 1. `DEFAULT_HABITS` at top of App.jsx calls `uuidv4()` at module load time -- these IDs regenerate if localStorage is empty, which is fine for first load but means you can't hardcode IDs
@@ -667,3 +807,7 @@ HabitItem shows a frequency badge: `wkd` (weekdays), `3x` (3x-week), `alt` (ever
 7. When schema changes (new fields like `groupId`, `notes`, `tags`), users with existing data will have `undefined` for those fields which defaults to `null`/`""`/`[]` -- backwards compatible
 8. After major schema changes, recommend running `localStorage.clear()` in browser console then refreshing to avoid stale data conflicts
 9. `tagColors` memo in App.jsx may call `setTagsMeta` during render for new tags -- safe because it only fires when colors object actually changed
+10. Supabase JS v2 `.from().upsert()` / `.insert()` / `.update()` return lazy `PromiseLike` objects -- they do NOT send HTTP requests unless `.then()` or `await` is used. Always append `.then(() => {})` for fire-and-forget writes
+11. `window.__htSync` is mutable shared state that survives Vite HMR -- module-level `let` variables do NOT survive HMR because Vite creates fresh module instances on hot reload
+12. Security validation (do not remove): icon upload in AddEditModal rejects non-image MIME types and files >1 MB; the import handler in App.jsx shape-checks every key (`Array.isArray` for arrays, plain-object check for objects) before writing to state
+13. The `dist/` folder contents depend on the last build flavor: `CAPACITOR=1 npm run build` produces the no-service-worker native build. Always rebuild WITHOUT the flag before a Vercel deploy

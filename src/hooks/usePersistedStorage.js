@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { get, set } from 'idb-keyval'
+import { syncPush } from './useSync'
 
 let saveTimestamp = null
 const saveListeners = new Set()
@@ -33,6 +34,7 @@ export function usePersistedStorage(key, initialValue) {
 
   const initializedFromIdb = useRef(false)
   const isFirstRender = useRef(true)
+  const idbTimer = useRef(null)
 
   useEffect(() => {
     if (initializedFromIdb.current) return
@@ -61,15 +63,28 @@ export function usePersistedStorage(key, initialValue) {
     }
 
     try {
-      window.localStorage.setItem(key, JSON.stringify(storedValue))
+      const json = JSON.stringify(storedValue)
+      window.localStorage.setItem(key, json)
+      syncPush(key, storedValue)
     } catch {
       // quota exceeded or private browsing
     }
 
-    set(key, storedValue).then(() => {
-      notifySave()
-    }).catch(() => {})
+    clearTimeout(idbTimer.current)
+    idbTimer.current = setTimeout(() => {
+      set(key, storedValue).then(() => {
+        notifySave()
+      }).catch(() => {})
+    }, 300)
   }, [key, storedValue])
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail.key === key) setStoredValue(e.detail.value)
+    }
+    window.addEventListener('ht-sync-update', handler)
+    return () => window.removeEventListener('ht-sync-update', handler)
+  }, [key])
 
   return [storedValue, setStoredValue]
 }

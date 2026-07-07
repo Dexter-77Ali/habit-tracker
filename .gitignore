@@ -5,3 +5,17 @@ dist
 *.log
 .DS_Store
 Thumbs.db
+
+# Android build outputs (sources in android/ ARE committed)
+android/app/build/
+android/.gradle/
+android/local.properties
+android/app/release/
+*.apk
+*.keystore
+
+# Deploy tooling
+.vercel/
+
+# Local plans/scratch
+plans/

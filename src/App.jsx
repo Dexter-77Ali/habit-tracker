@@ -1,6 +1,11 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { usePersistedStorage, useSaveIndicator } from './hooks/usePersistedStorage'
+import { useUndoDelete } from './hooks/useUndoDelete'
+import { useAuth } from './hooks/useAuth'
+import { useSync } from './hooks/useSync'
+import { supabase } from './lib/supabase'
+import AuthPage from './components/AuthPage'
 import { getDateKey, getWeekDates, getMonthDates, dateFromKey } from './utils/dateUtils'
 import {
   calculateDailyXP,
@@ -29,7 +34,11 @@ import ScoresPanel from './components/ScoresPanel'
 import GoalsPage from './components/GoalsPage'
 import GoalsSummaryCard from './components/GoalsSummaryCard'
 import AnalyticsPage from './components/AnalyticsPage'
+import DailyChallenges from './components/DailyChallenges'
 import './App.css'
+
+import { getRandomIcon } from './utils/iconUtils'
+import { scheduleDailyReminder } from './utils/notificationUtils'
 
 const QUICK_ADD_EMOJIS = ['🏃', '📖', '💧', '🧘', '🍎', '✏️', '💊', '🛌', '🎯', '💪']
 
@@ -46,6 +55,7 @@ const DEFAULT_HABITS = [
 ]
 
 export default function App() {
+  const { user, loading: authLoading, signUp, signIn, signInWithGoogle, signOut } = useAuth()
   const [habits, setHabits] = usePersistedStorage('ht_habits', DEFAULT_HABITS)
   const [logs, setLogs] = usePersistedStorage('ht_logs', {})
   const [tasks, setTasks] = usePersistedStorage('ht_tasks', [])
@@ -57,7 +67,7 @@ export default function App() {
   })
   const [settings, setSettings] = usePersistedStorage('ht_settings', {
     includeWeekends: false,
-    theme: 'dark',
+    theme: 'matrix',
     focusMode: false,
     maxFreezesPerMonth: 2,
   })
@@ -65,6 +75,11 @@ export default function App() {
   const [tagsMeta, setTagsMeta] = usePersistedStorage('ht_tags_meta', { colors: {} })
   const [goals, setGoals] = usePersistedStorage('ht_goals', [])
   const [streakFreezes, setStreakFreezes] = usePersistedStorage('ht_streak_freezes', {})
+  const [completedChallenges, setCompletedChallenges] = usePersistedStorage('ht_challenges', {})
+
+  useSync(user)
+
+  const { pending: undoPending, scheduleDelete, undo: undoAction } = useUndoDelete()
 
   const [currentPage, setCurrentPage] = useState('dashboard')
   const [modalState, setModalState] = useState({ open: false, item: null, mode: 'habit' })
@@ -74,6 +89,7 @@ export default function App() {
   const [notesModal, setNotesModal] = useState({ open: false, item: null, mode: 'habit' })
   const [celebration, setCelebration] = useState(null)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   const today = getDateKey()
   const [viewedDate, setViewedDate] = useState(today)
@@ -95,8 +111,12 @@ export default function App() {
 
   // Theme
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', settings.theme || 'dark')
+    document.documentElement.setAttribute('data-theme', settings.theme || 'matrix')
   }, [settings.theme])
+
+  useEffect(() => {
+    scheduleDailyReminder(settings.reminderTime ?? null) // native no-op on web
+  }, [settings.reminderTime])
 
   // ------------------------------------------------------------------
   // Tags - derive allTags and auto-assign colors
@@ -161,7 +181,20 @@ export default function App() {
 
   const streak = calculateStreak(logs, habits, settings.includeWeekends, streakFreezes)
   const level = getLevel(profile.allTimeXP)
-  const earnedBadges = getEarnedBadges(profile, streak)
+
+  const badgeStats = useMemo(() => {
+    const base = {
+      tasksCompleted: tasks.filter(t => t.completed).length,
+      totalHabits: habits.length,
+      challengesCompleted: Object.values(completedChallenges).flat().length,
+      badgeCount: 0,
+    }
+    // ponytail: two-pass for Firewall badge which needs badgeCount
+    base.badgeCount = getEarnedBadges(profile, streak, base).length
+    return base
+  }, [tasks, habits, completedChallenges, profile, streak])
+
+  const earnedBadges = getEarnedBadges(profile, streak, badgeStats)
 
   const xpByScope = {
     daily: todayEarned,
@@ -276,7 +309,7 @@ export default function App() {
   }, [today, setHabits])
 
   const quickAddHabit = useCallback((name) => {
-    const icon = QUICK_ADD_EMOJIS[Math.floor(Math.random() * QUICK_ADD_EMOJIS.length)]
+    const icon = getRandomIcon(QUICK_ADD_EMOJIS)
     addHabit({ name, xp: 10, icon })
   }, [addHabit])
 
@@ -284,7 +317,7 @@ export default function App() {
     setHabits((prev) => prev.map((h) => (h.id === id ? { ...h, ...data } : h)))
   }, [setHabits])
 
-  const deleteHabit = useCallback((id) => {
+  const _deleteHabit = useCallback((id) => {
     setHabits((prev) => prev.filter((h) => h.id !== id))
     setLogs((prev) => {
       const updated = { ...prev }
@@ -295,6 +328,11 @@ export default function App() {
       return updated
     })
   }, [setHabits, setLogs])
+
+  const deleteHabit = useCallback((id) => {
+    const habit = habits.find((h) => h.id === id)
+    scheduleDelete(habit, 'habit', () => _deleteHabit(id))
+  }, [habits, _deleteHabit, scheduleDelete])
 
   // ------------------------------------------------------------------
   // Task handlers
@@ -318,7 +356,7 @@ export default function App() {
   }, [today, setTasks])
 
   const quickAddTask = useCallback((name) => {
-    const icon = QUICK_ADD_EMOJIS[Math.floor(Math.random() * QUICK_ADD_EMOJIS.length)]
+    const icon = getRandomIcon(QUICK_ADD_EMOJIS)
     addTask({ name, xp: 10, icon, priority: 'none' })
   }, [addTask])
 
@@ -326,9 +364,14 @@ export default function App() {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...data } : t)))
   }, [setTasks])
 
-  const deleteTask = useCallback((id) => {
+  const _deleteTask = useCallback((id) => {
     setTasks((prev) => prev.filter((t) => t.id !== id))
   }, [setTasks])
+
+  const deleteTask = useCallback((id) => {
+    const task = tasks.find((t) => t.id === id)
+    scheduleDelete(task, 'task', () => _deleteTask(id))
+  }, [tasks, _deleteTask, scheduleDelete])
 
   const clearArchivedTasks = useCallback(() => {
     const sevenDaysAgo = new Date()
@@ -348,11 +391,16 @@ export default function App() {
     setGroups((prev) => prev.map((g) => (g.id === id ? { ...g, ...data } : g)))
   }, [setGroups])
 
-  const deleteGroup = useCallback((id) => {
+  const _deleteGroup = useCallback((id) => {
     setGroups((prev) => prev.filter((g) => g.id !== id))
     setHabits((prev) => prev.map((h) => h.groupId === id ? { ...h, groupId: null } : h))
     setTasks((prev) => prev.map((t) => t.groupId === id ? { ...t, groupId: null } : t))
   }, [setGroups, setHabits, setTasks])
+
+  const deleteGroup = useCallback((id) => {
+    const group = groups.find((g) => g.id === id)
+    scheduleDelete(group, 'group', () => _deleteGroup(id))
+  }, [groups, _deleteGroup, scheduleDelete])
 
   const toggleGroupCollapse = useCallback((id) => {
     setGroups((prev) => prev.map((g) => (g.id === id ? { ...g, collapsed: !g.collapsed } : g)))
@@ -405,9 +453,23 @@ export default function App() {
     setGoals((prev) => prev.map((g) => (g.id === id ? { ...g, ...data } : g)))
   }, [setGoals])
 
-  const deleteGoal = useCallback((id) => {
+  const _deleteGoal = useCallback((id) => {
     setGoals((prev) => prev.filter((g) => g.id !== id))
   }, [setGoals])
+
+  const deleteGoal = useCallback((id) => {
+    const goal = goals.find((g) => g.id === id)
+    scheduleDelete(goal, 'goal', () => _deleteGoal(id))
+  }, [goals, _deleteGoal, scheduleDelete])
+
+  const onChallengeComplete = useCallback((challengeId, xp) => {
+    setCompletedChallenges(prev => {
+      const todayList = prev[today] || []
+      if (todayList.includes(challengeId)) return prev
+      return { ...prev, [today]: [...todayList, challengeId] }
+    })
+    setProfile(prev => ({ ...prev, allTimeXP: prev.allTimeXP + xp }))
+  }, [today, setCompletedChallenges, setProfile])
 
   const toggleMilestone = useCallback((goalId, milestoneId) => {
     setGoals((prev) => prev.map((g) => {
@@ -565,16 +627,18 @@ export default function App() {
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result)
-        if (data.habits) setHabits(data.habits)
-        if (data.logs) setLogs(data.logs)
-        if (data.tasks) setTasks(data.tasks)
-        if (data.rewards) setRewards(data.rewards)
-        if (data.profile) setProfile(data.profile)
-        if (data.settings) setSettings(data.settings)
-        if (data.groups) setGroups(data.groups)
-        if (data.tagsMeta) setTagsMeta(data.tagsMeta)
-        if (data.goals) setGoals(data.goals)
-        if (data.streakFreezes) setStreakFreezes(data.streakFreezes)
+        // ponytail: shape guard, not full schema validation — arrays must be arrays, objects plain objects
+        const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v)
+        if (Array.isArray(data.habits)) setHabits(data.habits)
+        if (isObj(data.logs)) setLogs(data.logs)
+        if (Array.isArray(data.tasks)) setTasks(data.tasks)
+        if (Array.isArray(data.rewards)) setRewards(data.rewards)
+        if (isObj(data.profile)) setProfile(data.profile)
+        if (isObj(data.settings)) setSettings(data.settings)
+        if (Array.isArray(data.groups)) setGroups(data.groups)
+        if (isObj(data.tagsMeta)) setTagsMeta(data.tagsMeta)
+        if (Array.isArray(data.goals)) setGoals(data.goals)
+        if (isObj(data.streakFreezes)) setStreakFreezes(data.streakFreezes)
         setCelebration('Data imported successfully!')
       } catch {
         alert('Invalid backup file.')
@@ -584,9 +648,12 @@ export default function App() {
     e.target.value = ''
   }
 
-  const toggleTheme = () => {
-    setSettings((s) => ({ ...s, theme: s.theme === 'dark' ? 'light' : 'dark' }))
+  const THEMES = ['matrix', 'cyberpunk', 'midnight', 'crimson', 'arctic']
+  const cycleTheme = () => {
+    const i = THEMES.indexOf(settings.theme)
+    setSettings((s) => ({ ...s, theme: THEMES[(i + 1) % THEMES.length] }))
   }
+  const setTheme = (t) => setSettings((s) => ({ ...s, theme: t }))
 
   // ------------------------------------------------------------------
   // Keyboard shortcuts
@@ -612,9 +679,22 @@ export default function App() {
 
   const visibleHabits = habits.filter((h) => h.createdAt <= viewedDate)
 
+  if (supabase && authLoading) {
+    return <div className="auth-page"><div className="auth-card"><p className="auth-subtitle">&gt; connecting...</p></div></div>
+  }
+  if (supabase && !user) {
+    return <AuthPage onSignIn={signIn} onSignUp={signUp} onGoogleSignIn={signInWithGoogle} />
+  }
+
   return (
     <div className="app-layout">
-      <Sidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+      <Sidebar
+        currentPage={currentPage}
+        onNavigate={setCurrentPage}
+        onAddHabit={openAddHabit}
+        onAddTask={openAddTask}
+        onOpenSettings={() => setSettingsOpen(true)}
+      />
 
       <div className="app-main">
         <Header
@@ -623,16 +703,22 @@ export default function App() {
           allTimeXP={profile.allTimeXP}
           onExport={handleExport}
           onImport={handleImport}
-          theme={settings.theme || 'dark'}
-          onToggleTheme={toggleTheme}
+          theme={settings.theme || 'matrix'}
+          onSetTheme={setTheme}
           shortcutsOpen={shortcutsOpen}
           onToggleShortcuts={() => setShortcutsOpen((v) => !v)}
+          user={user}
+          onSignOut={signOut}
+          settingsOpen={settingsOpen}
+          onSetSettingsOpen={setSettingsOpen}
+          reminderTime={settings.reminderTime ?? null}
+          onSetReminderTime={(t) => setSettings((s) => ({ ...s, reminderTime: t }))}
         />
 
         {currentPage === 'dashboard' && (
           <>
             <LevelBar allTimeXP={profile.allTimeXP} />
-            <BadgeShelf profile={profile} streak={streak} />
+            <BadgeShelf profile={profile} streak={streak} stats={badgeStats} />
 
             <DateNav
               viewedDate={viewedDate}
@@ -655,6 +741,17 @@ export default function App() {
             )}
 
             <main className="dashboard">
+              {viewedDate === today && (
+                <DailyChallenges
+                  habits={habits}
+                  groups={groups}
+                  logs={logs}
+                  today={today}
+                  completedChallenges={completedChallenges[today] || []}
+                  onComplete={onChallengeComplete}
+                />
+              )}
+
               <section className="habits-section">
                 <HabitList
                   habits={visibleHabits}
@@ -822,6 +919,13 @@ export default function App() {
         <div className="save-indicator" key={lastSaved}>
           <span className="save-dot" />
           Saved {new Date(lastSaved).toLocaleTimeString()}
+        </div>
+      )}
+
+      {undoPending && (
+        <div className="undo-toast">
+          <span>Deleted {undoPending.type}: <strong>{undoPending.item?.name}</strong></span>
+          <button className="undo-btn" onClick={undoAction}>Undo</button>
         </div>
       )}
     </div>

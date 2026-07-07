@@ -1,4 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="64" fill="#6c63ff"/>
-  <text x="256" y="310" text-anchor="middle" font-size="240" font-family="Arial,sans-serif" font-weight="bold" fill="white">LT</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Life Tracker — hacker terminal icon -->
+  <rect width="1024" height="1024" rx="200" fill="#060a06"/>
+  <rect x="96" y="96" width="832" height="832" rx="120" fill="none" stroke="#00ff41" stroke-width="20" opacity="0.25"/>
+  <!-- terminal title bar -->
+  <rect x="152" y="152" width="720" height="120" rx="60" fill="#0d1a0d"/>
+  <circle cx="240" cy="212" r="28" fill="#00ff41" opacity="0.9"/>
+  <circle cx="330" cy="212" r="28" fill="#00ff41" opacity="0.5"/>
+  <circle cx="420" cy="212" r="28" fill="#00ff41" opacity="0.25"/>
+  <!-- prompt: > -->
+  <path d="M 230 420 L 430 560 L 230 700" fill="none" stroke="#00ff41" stroke-width="72" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- cursor block -->
+  <rect x="510" y="640" width="220" height="72" rx="16" fill="#00ff41"/>
+  <!-- streak flame spark, top right of prompt -->
+  <path d="M 700 400 q 40 -70 20 -130 q 90 50 90 150 q 0 90 -85 100 q -60 8 -85 -50 q -18 -45 20 -80 q 5 45 40 10 z" fill="#00ff41" opacity="0.85"/>
 </svg>
