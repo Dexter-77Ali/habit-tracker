@@ -42,7 +42,9 @@ export function usePersistedStorage(key, initialValue) {
     const localItem = window.localStorage.getItem(key)
     if (localItem !== null) {
       initializedFromIdb.current = true
-      set(key, JSON.parse(localItem)).catch(() => {})
+      // storedValue already holds the parsed value (or initialValue if the entry was
+      // corrupt); re-parsing localItem here would throw synchronously past the .catch.
+      set(key, storedValue).catch(() => {})
       return
     }
 

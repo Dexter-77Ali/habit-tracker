@@ -12,11 +12,12 @@ All app data lives in **one table**: `user_data (user_id uuid, key text, value j
 ## Safety rules (always follow)
 
 1. **Only UPDATE** `user_data` rows. Never `DELETE` rows, never `DROP`/`ALTER` anything, never touch `auth.*` tables.
-2. **Always set `updated_at = now()`** in the same UPDATE — the sync engine uses it for conflict resolution.
-3. Match the item shapes below **exactly** (the app assumes them). Generate ids with `gen_random_uuid()`. Dates are strings `YYYY-MM-DD`.
-4. To remove an item from an array, write the filtered array back — don't null the row.
-5. XP values: integers 1–1000 (default 10 for habits, 10–25 for tasks by effort).
-6. Icons: an emoji string (e.g. `'🎯'`) or an app icon path (e.g. `'/icons/063-terminal.png'`).
+2. **Always set `updated_at = now()`** in the same UPDATE (good hygiene; note the client currently resolves sync by arrival order, not by this column — so avoid writing while the user is actively editing the same key on another device).
+3. Match the item shapes below **exactly** (the app assumes them). Generate ids with `gen_random_uuid()`.
+4. **Dates must be the USER'S LOCAL date, not the DB's UTC `now()`.** The app keys logs/createdAt by local date via `getDateKey`. If you write `to_char(now(),'YYYY-MM-DD')` and the user is behind UTC in the evening, the item lands on tomorrow and is invisible until then. Use the user's actual local date as a literal — e.g. `'2026-07-08'` — which the assistant knows from its context. In the recipes below, replace `<TODAY>` with that literal.
+5. To remove an item from an array, write the filtered array back — don't null the row.
+6. XP values: integers 1–1000 (default 10 for habits, 10–25 for tasks by effort).
+7. Icons: an emoji string (e.g. `'🎯'`) or an app icon path (e.g. `'/icons/063-terminal.png'`).
 
 ## Data shapes (per key)
 
@@ -37,7 +38,7 @@ UPDATE user_data
 SET value = value || jsonb_build_array(
       jsonb_build_object(
         'id', gen_random_uuid(), 'name', 'TASK NAME HERE', 'xp', 10, 'icon', '🔧',
-        'completed', false, 'completedAt', null, 'createdAt', to_char(now(),'YYYY-MM-DD'),
+        'completed', false, 'completedAt', null, 'createdAt', '<TODAY>',
         'dueDate', null, 'priority', 'none', 'groupId', null, 'notes', '', 'tags', '[]'::jsonb
       )
       -- , jsonb_build_object(...)   -- append more objects for multiple tasks in one call
@@ -56,7 +57,7 @@ SET value = value || jsonb_build_array(
       jsonb_build_object(
         'id', gen_random_uuid(), 'name', 'HABIT NAME', 'xp', 10, 'icon', '🎯',
         'tags', '[]'::jsonb, 'notes', '', 'groupId', null,
-        'createdAt', to_char(now(),'YYYY-MM-DD'), 'frequency', 'daily'
+        'createdAt', '<TODAY>', 'frequency', 'daily'
       )),
     updated_at = now()
 WHERE user_id = '1a5338c9-8328-463a-afb8-06d2a06f7b79' AND key = 'ht_habits';
@@ -71,7 +72,7 @@ Two statements: mark the task done, then add its XP to the profile.
 ```sql
 UPDATE user_data SET value = (
   SELECT jsonb_agg(CASE WHEN t->>'name' ILIKE '%SEARCH NAME%' AND (t->>'completed')::bool = false
-    THEN t || jsonb_build_object('completed', true, 'completedAt', to_char(now(),'YYYY-MM-DD'))
+    THEN t || jsonb_build_object('completed', true, 'completedAt', '<TODAY>')
     ELSE t END)
   FROM jsonb_array_elements(value) t
 ), updated_at = now()
@@ -89,7 +90,7 @@ Look up the habit id from `ht_habits` first, then:
 ```sql
 UPDATE user_data SET value = jsonb_set(
       value,
-      ARRAY[to_char(now(),'YYYY-MM-DD'), '<habit-uuid>'],
+      ARRAY['<TODAY>', '<habit-uuid>'],
       'true'::jsonb, true),
     updated_at = now()
 WHERE user_id = '1a5338c9-8328-463a-afb8-06d2a06f7b79' AND key = 'ht_logs';

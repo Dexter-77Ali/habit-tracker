@@ -18,7 +18,9 @@ export function isHabitScheduled(habit, dateKey) {
     }
     case 'every-other-day': {
       const created = dateFromKey(habit.createdAt)
-      const diff = Math.floor((dateObj - created) / (1000 * 60 * 60 * 24))
+      // Math.round (not floor): a DST day is 23h/25h, so raw ms division drifts ±1h
+      // and floor would flip the odd/even parity for every date after the boundary.
+      const diff = Math.round((dateObj - created) / (1000 * 60 * 60 * 24))
       return diff % 2 === 0
     }
     case 'custom': {

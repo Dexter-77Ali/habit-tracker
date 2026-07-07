@@ -317,6 +317,13 @@ export default function App() {
   }, [setHabits])
 
   const _deleteHabit = useCallback((id) => {
+    // refund the XP this habit earned across all completed days (symmetric with deleteMilestone)
+    const habit = habits.find((h) => h.id === id)
+    if (habit) {
+      const completedCount = Object.values(logs).filter((day) => day[id]).length
+      const refund = completedCount * (habit.xp || 0)
+      if (refund > 0) setProfile((p) => ({ ...p, allTimeXP: Math.max(0, p.allTimeXP - refund) }))
+    }
     setHabits((prev) => prev.filter((h) => h.id !== id))
     setLogs((prev) => {
       const updated = { ...prev }
@@ -326,7 +333,7 @@ export default function App() {
       })
       return updated
     })
-  }, [setHabits, setLogs])
+  }, [habits, logs, setHabits, setLogs, setProfile])
 
   const deleteHabit = useCallback((id) => {
     const habit = habits.find((h) => h.id === id)
@@ -337,18 +344,16 @@ export default function App() {
   // Task handlers
   // ------------------------------------------------------------------
   const toggleTask = useCallback((taskId) => {
-    setTasks((prev) => prev.map((t) => {
-      if (t.id !== taskId) return t
-      const nowCompleted = !t.completed
-      if (nowCompleted) {
-        setProfile((p) => ({ ...p, allTimeXP: p.allTimeXP + t.xp }))
-        return { ...t, completed: true, completedAt: today }
-      } else {
-        setProfile((p) => ({ ...p, allTimeXP: Math.max(0, p.allTimeXP - t.xp) }))
-        return { ...t, completed: false, completedAt: null }
-      }
-    }))
-  }, [today, setTasks, setProfile])
+    const task = tasks.find((t) => t.id === taskId)
+    if (!task) return
+    const nowCompleted = !task.completed
+    // XP mutation lives OUTSIDE the setTasks updater — a setState inside an updater
+    // double-fires under StrictMode and is unsafe under concurrent rendering.
+    setProfile((p) => ({ ...p, allTimeXP: nowCompleted ? p.allTimeXP + task.xp : Math.max(0, p.allTimeXP - task.xp) }))
+    setTasks((prev) => prev.map((t) => t.id !== taskId ? t
+      : nowCompleted ? { ...t, completed: true, completedAt: today }
+      : { ...t, completed: false, completedAt: null }))
+  }, [today, tasks, setTasks, setProfile])
 
   const addTask = useCallback((data) => {
     setTasks((prev) => [...prev, { id: uuidv4(), createdAt: today, completed: false, completedAt: null, groupId: null, notes: '', tags: [], ...data }])
@@ -364,8 +369,10 @@ export default function App() {
   }, [setTasks])
 
   const _deleteTask = useCallback((id) => {
+    const task = tasks.find((t) => t.id === id)
+    if (task?.completed) setProfile((p) => ({ ...p, allTimeXP: Math.max(0, p.allTimeXP - (task.xp || 0)) }))
     setTasks((prev) => prev.filter((t) => t.id !== id))
-  }, [setTasks])
+  }, [tasks, setTasks, setProfile])
 
   const deleteTask = useCallback((id) => {
     const task = tasks.find((t) => t.id === id)
@@ -471,27 +478,22 @@ export default function App() {
   }, [today, setCompletedChallenges, setProfile])
 
   const toggleMilestone = useCallback((goalId, milestoneId) => {
+    const goal = goals.find((g) => g.id === goalId)
+    const milestone = goal?.milestones.find((m) => m.id === milestoneId)
+    if (!milestone) return
+    const nowCompleted = !milestone.completed
+    // XP mutation outside the setGoals updater (StrictMode-safe)
+    setProfile((p) => ({ ...p, allTimeXP: nowCompleted ? p.allTimeXP + milestone.xp : Math.max(0, p.allTimeXP - milestone.xp) }))
     setGoals((prev) => prev.map((g) => {
       if (g.id !== goalId) return g
-      const milestones = g.milestones.map((m) => {
-        if (m.id !== milestoneId) return m
-        const nowCompleted = !m.completed
-        if (nowCompleted) {
-          setProfile((p) => ({ ...p, allTimeXP: p.allTimeXP + m.xp }))
-          return { ...m, completed: true, completedAt: today }
-        } else {
-          setProfile((p) => ({ ...p, allTimeXP: Math.max(0, p.allTimeXP - m.xp) }))
-          return { ...m, completed: false, completedAt: null }
-        }
-      })
+      const milestones = g.milestones.map((m) => m.id !== milestoneId ? m
+        : nowCompleted ? { ...m, completed: true, completedAt: today }
+        : { ...m, completed: false, completedAt: null })
       const allDone = milestones.length > 0 && milestones.every((m) => m.completed)
-      const wasComplete = g.completed
-      if (allDone && !wasComplete) {
-        setCelebration(`Goal completed: ${g.icon} ${g.name}!`)
-      }
+      if (allDone && !g.completed) setCelebration(`Goal completed: ${g.icon} ${g.name}!`)
       return { ...g, milestones, completed: allDone, completedAt: allDone ? today : null }
     }))
-  }, [today, setGoals, setProfile])
+  }, [today, goals, setGoals, setProfile])
 
   const addMilestone = useCallback((goalId, data) => {
     setGoals((prev) => prev.map((g) => {
@@ -609,7 +611,7 @@ export default function App() {
   // Export / Import
   // ------------------------------------------------------------------
   const handleExport = () => {
-    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes }
+    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -626,18 +628,25 @@ export default function App() {
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result)
-        // ponytail: shape guard, not full schema validation — arrays must be arrays, objects plain objects
         const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v)
-        if (Array.isArray(data.habits)) setHabits(data.habits)
+        // Every element must be a real object with an id — a null/primitive element would
+        // pass Array.isArray and then crash render (h.tags, g.type…) with no error boundary.
+        const isItemArray = (v) => Array.isArray(v) && v.every((x) => isObj(x) && 'id' in x)
+        if (isItemArray(data.habits)) setHabits(data.habits)
         if (isObj(data.logs)) setLogs(data.logs)
-        if (Array.isArray(data.tasks)) setTasks(data.tasks)
-        if (Array.isArray(data.rewards)) setRewards(data.rewards)
-        if (isObj(data.profile)) setProfile(data.profile)
+        if (isItemArray(data.tasks)) setTasks(data.tasks)
+        if (isItemArray(data.rewards)) setRewards(data.rewards)
+        if (isObj(data.profile)) {
+          // coerce allTimeXP to a finite number so a later toggle can't produce NaN XP
+          const xp = Number(data.profile.allTimeXP)
+          setProfile({ ...data.profile, allTimeXP: Number.isFinite(xp) ? xp : 0 })
+        }
         if (isObj(data.settings)) setSettings(data.settings)
-        if (Array.isArray(data.groups)) setGroups(data.groups)
+        if (isItemArray(data.groups)) setGroups(data.groups)
         if (isObj(data.tagsMeta)) setTagsMeta(data.tagsMeta)
-        if (Array.isArray(data.goals)) setGoals(data.goals)
+        if (isItemArray(data.goals)) setGoals(data.goals)
         if (isObj(data.streakFreezes)) setStreakFreezes(data.streakFreezes)
+        if (isObj(data.completedChallenges)) setCompletedChallenges(data.completedChallenges)
         setCelebration('Data imported successfully!')
       } catch {
         alert('Invalid backup file.')

@@ -828,7 +828,7 @@
   border-radius: var(--radius);
   padding: var(--space-1);
   box-shadow: var(--shadow-lg);
-  z-index: 60;
+  z-index: 95; /* above the mobile bottom-nav (90) so row action menus aren't covered */
   min-width: 160px;
   animation: fadeIn 0.1s ease;
   display: flex;
@@ -1523,8 +1523,8 @@
 
 .date-nav-frozen {
   font-size: var(--text-xs);
-  color: #06b6d4;
-  background: rgba(6, 182, 212, 0.1);
+  color: var(--cyan);
+  background: color-mix(in srgb, var(--cyan) 12%, transparent);
   padding: 2px var(--space-2);
   border-radius: var(--radius-full);
   margin-top: var(--space-1);
@@ -1538,14 +1538,14 @@
 }
 
 .freeze-btn:hover:not(:disabled) {
-  border-color: #06b6d4;
-  color: #06b6d4;
+  border-color: var(--cyan);
+  color: var(--cyan);
 }
 
 .freeze-btn--active {
-  background: rgba(6, 182, 212, 0.15);
-  border-color: #06b6d4;
-  color: #06b6d4;
+  background: color-mix(in srgb, var(--cyan) 15%, transparent);
+  border-color: var(--cyan);
+  color: var(--cyan);
 }
 
 .freeze-btn:disabled {
@@ -3088,3 +3088,43 @@
 }
 
 .settings-item--danger { color: var(--danger); }
+
+/* ═══════════════════════════════════════════════════════════════
+   ERROR BOUNDARY (crash recovery screen)
+═══════════════════════════════════════════════════════════════ */
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--bg);
+}
+.error-boundary-card {
+  max-width: 480px;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--glow-border, var(--border));
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-glow);
+}
+.error-boundary-card h1 {
+  font-family: var(--font-display, inherit);
+  color: var(--danger);
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-3);
+}
+.error-boundary-card p { color: var(--text-muted); font-size: var(--text-sm); margin-bottom: var(--space-4); line-height: 1.6; }
+.error-boundary-actions { display: flex; gap: var(--space-3); margin-bottom: var(--space-4); }
+.error-boundary-detail {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
