@@ -16,6 +16,7 @@ A gamified habit & task tracker with a hacker-terminal aesthetic. Build streaks,
 - **Sync**: email/password + Google sign-in, realtime cross-device sync via Supabase — fully offline-capable without it
 - **Mobile**: swipe-to-complete, haptic feedback, daily reminder notifications, bottom navigation, installable PWA + native APK
 - 191 hacker-themed icons + custom icon upload, markdown notes, tags, analytics heatmaps
+- **💰 Pocket Tracker**: personal income & expense tracker — monthly budget with recurring payday, category breakdowns, spend calendar, stats/trends, saving goals, dual currency (IQD + USD), and per-tab layout choices. Purely financial, no XP
 
 ## 📱 Mobile App (Android)
 
@@ -23,6 +24,7 @@ Download the APK from [**Releases**](https://github.com/Dexter-77Ali/habit-track
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| v0.3.0 | 2026-07-08 | 💰 Pocket Tracker: full income/expense tracker — budget ring/ledger/cards dashboards, spend calendar, stats, saving goals, dual IQD/USD currency, payday auto-reset |
 | v0.2.2 | 2026-07-08 | Security hardening (CSP headers, backup lock-down, beacon block, crash recovery) + XP-integrity fixes from a deep code review |
 | v0.2.1 | 2026-07-08 | Phone-fit UI scaling (Pixel-sized screens), fixed level-up banner showing on every reload |
 | v0.2.0 | 2026-07-05 | Google sign-in, daily reminder notifications, tiered badges, completion effects, new terminal icon, FAB habit/task chooser, collapsible badges |

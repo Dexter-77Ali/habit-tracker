@@ -35,6 +35,7 @@ import GoalsPage from './components/GoalsPage'
 import GoalsSummaryCard from './components/GoalsSummaryCard'
 import AnalyticsPage from './components/AnalyticsPage'
 import DailyChallenges from './components/DailyChallenges'
+import PocketTracker from './components/pocket/PocketTracker'
 import './App.css'
 
 import { getRandomIcon } from './utils/iconUtils'
@@ -721,6 +722,7 @@ export default function App() {
           onSetSettingsOpen={setSettingsOpen}
           reminderTime={settings.reminderTime ?? null}
           onSetReminderTime={(t) => setSettings((s) => ({ ...s, reminderTime: t }))}
+          onNavigate={setCurrentPage}
         />
 
         {currentPage === 'dashboard' && (
@@ -873,6 +875,10 @@ export default function App() {
             allTags={allTags}
             includeWeekends={settings.includeWeekends}
           />
+        )}
+
+        {currentPage === 'pocket' && (
+          <PocketTracker onExit={() => setCurrentPage('dashboard')} />
         )}
       </div>
 

@@ -781,6 +781,26 @@ The app runs fully offline with localStorage + IndexedDB. When `VITE_SUPABASE_UR
 
 ---
 
+## Pocket Tracker (financial section)
+
+Self-contained income/expense tracker at `currentPage === 'pocket'` (Sidebar "Pocket" entry on desktop; Header settings dropdown "👛 Pocket Tracker" on mobile). **Fully isolated from gamification** — no XP/level/streak/badge writes, `ht_pocket_goals` is separate from `ht_goals`. Internal tab bar (Overview · Calendar · Stats · Goals · Settings) becomes a fixed bottom bar ≤768px.
+
+### Files
+- `src/utils/pocketUtils.js` — pure selectors (budget/spent/remaining/breakdown/weeklyBuckets/monthlyTotals/daySpend/suggestedMonthly), currency (`money()` returns {primary, secondary}; canonical amounts are ALWAYS IQD, USD is display-only via `ui.iqdRate`), payday-period math (`periodBounds`), seeds (24 categories, 3 goals, sample expenses).
+- `src/components/pocket/PocketTracker.jsx` — shell: owns all 5 persisted keys + CRUD (validated: amount clamped 0..1e9, category must exist, date regex), tab state.
+- `PocketOverview/Calendar/Stats/Goals/Settings.jsx` — each renders the variant chosen in `ht_pocket_ui`; `AddExpenseModal`, `SetIncomeModal`, `ExpenseHistory` — flows; `charts.jsx` — shared SVG primitives (RingGauge/Donut/Bars/RankedBars/TrendLine/SegmentedBar/ProgressBar); `PocketBits.jsx` — MonthNav/Money.
+
+### Persistence keys (in SYNC_KEYS, synced like everything else)
+| Key | Shape |
+|---|---|
+| `ht_pocket_income` | `{ amount, currency, source, recurring, resetDay(1-28 UI-clamped), overrides:{'YYYY-MM':amt} }` — recurring DEFAULT false (periods = calendar months); when true, period runs resetDay→resetDay and figures follow it |
+| `ht_pocket_expenses` | `[{ id, amount(IQD), currency, categoryId, note(≤120), date:'YYYY-MM-DD', paymentMethod }]` |
+| `ht_pocket_categories` | `[{ id, label, icon, color }]` — user-manageable, seeded with 24 |
+| `ht_pocket_goals` | `[{ id, name, icon, target, saved, deadline:'YYYY-MM' }]` |
+| `ht_pocket_ui` | `{ dashboardStyle:'ring\|ledger\|cards', calendarStyle:'heat\|agenda', statsStyle:'grid\|focus', goalsStyle:'cards\|rings', primaryCurrency, iqdRate }` |
+
+All Pocket CSS is prefixed `pk-`/`pocket-` in App.css and uses ONLY theme tokens (works in all 5 themes); category colors are fixed hex (identity colors, like tag palette). `suggestedMonthly = ceil((target−saved)/monthsLeft)`, monthsLeft clamped ≥1.
+
 ## AI Copilot (Claude via Supabase)
 
 The AI copilot lives OUTSIDE the app: Claude (Cowork/Claude Code with the Supabase MCP, or claude.ai with the official Supabase connector) reads/writes `user_data` rows directly; the app's realtime sync makes changes appear on all devices in seconds. Zero app code, zero API cost (covered by the user's Claude Max plan).

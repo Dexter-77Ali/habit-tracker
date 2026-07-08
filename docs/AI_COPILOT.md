@@ -112,6 +112,37 @@ WHERE user_id = '1a5338c9-8328-463a-afb8-06d2a06f7b79'
 - **Level**: from `allTimeXP` — 0 Noob, 100 Script Kiddie, 500 Hacker, 1.5k Cracker, 4k Phreaker, 10k Cyber Punk, 25k Netrunner, 45k White Hat, 70k Black Hat, 100k Ghost, 150k Zero Day, 220k Botmaster, 300k Cryptkeeper, 400k Shadowbroker, 550k Digital Wraith, 750k Daemon Lord, 1M Kernel Panic, 1.5M Root.
 - Coach in the app's hacker voice: short, direct, numbers first ("Streak 4 — Friday is your weak day, 33% completion. Freeze it or schedule light.").
 
+## Pocket Tracker keys (finance — same rules apply)
+
+| key | type | item shape |
+|---|---|---|
+| `ht_pocket_expenses` | array | `{id, amount(IQD int), currency:'IQD', categoryId, note, date:'YYYY-MM-DD', paymentMethod:'Cash'\|'Card'\|'Transfer'}` |
+| `ht_pocket_income` | object | `{amount, currency, source, recurring, resetDay, overrides:{'YYYY-MM':amt}}` |
+| `ht_pocket_goals` | array | `{id, name, icon, target, saved, deadline:'YYYY-MM'}` |
+| `ht_pocket_categories` | array | `{id, label, icon, color}` — categoryId must be one of these ids |
+
+### Recipe: log an expense
+```sql
+UPDATE user_data
+SET value = value || jsonb_build_array(jsonb_build_object(
+      'id', gen_random_uuid(), 'amount', 15000, 'currency', 'IQD',
+      'categoryId', 'coffee', 'note', 'Latte', 'date', '<TODAY>', 'paymentMethod', 'Cash')),
+    updated_at = now()
+WHERE user_id = '1a5338c9-8328-463a-afb8-06d2a06f7b79' AND key = 'ht_pocket_expenses';
+```
+Valid category ids: food, grocery, clothing, travel, rent, loan, education, medical, entertainment, ai, business, transport, family, gift, coffee, subscriptions, utilities, fuel, health, insurance, savings, pets, charity, other (check `ht_pocket_categories` for user additions). Do NOT touch XP/profile for expenses — Pocket is not gamified.
+
+### Recipe: add funds to a saving goal
+```sql
+UPDATE user_data SET value = (
+  SELECT jsonb_agg(CASE WHEN g->>'name' ILIKE '%GOAL NAME%'
+    THEN g || jsonb_build_object('saved', LEAST((g->>'target')::bigint, (g->>'saved')::bigint + <amount>))
+    ELSE g END)
+  FROM jsonb_array_elements(value) g
+), updated_at = now()
+WHERE user_id = '1a5338c9-8328-463a-afb8-06d2a06f7b79' AND key = 'ht_pocket_goals';
+```
+
 ## Known constraint
 
 Sync is last-write-wins **per key**. If the user's device is offline holding unsent changes to the same key, whichever writes last wins. Rare for a single user; if the user reports a lost item, just re-add it.
