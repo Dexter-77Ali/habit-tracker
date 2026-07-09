@@ -13,6 +13,9 @@ export default function Sidebar({ currentPage, onNavigate, onAddHabit, onAddTask
   }, [])
 
   if (isMobile) {
+    // Inside Pocket Tracker, its own bottom tab bar owns the bottom edge —
+    // rendering both bars stacks them and breaks the layout.
+    if (currentPage === 'pocket') return null
     return (
       <nav className="bottom-nav">
         <button
@@ -54,6 +57,13 @@ export default function Sidebar({ currentPage, onNavigate, onAddHabit, onAddTask
         >
           <AnalyticsIcon />
           <span className="bottom-nav-label">Stats</span>
+        </button>
+        <button
+          className={`bottom-nav-btn ${currentPage === 'pocket' ? 'bottom-nav-btn--active' : ''}`}
+          onClick={() => onNavigate('pocket')}
+        >
+          <WalletIcon />
+          <span className="bottom-nav-label">Pocket</span>
         </button>
         <button className="bottom-nav-btn" onClick={onOpenSettings}>
           <SettingsIcon />

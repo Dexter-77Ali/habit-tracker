@@ -783,7 +783,7 @@ The app runs fully offline with localStorage + IndexedDB. When `VITE_SUPABASE_UR
 
 ## Pocket Tracker (financial section)
 
-Self-contained income/expense tracker at `currentPage === 'pocket'` (Sidebar "Pocket" entry on desktop; Header settings dropdown "👛 Pocket Tracker" on mobile). **Fully isolated from gamification** — no XP/level/streak/badge writes, `ht_pocket_goals` is separate from `ht_goals`. Internal tab bar (Overview · Calendar · Stats · Goals · Settings) becomes a fixed bottom bar ≤768px.
+Self-contained income/expense tracker at `currentPage === 'pocket'` (Sidebar "Pocket" entry on desktop; dedicated "Pocket" button in the mobile bottom nav). **Fully isolated from gamification** — no XP/level/streak/badge writes, `ht_pocket_goals` is separate from `ht_goals`. Internal tab bar (Overview · Calendar · Stats · Goals · Settings) becomes a fixed bottom bar ≤768px that REPLACES the app bottom nav (Sidebar returns null when `currentPage === 'pocket'` on mobile — rendering both stacks two fixed bars); a mobile-only "‹ Exit" tab (`.pocket-tab--exit`, display:none on desktop) returns to the dashboard.
 
 ### Files
 - `src/utils/pocketUtils.js` — pure selectors (budget/spent/remaining/breakdown/weeklyBuckets/monthlyTotals/daySpend/suggestedMonthly), currency (`money()` returns {primary, secondary}; canonical amounts are ALWAYS IQD, USD is display-only via `ui.iqdRate`), payday-period math (`periodBounds`), seeds (24 categories, 3 goals, sample expenses).

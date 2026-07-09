@@ -722,7 +722,6 @@ export default function App() {
           onSetSettingsOpen={setSettingsOpen}
           reminderTime={settings.reminderTime ?? null}
           onSetReminderTime={(t) => setSettings((s) => ({ ...s, reminderTime: t }))}
-          onNavigate={setCurrentPage}
         />
 
         {currentPage === 'dashboard' && (

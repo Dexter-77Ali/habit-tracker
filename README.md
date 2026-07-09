@@ -24,6 +24,7 @@ Download the APK from [**Releases**](https://github.com/Dexter-77Ali/habit-track
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| v0.3.1 | 2026-07-09 | Mobile nav fix: dedicated Pocket button in the bottom bar, Pocket's tab bar now cleanly replaces the app nav (no more overlapping bars), Exit tab |
 | v0.3.0 | 2026-07-08 | 💰 Pocket Tracker: full income/expense tracker — budget ring/ledger/cards dashboards, spend calendar, stats, saving goals, dual IQD/USD currency, payday auto-reset |
 | v0.2.2 | 2026-07-08 | Security hardening (CSP headers, backup lock-down, beacon block, crash recovery) + XP-integrity fixes from a deep code review |
 | v0.2.1 | 2026-07-08 | Phone-fit UI scaling (Pixel-sized screens), fixed level-up banner showing on every reload |

@@ -13,7 +13,7 @@ const THEMES = [
   { id: 'arctic', label: 'Arctic', color: '#0066ff' },
 ]
 
-export default function Header({ streak, dayComplete, allTimeXP, onExport, onImport, theme, onSetTheme, shortcutsOpen, onToggleShortcuts, user, onSignOut, settingsOpen, onSetSettingsOpen, reminderTime, onSetReminderTime, onNavigate }) {
+export default function Header({ streak, dayComplete, allTimeXP, onExport, onImport, theme, onSetTheme, shortcutsOpen, onToggleShortcuts, user, onSignOut, settingsOpen, onSetSettingsOpen, reminderTime, onSetReminderTime }) {
   const level = getLevel(allTimeXP)
   const setSettingsOpen = onSetSettingsOpen // lifted to App so the mobile "More" nav button can open it
   const settingsRef = useRef(null)
@@ -59,11 +59,6 @@ export default function Header({ streak, dayComplete, allTimeXP, onExport, onImp
           </button>
           {settingsOpen && (
             <div className="settings-dropdown">
-              {onNavigate && (
-                <button className="settings-item" onClick={() => { onNavigate('pocket'); setSettingsOpen(false) }}>
-                  👛 Pocket Tracker
-                </button>
-              )}
               <button className="settings-item" onClick={() => { onToggleShortcuts(); setSettingsOpen(false) }}>
                 ⌨️ Keyboard shortcuts
               </button>

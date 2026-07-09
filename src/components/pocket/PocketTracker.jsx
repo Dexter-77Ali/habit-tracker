@@ -95,6 +95,10 @@ export default function PocketTracker({ onExit }) {
           </button>
         </div>
         <nav className="pocket-tabs" role="tablist">
+          <button className="pocket-tab pocket-tab--exit" onClick={onExit} title="Back to Life Tracker">
+            <span className="pocket-tab-icon">‹</span>
+            <span className="pocket-tab-label">Exit</span>
+          </button>
           {TABS.map((t) => (
             <button
               key={t.id}

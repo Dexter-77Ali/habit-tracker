@@ -3142,6 +3142,7 @@
 .pocket-tab { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); background: transparent; border: 1px solid transparent; border-radius: var(--radius-lg); color: var(--text-muted); font-family: inherit; font-size: var(--text-sm); font-weight: 600; cursor: pointer; transition: all var(--transition); }
 .pocket-tab:hover { color: var(--text); background: var(--surface); }
 .pocket-tab--active { background: var(--gradient-primary); color: #fff; }
+.pocket-tab--exit { display: none; } /* desktop: breadcrumb + sidebar handle exit */
 .pk-tab-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-3); }
 .pk-actions { display: flex; gap: var(--space-2); }
 .pk-monthnav { display: flex; align-items: center; gap: var(--space-2); }
@@ -3317,7 +3318,8 @@
   .pk-breakdown--2col { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-  .pocket-tabs { position: fixed; bottom: 0; left: 0; right: 0; z-index: 85; background: var(--surface); border-top: 1px solid var(--border); padding: var(--space-2) var(--space-1) calc(var(--space-2) + env(safe-area-inset-bottom)); justify-content: space-around; gap: 0; }
+  .pocket-tabs { position: fixed; bottom: 0; left: 0; right: 0; z-index: 90; background: var(--surface); border-top: 1px solid var(--border); padding: var(--space-2) var(--space-1) calc(var(--space-2) + env(safe-area-inset-bottom)); justify-content: space-around; gap: 0; }
+  .pocket-tab--exit { display: flex; } /* mobile: visible exit since the app bottom-nav hides inside Pocket */
   .pocket-tab { flex-direction: column; gap: 2px; padding: 4px 6px; border-radius: var(--radius); }
   .pocket-tab-label { font-size: 0.6rem; }
   .pocket { padding-bottom: 70px; }
