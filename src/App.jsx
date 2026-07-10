@@ -713,6 +713,7 @@ export default function App() {
       />
 
       <div className="app-main">
+        {currentPage !== 'pocket' && (
         <Header
           streak={streak}
           dayComplete={dayComplete}
@@ -732,6 +733,7 @@ export default function App() {
           reminderTime={settings.reminderTime ?? null}
           onSetReminderTime={(t) => setSettings((s) => ({ ...s, reminderTime: t }))}
         />
+        )}
 
         {currentPage === 'dashboard' && (
           <>
