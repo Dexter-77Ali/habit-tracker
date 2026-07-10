@@ -24,6 +24,7 @@ Download the APK from [**Releases**](https://github.com/Dexter-77Ali/habit-track
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| v0.4.2 | 2026-07-11 | 🐛 Pocket Tracker polish: single header inside Pocket (no more app-in-app nesting), compact empty-Stats state, and fixed the pinched card spacing in the focus Stats layout |
 | v0.4.1 | 2026-07-10 | 🐛 Skin fixes: opaque Notes modal (Aurora), kebab menu no longer clipped inside groups, daily-challenge XP-pill spacing, empty-trend "No data yet" state — plus a new Settings → "Check for update" (Android) |
 | v0.4.0 | 2026-07-10 | 🎨 5 premium whole-app skins — Meridian, Terra, Bolt, Aurora, Halo — restyling every screen; switch in Settings → App style (Classic + 5 themes still intact) |
 | v0.3.1 | 2026-07-09 | Mobile nav fix: dedicated Pocket button in the bottom bar, Pocket's tab bar now cleanly replaces the app nav (no more overlapping bars), Exit tab |
