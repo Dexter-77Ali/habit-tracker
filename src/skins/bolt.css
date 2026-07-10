@@ -1,1 +1,241 @@
-/* ═══ bolt skin — all rules scoped under html[data-skin="bolt"] ═══ */
+/* ═══════════════════════════════════════════════════════════════
+   BOLT — neo-brutalist paper: ink outlines, hard offset shadows, flat fills
+   Spec: docs/redesign/tokens/bolt.md
+   References: public/showcase-habit-bolt.html · showcase-bolt.html
+   Three rules: 2.5px ink borders · hard shadow (no blur) · radius 0, no gradients.
+   All rules scoped html[data-skin="bolt"]. No !important.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Layer 1 · token override ─────────────────────────────── */
+html[data-skin="bolt"] {
+  --bg: #d9d2c2;
+  --surface: #fbf9f3;
+  --surface-2: #ece7da;
+  --border: #181410;
+  --text: #181410;
+  --text-muted: #5c554a;
+  --primary: #2f4bff;
+  --primary-light: #2f4bff;
+  --accent: #c6f24e;
+  --success: #82c91e;
+  --success-bg: #eefac4;
+  --gold: #ffb43a;
+  --orange: #ff5a3c;
+  --danger: #e03131;
+  --danger-light: #ff5a3c;
+  --cyan: #22b8cf;
+  --gradient-primary: #2f4bff;         /* flat — Bolt bans gradients */
+  --gradient-primary-hover: #1a34d6;
+  --gradient-success: #c6f24e;
+  --shadow-glow: 4px 4px 0 #181410;
+  --glow: 6px 6px 0 #181410;
+  --glow-border: #181410;
+  --shadow-xs: 2px 2px 0 #181410;
+  --shadow-sm: 3px 3px 0 #181410;
+  --shadow: 6px 6px 0 #181410;
+  --shadow-lg: 10px 10px 0 #181410;
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius: 0;
+  --radius-lg: 0;
+  --radius-full: 0;
+  --font-display: 'Archivo', sans-serif;
+}
+
+html[data-skin="bolt"] body { font-family: 'Archivo', system-ui, sans-serif; background: #d9d2c2; }
+html[data-skin="bolt"] :focus-visible { outline: 3px solid #2f4bff; outline-offset: 2px; }
+
+/* ── surfaces: flat cards, ink border, hard shadow, zero radius ─ */
+html[data-skin="bolt"] .card,
+html[data-skin="bolt"] .pk-card,
+html[data-skin="bolt"] .skin-hero,
+html[data-skin="bolt"] .goal-card,
+html[data-skin="bolt"] .modal,
+html[data-skin="bolt"] .settings-dropdown,
+html[data-skin="bolt"] .kebab-dropdown,
+html[data-skin="bolt"] .shortcuts-panel,
+html[data-skin="bolt"] .auth-card,
+html[data-skin="bolt"] .date-nav,
+html[data-skin="bolt"] .badge-shelf-toggle {
+  background: #fbf9f3;
+  border: 2.5px solid #181410;
+  box-shadow: 6px 6px 0 #181410;
+  border-radius: 0;
+}
+html[data-skin="bolt"] .modal-overlay .modal { box-shadow: 10px 10px 0 #181410; }
+
+/* headings/labels: Archivo heavy uppercase; numbers: Space Mono */
+html[data-skin="bolt"] .card-header h3,
+html[data-skin="bolt"] .badge-shelf-title,
+html[data-skin="bolt"] .pk-section-title,
+html[data-skin="bolt"] .app-title,
+html[data-skin="bolt"] .pocket-wordmark,
+html[data-skin="bolt"] .skin-hero-label,
+html[data-skin="bolt"] .auth-title {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #181410;
+}
+html[data-skin="bolt"] .habit-xp,
+html[data-skin="bolt"] .task-xp,
+html[data-skin="bolt"] .habit-streak,
+html[data-skin="bolt"] .streak-count,
+html[data-skin="bolt"] .pk-money-primary,
+html[data-skin="bolt"] .pk-money-secondary,
+html[data-skin="bolt"] .pk-kpi-value,
+html[data-skin="bolt"] .pk-ledger-amt,
+html[data-skin="bolt"] .pk-recent-amt,
+html[data-skin="bolt"] .pk-table-amt,
+html[data-skin="bolt"] .skin-hero-count,
+html[data-skin="bolt"] .skin-hero-total,
+html[data-skin="bolt"] .skin-hero-streakn,
+html[data-skin="bolt"] .pk-hero-figure--ribbon {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  letter-spacing: -.5px;
+}
+
+/* ── habit & task rows ────────────────────────────────────── */
+html[data-skin="bolt"] .habit-item { border-bottom: 2px solid #e6ded0; }
+html[data-skin="bolt"] .habit-checkbox {
+  width: 26px; height: 26px;
+  border-radius: 0;
+  background: #fbf9f3;
+  border: 2.5px solid #181410;
+  box-shadow: 2px 2px 0 #181410;
+}
+html[data-skin="bolt"] .habit-checkbox--checked { background: #2f4bff; color: #fff; }
+html[data-skin="bolt"] .habit-icon {
+  background: #ece7da;
+  border: 2px solid #181410;
+  border-radius: 0;
+  width: 34px; height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 3px;
+}
+html[data-skin="bolt"] .history-dot { width: 8px; height: 8px; border-radius: 0; border: 1.5px solid #181410; }
+html[data-skin="bolt"] .history-dot--done { background: #2f4bff; }
+html[data-skin="bolt"] .history-dot--missed { background: #ece7da; }
+html[data-skin="bolt"] .history-dot--na { background: transparent; border-color: #b8b0a0; }
+html[data-skin="bolt"] .habit-streak { color: #181410; }
+
+/* priority chips: color block + ink border, uppercase */
+html[data-skin="bolt"] .task-priority {
+  border-radius: 0;
+  border: 2px solid #181410;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+html[data-skin="bolt"] .task-priority--high { background: #ff5a3c; color: #fff; }
+html[data-skin="bolt"] .task-priority--medium { background: #ffb43a; color: #181410; }
+html[data-skin="bolt"] .task-priority--low { background: #c6f24e; color: #3d4a12; }
+
+/* ── buttons ──────────────────────────────────────────────── */
+html[data-skin="bolt"] .btn-primary {
+  background: #2f4bff;
+  color: #fff;
+  border: 2.5px solid #181410;
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #181410;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+html[data-skin="bolt"] .btn-primary:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #181410; }
+html[data-skin="bolt"] .btn-ghost {
+  background: #fbf9f3;
+  border: 2.5px solid #181410;
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #181410;
+  color: #181410;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* progress: flat blue in ink-bordered track */
+html[data-skin="bolt"] .progress-track,
+html[data-skin="bolt"] .pk-progress,
+html[data-skin="bolt"] .skin-hero-track {
+  background: #ece7da;
+  border: 2px solid #181410;
+  border-radius: 0;
+  overflow: hidden;
+  height: 14px;
+}
+html[data-skin="bolt"] .progress-fill,
+html[data-skin="bolt"] .pk-progress-fill,
+html[data-skin="bolt"] .goal-card-progress-fill,
+html[data-skin="bolt"] .skin-hero-fill { background: #2f4bff; box-shadow: none; border-radius: 0; }
+
+/* ── header & nav ─────────────────────────────────────────── */
+html[data-skin="bolt"] .app-title { letter-spacing: -1px; color: #181410; }
+html[data-skin="bolt"] .streak-badge { background: #c6f24e; border: 2.5px solid #181410; border-radius: 0; box-shadow: 2px 2px 0 #181410; }
+html[data-skin="bolt"] .streak-count { color: #3d4a12; }
+html[data-skin="bolt"] .level-badge-header { background: #fbf9f3; border: 2.5px solid #181410; border-radius: 0; }
+
+html[data-skin="bolt"] .sidebar { background: #ece7da; border-right: 2.5px solid #181410; }
+html[data-skin="bolt"] .sidebar-logo { background: #2f4bff; color: #fff; border: 2.5px solid #181410; border-radius: 0; box-shadow: 3px 3px 0 #181410; font-family: 'Archivo', sans-serif; }
+html[data-skin="bolt"] .sidebar-btn { border-radius: 0; color: #5c554a; }
+html[data-skin="bolt"] .sidebar-btn--active { background: #181410; color: #fbf9f3; border: 2.5px solid #181410; }
+html[data-skin="bolt"] .bottom-nav,
+html[data-skin="bolt"] .pocket-tabs { background: #ece7da; border-top: 2.5px solid #181410; }
+html[data-skin="bolt"] .bottom-nav-btn { color: #5c554a; }
+html[data-skin="bolt"] .bottom-nav-btn--active { color: #2f4bff; font-weight: 800; }
+html[data-skin="bolt"] .bottom-nav-fab { background: #2f4bff; border: 2.5px solid #181410; border-radius: 0; box-shadow: 4px 4px 0 #181410; color: #fff; }
+
+/* ── badges, challenges, rewards ──────────────────────────── */
+html[data-skin="bolt"] .badge-shelf-count { color: #2f4bff; font-family: 'Space Mono', monospace; }
+html[data-skin="bolt"] .badge-family { background: #ece7da; border: 2px solid #181410; border-radius: 0; }
+html[data-skin="bolt"] .challenge-item,
+html[data-skin="bolt"] .reward-item { border-radius: 0; background: #ece7da; border: 2.5px solid #181410; box-shadow: 3px 3px 0 #181410; }
+html[data-skin="bolt"] .freeze-btn { border: 2px solid #181410; border-radius: 0; }
+html[data-skin="bolt"] .freeze-btn--active { background: #2f4bff; color: #fff; }
+
+/* ── forms & modals ───────────────────────────────────────── */
+html[data-skin="bolt"] .form-input {
+  background: #fbf9f3;
+  border: 2.5px solid #181410;
+  border-radius: 0;
+  color: #181410;
+}
+html[data-skin="bolt"] .form-input:focus { box-shadow: 2px 2px 0 #2f4bff; }
+html[data-skin="bolt"] .emoji-btn,
+html[data-skin="bolt"] .pk-cat-chip { background: #fbf9f3; border: 2px solid #181410; border-radius: 0; }
+html[data-skin="bolt"] .emoji-btn--selected,
+html[data-skin="bolt"] .pk-cat-chip--active { background: #2f4bff; color: #fff; box-shadow: 2px 2px 0 #181410; }
+
+/* ── pocket ───────────────────────────────────────────────── */
+html[data-skin="bolt"] .pocket-wordmark { color: #181410; letter-spacing: -.5px; }
+html[data-skin="bolt"] .pocket-tab { border-radius: 0; color: #5c554a; font-family: 'Archivo', sans-serif; font-weight: 700; text-transform: uppercase; }
+html[data-skin="bolt"] .pocket-tab--active { background: #181410; color: #fbf9f3; box-shadow: none; }
+/* expense amounts ink, not red */
+html[data-skin="bolt"] .pk-ledger-amt,
+html[data-skin="bolt"] .pk-recent-amt,
+html[data-skin="bolt"] .pk-table-amt,
+html[data-skin="bolt"] .pk-ledger-daytotal { color: #181410; }
+html[data-skin="bolt"] .pk-delta--up { color: #e03131; }
+html[data-skin="bolt"] .pk-delta--down { color: #3d4a12; }
+html[data-skin="bolt"] .pk-cal-cell { border: 2px solid #181410; border-radius: 0; }
+html[data-skin="bolt"] .pk-cal-cell--sel { background: #2f4bff; color: #fff; box-shadow: 3px 3px 0 #181410; }
+html[data-skin="bolt"] .pk-seg-toggle { border: 2.5px solid #181410; border-radius: 0; }
+html[data-skin="bolt"] .pk-seg-btn { border-radius: 0; }
+html[data-skin="bolt"] .pk-seg-btn--active { background: #181410; color: #fbf9f3; }
+html[data-skin="bolt"] .pk-bar-fill { border: 2px solid #181410; border-radius: 0; background: #2f4bff; }
+html[data-skin="bolt"] .pk-goal-suggest strong { color: #3d4a12; }
+html[data-skin="bolt"] .pk-kpi-value { color: #181410; }
+
+/* ── misc ─────────────────────────────────────────────────── */
+html[data-skin="bolt"] .save-indicator { background: #c6f24e; border: 2px solid #181410; border-radius: 0; color: #3d4a12; }
+html[data-skin="bolt"] .celebration-toast,
+html[data-skin="bolt"] .celebration-banner { background: #fbf9f3; border: 3px solid #181410; border-radius: 0; box-shadow: 8px 8px 0 #181410; color: #181410; }
+html[data-skin="bolt"] .auth-page { background: #d9d2c2; }
+html[data-skin="bolt"] .auth-submit { background: #2f4bff; color: #fff; border: 2.5px solid #181410; border-radius: 0; box-shadow: 4px 4px 0 #181410; }
+
+/* Bolt uses bars not lines in Stats (brutalism favors chunky bars) — the app
+   already renders CSS-height bars; the ink border above handles the look. */
