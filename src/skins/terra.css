@@ -1,1 +1,216 @@
-/* ═══ terra skin — all rules scoped under html[data-skin="terra"] ═══ */
+/* ═══════════════════════════════════════════════════════════════
+   TERRA — warm bone/espresso editorial, terracotta + ochre + sage
+   Spec: docs/redesign/tokens/terra.md
+   References: public/showcase-habit-terra.html · showcase-terra.html
+   All rules scoped html[data-skin="terra"]. No !important.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Layer 1 · token override ─────────────────────────────── */
+html[data-skin="terra"] {
+  --bg: #ded3c1;
+  --surface: #fffdf8;
+  --surface-2: #efe7d8;
+  --border: #e6dcc9;
+  --text: #2c2620;
+  --text-muted: #8a7f6f;
+  --primary: #c65f3c;
+  --primary-light: #d97a56;
+  --accent: #d9a441;
+  --success: #7a8b6f;
+  --success-bg: rgba(122, 139, 111, .14);
+  --gold: #d9a441;
+  --orange: #b07a4f;
+  --danger: #a94b2d;
+  --danger-light: #c65f3c;
+  --cyan: #7a8b6f;
+  --gradient-primary: linear-gradient(135deg, #c65f3c, #a94b2d);
+  --gradient-primary-hover: linear-gradient(135deg, #d97a56, #c65f3c);
+  --gradient-success: linear-gradient(90deg, #7a8b6f, #8a9b7a);
+  --shadow-glow: 0 10px 24px rgba(166, 75, 45, .3);
+  --glow: 0 12px 30px rgba(120, 90, 60, .08);
+  --glow-border: #e6dcc9;
+  --shadow-xs: 0 1px 2px rgba(120, 90, 60, .06);
+  --shadow-sm: 0 4px 12px rgba(120, 90, 60, .07);
+  --shadow: 0 12px 30px rgba(120, 90, 60, .08);
+  --shadow-lg: 0 20px 50px rgba(120, 90, 60, .12);
+  --radius-xs: 8px;
+  --radius-sm: 11px;
+  --radius: 11px;
+  --radius-lg: 22px;
+  --font-display: 'Newsreader', serif;
+}
+
+html[data-skin="terra"] body {
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  background: #ded3c1;
+}
+html[data-skin="terra"] :focus-visible { outline: 2px solid #c65f3c; outline-offset: 3px; }
+
+/* ── surfaces ─────────────────────────────────────────────── */
+html[data-skin="terra"] .card,
+html[data-skin="terra"] .pk-card,
+html[data-skin="terra"] .goal-card,
+html[data-skin="terra"] .settings-dropdown,
+html[data-skin="terra"] .kebab-dropdown,
+html[data-skin="terra"] .shortcuts-panel,
+html[data-skin="terra"] .modal,
+html[data-skin="terra"] .auth-card {
+  background: #fffdf8;
+  border: 1px solid #e6dcc9;
+  box-shadow: 0 12px 30px rgba(120, 90, 60, .08);
+  border-radius: 22px;
+}
+html[data-skin="terra"] .skin-hero {
+  background: linear-gradient(160deg, #fffdf8, #f6efe1);
+  border: 1px solid #e6dcc9;
+  box-shadow: inset 0 2px 0 #fffefb, 0 12px 30px rgba(120, 90, 60, .08);
+}
+/* faint terracotta bloom behind the hero figure */
+html[data-skin="terra"] .skin-hero::after {
+  content: '';
+  position: absolute;
+  top: -60px; right: 8%;
+  width: 340px; height: 240px;
+  background: radial-gradient(closest-side, rgba(198, 95, 60, .12), transparent);
+  pointer-events: none;
+}
+
+/* editorial serif labels + numerals */
+html[data-skin="terra"] .card-header h3,
+html[data-skin="terra"] .badge-shelf-title,
+html[data-skin="terra"] .pk-section-title {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #6f6558;
+  font-weight: 500;
+}
+html[data-skin="terra"] .skin-hero-label { font-family: 'Hanken Grotesk', sans-serif; letter-spacing: 1.5px; color: #a59a89; opacity: 1; font-size: 11px; }
+html[data-skin="terra"] .habit-xp,
+html[data-skin="terra"] .task-xp,
+html[data-skin="terra"] .habit-streak,
+html[data-skin="terra"] .pk-money-primary,
+html[data-skin="terra"] .pk-kpi-value,
+html[data-skin="terra"] .streak-count { font-family: 'Newsreader', serif; font-weight: 500; }
+
+/* ── habit & task rows ────────────────────────────────────── */
+html[data-skin="terra"] .habit-item { border-bottom: 1px solid #efe7d8; }
+html[data-skin="terra"] .habit-checkbox {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: #f6efe1;
+  border: 1.5px solid #d8cbb4;
+}
+html[data-skin="terra"] .habit-checkbox--checked {
+  background: #c65f3c;
+  border-color: #a94b2d;
+  color: #fdf6ec;
+  box-shadow: 0 4px 12px rgba(166, 75, 45, .3);
+}
+html[data-skin="terra"] .habit-icon {
+  background: #f6efe1;
+  border: 1px solid #e6dcc9;
+  border-radius: 12px;
+  width: 34px; height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px;
+}
+html[data-skin="terra"] .history-dot { width: 7px; height: 7px; }
+html[data-skin="terra"] .history-dot--done { background: #c65f3c; }
+html[data-skin="terra"] .history-dot--missed { background: #e0d5c2; }
+html[data-skin="terra"] .history-dot--na { background: #ece3d2; }
+html[data-skin="terra"] .habit-streak { color: #b07a4f; }
+html[data-skin="terra"] .habit-item--checked .habit-xp { color: #5e6f52; }
+
+html[data-skin="terra"] .task-priority { border-radius: 20px; letter-spacing: .5px; }
+html[data-skin="terra"] .task-priority--high { color: #a94b2d; background: rgba(198, 95, 60, .12); border: 1px solid rgba(198, 95, 60, .3); }
+html[data-skin="terra"] .task-priority--medium { color: #9a7a2e; background: rgba(217, 164, 65, .14); border: 1px solid rgba(217, 164, 65, .35); }
+html[data-skin="terra"] .task-priority--low { color: #5e6f52; background: rgba(122, 139, 111, .14); border: 1px solid rgba(122, 139, 111, .3); }
+
+/* ── buttons & progress ───────────────────────────────────── */
+html[data-skin="terra"] .btn-primary {
+  background: linear-gradient(135deg, #c65f3c, #a94b2d);
+  color: #fdf6ec;
+  border-radius: 11px;
+  box-shadow: 0 10px 24px rgba(166, 75, 45, .3);
+  border: none;
+}
+html[data-skin="terra"] .btn-ghost { border: 1px solid #d8cbb4; border-radius: 11px; color: #6f6558; }
+html[data-skin="terra"] .progress-fill,
+html[data-skin="terra"] .pk-progress-fill,
+html[data-skin="terra"] .goal-card-progress-fill { background: linear-gradient(90deg, #c65f3c, #d9a441); box-shadow: none; }
+html[data-skin="terra"] .progress-track,
+html[data-skin="terra"] .pk-progress { background: #ece1cd; }
+html[data-skin="terra"] .skin-hero-track { background: #ece1cd; }
+
+/* ── header & nav ─────────────────────────────────────────── */
+html[data-skin="terra"] .app-title { font-family: 'Newsreader', serif; font-weight: 600; text-transform: none; letter-spacing: 0; color: #2c2620; }
+html[data-skin="terra"] .streak-badge { background: rgba(217, 164, 65, .14); border: 1px solid rgba(217, 164, 65, .4); border-radius: 20px; }
+html[data-skin="terra"] .streak-count { color: #b07a4f; }
+html[data-skin="terra"] .level-badge-header { background: #f6efe1; border: 1px solid #e6dcc9; border-radius: 20px; }
+html[data-skin="terra"] .skin-hero-streak { background: rgba(217, 164, 65, .1); border-color: rgba(217, 164, 65, .35); }
+html[data-skin="terra"] .skin-hero-streakn { color: #b07a4f; }
+
+html[data-skin="terra"] .sidebar { background: #efe7d8; border-right: 1px solid #ddd0bb; }
+html[data-skin="terra"] .sidebar-logo {
+  background: linear-gradient(135deg, #c65f3c, #a94b2d);
+  color: #fdf6ec;
+  border-radius: 14px;
+  font-family: 'Newsreader', serif;
+}
+html[data-skin="terra"] .sidebar-btn { border-radius: 14px; color: #a59a89; }
+html[data-skin="terra"] .sidebar-btn--active { background: #fffdf8; border: 1px solid #e6dcc9; color: #c65f3c; box-shadow: 0 6px 16px rgba(120, 90, 60, .1); }
+html[data-skin="terra"] .bottom-nav,
+html[data-skin="terra"] .pocket-tabs { background: #efe7d8; border-top: 1px solid #ddd0bb; }
+html[data-skin="terra"] .bottom-nav-btn { color: #a59a89; }
+html[data-skin="terra"] .bottom-nav-btn--active { color: #c65f3c; }
+html[data-skin="terra"] .bottom-nav-fab { background: linear-gradient(135deg, #c65f3c, #a94b2d); box-shadow: 0 10px 24px rgba(166, 75, 45, .35); }
+
+/* ── badges, date-nav, challenges, rewards ────────────────── */
+html[data-skin="terra"] .badge-shelf-toggle,
+html[data-skin="terra"] .date-nav { background: #fffdf8; border: 1px solid #e6dcc9; border-radius: 16px; box-shadow: 0 6px 16px rgba(120, 90, 60, .06); }
+html[data-skin="terra"] .badge-shelf-count { color: #b07a4f; }
+html[data-skin="terra"] .badge-family { background: #faf5ea; border-color: #e6dcc9; border-radius: 14px; }
+html[data-skin="terra"] .challenge-item,
+html[data-skin="terra"] .reward-item { border-radius: 16px; background: rgba(217, 164, 65, .1); border: 1px solid rgba(217, 164, 65, .3); }
+html[data-skin="terra"] .freeze-btn:hover:not(:disabled),
+html[data-skin="terra"] .freeze-btn--active { border-color: #7a8b6f; color: #5e6f52; }
+
+/* ── forms & modals ───────────────────────────────────────── */
+html[data-skin="terra"] .form-input {
+  background: #faf5ea;
+  border: 1px solid #ddd0bb;
+  border-radius: 12px;
+  color: #2c2620;
+}
+html[data-skin="terra"] .form-input:focus { border-color: #c65f3c; }
+html[data-skin="terra"] .emoji-btn,
+html[data-skin="terra"] .pk-cat-chip { background: #faf5ea; border: 1px solid #e6dcc9; border-radius: 12px; }
+html[data-skin="terra"] .emoji-btn--selected,
+html[data-skin="terra"] .pk-cat-chip--active { border-color: #c65f3c; box-shadow: 0 0 0 2px rgba(198, 95, 60, .2); }
+
+/* ── pocket ───────────────────────────────────────────────── */
+html[data-skin="terra"] .pocket-wordmark { font-family: 'Newsreader', serif; font-weight: 600; letter-spacing: 0; color: #2c2620; }
+html[data-skin="terra"] .pocket-tab { border-radius: 20px; color: #8a7f6f; }
+html[data-skin="terra"] .pocket-tab--active { background: linear-gradient(135deg, #c65f3c, #a94b2d); color: #fdf6ec; box-shadow: 0 8px 18px rgba(166, 75, 45, .25); }
+/* restraint: amounts in espresso, not red */
+html[data-skin="terra"] .pk-ledger-amt,
+html[data-skin="terra"] .pk-recent-amt,
+html[data-skin="terra"] .pk-table-amt,
+html[data-skin="terra"] .pk-ledger-daytotal { color: #2c2620; }
+html[data-skin="terra"] .pk-delta--up { color: #a94b2d; }
+html[data-skin="terra"] .pk-delta--down { color: #5e6f52; }
+html[data-skin="terra"] .pk-cal-cell { border-radius: 14px; border-color: #e6dcc9; }
+html[data-skin="terra"] .pk-cal-cell--sel { border-color: #c65f3c; box-shadow: 0 0 0 2px rgba(198, 95, 60, .25); }
+html[data-skin="terra"] .pk-seg-btn--active { background: linear-gradient(135deg, #c65f3c, #a94b2d); color: #fdf6ec; }
+html[data-skin="terra"] .pk-goal-suggest strong { color: #5e6f52; }
+
+/* ── misc ─────────────────────────────────────────────────── */
+html[data-skin="terra"] .save-indicator { background: rgba(122, 139, 111, .14); border: 1px solid rgba(122, 139, 111, .3); color: #5e6f52; border-radius: 20px; }
+html[data-skin="terra"] .celebration-toast,
+html[data-skin="terra"] .celebration-banner { background: #fffdf8; border: 1px solid #d9a441; border-radius: 18px; color: #2c2620; }
+html[data-skin="terra"] .auth-page { background: #ded3c1; }
+html[data-skin="terra"] .auth-title { font-family: 'Newsreader', serif; color: #2c2620; }
+html[data-skin="terra"] .auth-submit { background: linear-gradient(135deg, #c65f3c, #a94b2d); color: #fdf6ec; border-radius: 11px; }

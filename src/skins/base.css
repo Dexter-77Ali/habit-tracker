@@ -49,6 +49,12 @@
 .pk-ribbon--ink { border-radius: 0; border: 2.5px solid #181410; }
 .pk-ribbon--ink .pk-ribbon-seg { border-right: 2.5px solid #181410; }
 
+/* ribbon pocket hero (Terra/Bolt) */
+.pk-hero-ribbon { position: relative; overflow: hidden; }
+.pk-hero-figure--ribbon { font-family: var(--font-display); font-weight: 600; font-size: 42px; letter-spacing: -1px; line-height: .95; margin-top: 6px; }
+.pk-hero-ribbonline { font-size: 12px; opacity: .6; margin-top: 10px; }
+.pk-hero-ribbonline strong { font-family: var(--font-display); }
+
 @media (max-width: 900px) {
   .skin-hero { grid-template-columns: 1fr; gap: 18px; padding: 22px 20px; }
   .skin-hero-gauge { order: -1; }

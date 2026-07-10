@@ -8,9 +8,13 @@ import { dateFromKey } from '../../utils/dateUtils'
 import ExpenseHistory from './ExpenseHistory'
 import { useSkin } from '../../skins/useSkin'
 import MeridianOverview from './skins/MeridianOverview'
+import TerraOverview from './skins/TerraOverview'
+import BoltOverview from './skins/BoltOverview'
 
-// Premium skins bring their own Overview renderer; classic keeps ui.dashboardStyle.
-const SKIN_OVERVIEWS = { meridian: MeridianOverview }
+// Premium skins with a bespoke Overview structure; classic keeps ui.dashboardStyle.
+// Aurora/Halo intentionally reuse the classic layouts fully reskinned by their CSS
+// (their signatures are surface systems, not structural changes).
+const SKIN_OVERVIEWS = { meridian: MeridianOverview, terra: TerraOverview, bolt: BoltOverview }
 
 export default function PocketOverview(props) {
   const { income, expenses, categories, ui, activeMonth, setActiveMonth, showHistory, onCloseHistory } = props
