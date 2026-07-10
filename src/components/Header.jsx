@@ -13,7 +13,17 @@ const THEMES = [
   { id: 'arctic', label: 'Arctic', color: '#0066ff' },
 ]
 
-export default function Header({ streak, dayComplete, allTimeXP, onExport, onImport, theme, onSetTheme, shortcutsOpen, onToggleShortcuts, user, onSignOut, settingsOpen, onSetSettingsOpen, reminderTime, onSetReminderTime }) {
+// Whole-app skins (data-skin). Classic keeps the theme picker; premium skins own the full look.
+const SKINS = [
+  { id: 'classic',  label: 'Classic',  color: '#00ff41' },
+  { id: 'meridian', label: 'Meridian', color: '#10b981' },
+  { id: 'terra',    label: 'Terra',    color: '#c65f3c' },
+  { id: 'bolt',     label: 'Bolt',     color: '#2f4bff' },
+  { id: 'aurora',   label: 'Aurora',   color: '#a78bfa' },
+  { id: 'halo',     label: 'Halo',     color: '#6d5efc' },
+]
+
+export default function Header({ streak, dayComplete, allTimeXP, onExport, onImport, theme, onSetTheme, skin = 'classic', onSetSkin, shortcutsOpen, onToggleShortcuts, user, onSignOut, settingsOpen, onSetSettingsOpen, reminderTime, onSetReminderTime }) {
   const level = getLevel(allTimeXP)
   const setSettingsOpen = onSetSettingsOpen // lifted to App so the mobile "More" nav button can open it
   const settingsRef = useRef(null)
@@ -85,19 +95,39 @@ export default function Header({ streak, dayComplete, allTimeXP, onExport, onImp
                   </div>
                 </div>
               )}
-              <div className="theme-picker">
-                {THEMES.map((t) => (
-                  <button
-                    key={t.id}
-                    className="theme-pill"
-                    style={{ '--pill-color': t.color }}
-                    data-active={theme === t.id ? 'true' : 'false'}
-                    onClick={() => onSetTheme(t.id)}
-                  >
-                    {t.label}
-                  </button>
-                ))}
+              <div className="skin-picker">
+                <span className="skin-picker-label">App style</span>
+                <div className="theme-picker">
+                  {SKINS.map((s) => (
+                    <button
+                      key={s.id}
+                      className="theme-pill"
+                      style={{ '--pill-color': s.color }}
+                      data-active={skin === s.id ? 'true' : 'false'}
+                      onClick={() => onSetSkin?.(s.id)}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
               </div>
+              {skin === 'classic' ? (
+                <div className="theme-picker">
+                  {THEMES.map((t) => (
+                    <button
+                      key={t.id}
+                      className="theme-pill"
+                      style={{ '--pill-color': t.color }}
+                      data-active={theme === t.id ? 'true' : 'false'}
+                      onClick={() => onSetTheme(t.id)}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="skin-picker-hint">Themes apply to the Classic style.</p>
+              )}
               {user && onSignOut && (
                 <>
                   <div className="settings-divider" />

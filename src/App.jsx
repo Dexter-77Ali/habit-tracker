@@ -37,6 +37,7 @@ import AnalyticsPage from './components/AnalyticsPage'
 import DailyChallenges from './components/DailyChallenges'
 import PocketTracker from './components/pocket/PocketTracker'
 import './App.css'
+import './skins/index.css' // premium skins — must come AFTER App.css (specificity)
 
 import { getRandomIcon } from './utils/iconUtils'
 import { scheduleDailyReminder } from './utils/notificationUtils'
@@ -114,6 +115,11 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', settings.theme || 'matrix')
   }, [settings.theme])
+
+  useEffect(() => {
+    // whole-app skin dimension; 'classic' = today's look (themes apply only to classic)
+    document.documentElement.setAttribute('data-skin', settings.skin || 'classic')
+  }, [settings.skin])
 
   useEffect(() => {
     scheduleDailyReminder(settings.reminderTime ?? null) // native no-op on web
@@ -714,6 +720,8 @@ export default function App() {
           onImport={handleImport}
           theme={settings.theme || 'matrix'}
           onSetTheme={setTheme}
+          skin={settings.skin || 'classic'}
+          onSetSkin={(skin) => setSettings((s) => ({ ...s, skin }))}
           shortcutsOpen={shortcutsOpen}
           onToggleShortcuts={() => setShortcutsOpen((v) => !v)}
           user={user}

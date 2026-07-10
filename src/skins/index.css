@@ -1,0 +1,12 @@
+/* ═══════════════════════════════════════════════════════════════
+   PREMIUM SKIN SYSTEM — import chain
+   Imported from App.jsx AFTER App.css so equal-specificity rules win.
+   Every rule inside these files is scoped html[data-skin="<skin>"] —
+   classic (data-skin="classic") and the 5 themes are untouchable.
+   No !important anywhere. See docs/redesign/BUILD_PROMPT.md.
+═══════════════════════════════════════════════════════════════ */
+@import './meridian.css';
+@import './terra.css';
+@import './bolt.css';
+@import './aurora.css';
+@import './halo.css';

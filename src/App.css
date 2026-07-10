@@ -3324,3 +3324,18 @@
   .pocket-tab-label { font-size: 0.6rem; }
   .pocket { padding-bottom: 70px; }
 }
+
+/* App-style (skin) picker in settings dropdown */
+.skin-picker-label {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--space-2) var(--space-3) 0;
+}
+.skin-picker-hint {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  padding: 0 var(--space-3) var(--space-2);
+}
