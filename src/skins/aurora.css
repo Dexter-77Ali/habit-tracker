@@ -1,1 +1,214 @@
-/* ═══ aurora skin — all rules scoped under html[data-skin="aurora"] ═══ */
+/* ═══════════════════════════════════════════════════════════════
+   AURORA — dark aurora-glass, teal/violet/pink glows
+   Spec: docs/redesign/tokens/aurora.md
+   References: public/showcase-habit-aurora.html · showcase-aurora.html
+   All rules scoped html[data-skin="aurora"]. No !important.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Layer 1 · token override ─────────────────────────────── */
+html[data-skin="aurora"] {
+  --bg: #0a0a0e;
+  --surface: rgba(255, 255, 255, .05);
+  --surface-2: rgba(0, 0, 0, .25);
+  --border: rgba(255, 255, 255, .1);
+  --text: #f4f2ff;
+  --text-muted: rgba(255, 255, 255, .45);
+  --primary: #2dd4bf;
+  --primary-light: #5eead4;
+  --accent: #a78bfa;
+  --success: #2dd4bf;
+  --success-bg: rgba(45, 212, 191, .14);
+  --gold: #facc15;
+  --orange: #fb923c;
+  --danger: #f0abfc;
+  --danger-light: #f0abfc;
+  --cyan: #8be9ff;
+  --gradient-primary: linear-gradient(135deg, #2dd4bf, #6366f1);
+  --gradient-primary-hover: linear-gradient(135deg, #5eead4, #818cf8);
+  --gradient-success: linear-gradient(90deg, #2dd4bf, #a78bfa, #f0abfc);
+  --shadow-glow: 0 10px 30px rgba(99, 102, 241, .45);
+  --glow: 0 40px 120px rgba(0, 0, 0, .6);
+  --glow-border: rgba(255, 255, 255, .14);
+  --radius-xs: 8px;
+  --radius-sm: 11px;
+  --radius: 12px;
+  --radius-lg: 24px;
+  --font-display: 'Space Grotesk', sans-serif;
+}
+
+html[data-skin="aurora"] body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  color: #f4f2ff;
+  background:
+    radial-gradient(1200px 800px at 80% -10%, #1b1030, transparent 60%),
+    radial-gradient(1000px 700px at 0% 0%, #0a1a2a, transparent 55%),
+    #0a0a0e;
+  background-attachment: fixed;
+}
+html[data-skin="aurora"] :focus-visible { outline: 2px solid #8be9ff; outline-offset: 3px; }
+
+/* ── glass surfaces ───────────────────────────────────────── */
+html[data-skin="aurora"] .card,
+html[data-skin="aurora"] .pk-card,
+html[data-skin="aurora"] .goal-card,
+html[data-skin="aurora"] .modal,
+html[data-skin="aurora"] .settings-dropdown,
+html[data-skin="aurora"] .kebab-dropdown,
+html[data-skin="aurora"] .shortcuts-panel,
+html[data-skin="aurora"] .auth-card,
+html[data-skin="aurora"] .date-nav,
+html[data-skin="aurora"] .badge-shelf-toggle {
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 24px 60px rgba(0, 0, 0, .4);
+  border-radius: 24px;
+}
+/* hero (dashboard + pocket) = teal/violet tint glass */
+html[data-skin="aurora"] .skin-hero,
+html[data-skin="aurora"] .pk-hero-meridian,
+html[data-skin="aurora"] .pk-hero-ribbon {
+  background: linear-gradient(135deg, rgba(45, 212, 191, .16), rgba(167, 139, 250, .16));
+  border: 1px solid rgba(255, 255, 255, .14);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+  border-radius: 24px;
+}
+
+/* perf / no-support fallback: solid translucent, no blur */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  html[data-skin="aurora"] .card,
+  html[data-skin="aurora"] .pk-card,
+  html[data-skin="aurora"] .goal-card,
+  html[data-skin="aurora"] .modal,
+  html[data-skin="aurora"] .settings-dropdown,
+  html[data-skin="aurora"] .kebab-dropdown,
+  html[data-skin="aurora"] .shortcuts-panel,
+  html[data-skin="aurora"] .auth-card,
+  html[data-skin="aurora"] .date-nav,
+  html[data-skin="aurora"] .badge-shelf-toggle { background: rgba(20, 22, 34, .82); }
+}
+/* reduce blur cost on small screens (mid/low Android) */
+@media (max-width: 480px) {
+  html[data-skin="aurora"] .card,
+  html[data-skin="aurora"] .pk-card,
+  html[data-skin="aurora"] .goal-card { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+}
+
+html[data-skin="aurora"] .card-header h3,
+html[data-skin="aurora"] .badge-shelf-title,
+html[data-skin="aurora"] .pk-section-title { color: rgba(255, 255, 255, .55); letter-spacing: 1px; text-transform: uppercase; font-size: 11px; }
+html[data-skin="aurora"] .app-title { font-family: 'Space Grotesk', sans-serif; text-transform: none; letter-spacing: -.5px; color: #f4f2ff; }
+html[data-skin="aurora"] .habit-xp,
+html[data-skin="aurora"] .task-xp,
+html[data-skin="aurora"] .pk-money-primary,
+html[data-skin="aurora"] .pk-kpi-value,
+html[data-skin="aurora"] .streak-count,
+html[data-skin="aurora"] .skin-hero-count { font-family: 'Space Grotesk', sans-serif; }
+
+/* ── habit & task rows ────────────────────────────────────── */
+html[data-skin="aurora"] .habit-item { border-bottom: 1px solid rgba(255, 255, 255, .06); }
+html[data-skin="aurora"] .habit-checkbox {
+  width: 26px; height: 26px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .18);
+}
+html[data-skin="aurora"] .habit-checkbox--checked {
+  background: linear-gradient(135deg, #2dd4bf, #6366f1);
+  border-color: transparent;
+  color: #06131a;
+  box-shadow: 0 0 18px rgba(45, 212, 191, .6);
+}
+html[data-skin="aurora"] .habit-icon {
+  background: rgba(45, 212, 191, .15);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 11px;
+  width: 34px; height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px;
+}
+html[data-skin="aurora"] .history-dot--done { background: #2dd4bf; box-shadow: 0 0 6px rgba(45, 212, 191, .6); }
+html[data-skin="aurora"] .history-dot--missed { background: rgba(255, 255, 255, .1); }
+html[data-skin="aurora"] .history-dot--na { background: rgba(255, 255, 255, .04); }
+html[data-skin="aurora"] .habit-streak { color: #f0abfc; }
+
+html[data-skin="aurora"] .task-priority { border-radius: 8px; }
+html[data-skin="aurora"] .task-priority--high { color: #f0abfc; background: rgba(240, 171, 252, .14); border: 1px solid rgba(240, 171, 252, .3); }
+html[data-skin="aurora"] .task-priority--medium { color: #facc15; background: rgba(250, 204, 21, .12); border: 1px solid rgba(250, 204, 21, .3); }
+html[data-skin="aurora"] .task-priority--low { color: #5eead4; background: rgba(45, 212, 191, .12); border: 1px solid rgba(45, 212, 191, .3); }
+
+/* ── buttons & progress ───────────────────────────────────── */
+html[data-skin="aurora"] .btn-primary {
+  background: linear-gradient(135deg, #2dd4bf, #6366f1);
+  color: #f4f2ff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, .45);
+  border: none;
+}
+html[data-skin="aurora"] .btn-ghost { border: 1px solid rgba(255, 255, 255, .14); border-radius: 12px; color: rgba(255, 255, 255, .8); }
+html[data-skin="aurora"] .progress-track,
+html[data-skin="aurora"] .pk-progress,
+html[data-skin="aurora"] .skin-hero-track { background: rgba(0, 0, 0, .25); }
+html[data-skin="aurora"] .progress-fill,
+html[data-skin="aurora"] .pk-progress-fill,
+html[data-skin="aurora"] .goal-card-progress-fill,
+html[data-skin="aurora"] .skin-hero-fill {
+  background: linear-gradient(90deg, #2dd4bf, #a78bfa, #f0abfc);
+  box-shadow: 0 0 18px rgba(167, 139, 250, .7);
+}
+
+/* ── header & nav ─────────────────────────────────────────── */
+html[data-skin="aurora"] .streak-badge { background: rgba(240, 171, 252, .1); border: 1px solid rgba(240, 171, 252, .3); border-radius: 12px; }
+html[data-skin="aurora"] .streak-count { color: #f0abfc; }
+html[data-skin="aurora"] .level-badge-header { background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); border-radius: 12px; }
+
+html[data-skin="aurora"] .sidebar { background: rgba(255, 255, 255, .02); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-right: 1px solid rgba(255, 255, 255, .06); }
+html[data-skin="aurora"] .sidebar-logo { background: linear-gradient(135deg, #2dd4bf, #a78bfa); color: #06131a; border-radius: 13px; box-shadow: 0 8px 22px rgba(167, 139, 250, .4); font-family: 'Space Grotesk', sans-serif; }
+html[data-skin="aurora"] .sidebar-btn { border-radius: 12px; color: rgba(255, 255, 255, .4); }
+html[data-skin="aurora"] .sidebar-btn--active { background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .12); color: #5eead4; }
+html[data-skin="aurora"] .bottom-nav,
+html[data-skin="aurora"] .pocket-tabs { background: rgba(11, 14, 24, .8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid rgba(255, 255, 255, .08); }
+html[data-skin="aurora"] .bottom-nav-btn { color: rgba(255, 255, 255, .4); }
+html[data-skin="aurora"] .bottom-nav-btn--active { color: #5eead4; }
+html[data-skin="aurora"] .bottom-nav-fab { background: linear-gradient(135deg, #2dd4bf, #6366f1); box-shadow: 0 10px 30px rgba(99, 102, 241, .5); }
+
+/* ── badges, challenges, rewards ──────────────────────────── */
+html[data-skin="aurora"] .badge-shelf-count { color: #5eead4; }
+html[data-skin="aurora"] .badge-family { background: rgba(255, 255, 255, .04); border-radius: 14px; }
+html[data-skin="aurora"] .challenge-item,
+html[data-skin="aurora"] .reward-item { border-radius: 16px; background: rgba(167, 139, 250, .1); border: 1px solid rgba(167, 139, 250, .25); }
+html[data-skin="aurora"] .freeze-btn:hover:not(:disabled),
+html[data-skin="aurora"] .freeze-btn--active { border-color: #8be9ff; color: #8be9ff; }
+
+/* ── forms & modals ───────────────────────────────────────── */
+html[data-skin="aurora"] .form-input { background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .12); border-radius: 12px; color: #f4f2ff; }
+html[data-skin="aurora"] .form-input:focus { border-color: rgba(45, 212, 191, .6); }
+html[data-skin="aurora"] .emoji-btn,
+html[data-skin="aurora"] .pk-cat-chip { background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1); border-radius: 12px; }
+html[data-skin="aurora"] .emoji-btn--selected,
+html[data-skin="aurora"] .pk-cat-chip--active { border-color: rgba(45, 212, 191, .6); box-shadow: 0 0 0 2px rgba(45, 212, 191, .25); }
+
+/* ── pocket ───────────────────────────────────────────────── */
+html[data-skin="aurora"] .pocket-wordmark { font-family: 'Space Grotesk', sans-serif; color: #f4f2ff; letter-spacing: 1px; }
+html[data-skin="aurora"] .pocket-tab { border-radius: 10px; color: rgba(255, 255, 255, .45); }
+html[data-skin="aurora"] .pocket-tab--active { background: linear-gradient(135deg, #2dd4bf, #6366f1); color: #f4f2ff; box-shadow: 0 8px 22px rgba(99, 102, 241, .4); }
+html[data-skin="aurora"] .pk-ledger-amt,
+html[data-skin="aurora"] .pk-recent-amt,
+html[data-skin="aurora"] .pk-table-amt,
+html[data-skin="aurora"] .pk-ledger-daytotal { color: #f0abfc; }
+html[data-skin="aurora"] .pk-delta--up { color: #f0abfc; }
+html[data-skin="aurora"] .pk-delta--down { color: #5eead4; }
+html[data-skin="aurora"] .pk-cal-cell { border-radius: 12px; }
+html[data-skin="aurora"] .pk-cal-cell--sel { border-color: rgba(45, 212, 191, .7); box-shadow: 0 0 0 2px rgba(45, 212, 191, .3), 0 0 18px rgba(45, 212, 191, .3); }
+html[data-skin="aurora"] .pk-seg-btn--active { background: linear-gradient(135deg, #2dd4bf, #6366f1); color: #f4f2ff; }
+html[data-skin="aurora"] .pk-kpi-value { color: #f4f2ff; }
+
+/* ── misc ─────────────────────────────────────────────────── */
+html[data-skin="aurora"] .save-indicator { background: rgba(45, 212, 191, .14); border: 1px solid rgba(45, 212, 191, .3); color: #5eead4; border-radius: 20px; }
+html[data-skin="aurora"] .celebration-toast,
+html[data-skin="aurora"] .celebration-banner { background: rgba(20, 22, 34, .82); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(167, 139, 250, .35); border-radius: 18px; }
+html[data-skin="aurora"] .auth-title { font-family: 'Space Grotesk', sans-serif; color: #f4f2ff; }
+html[data-skin="aurora"] .auth-submit { background: linear-gradient(135deg, #2dd4bf, #6366f1); color: #f4f2ff; border-radius: 12px; }
