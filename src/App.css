@@ -3226,7 +3226,7 @@
 .pk-ranked-val { font-family: var(--font-display); color: var(--text-muted); }
 .pk-trend { display: block; }
 .pk-trend-label { font-size: 9px; fill: var(--text-muted); }
-.pk-trend-empty { display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: var(--text-sm); opacity: 0.75; }
+.pk-trend-empty { display: flex; align-items: center; justify-content: center; min-height: 64px; padding: var(--space-6) 0; color: var(--text-muted); font-size: var(--text-sm); opacity: 0.75; }
 .pk-focus-stats { display: flex; gap: var(--space-4); justify-content: center; font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-2); }
 .pk-compare { display: flex; flex-direction: column; gap: var(--space-2); }
 .pk-compare-row { display: grid; grid-template-columns: 100px 1fr 48px; align-items: center; gap: var(--space-2); font-size: var(--text-xs); }

@@ -132,7 +132,7 @@ export function RankedBars({ data = [], format = (n) => n }) {
 export function TrendLine({ points = [], height = 160, color = 'var(--cyan)', format = (n) => n }) {
   // all-zero months would draw a misleading flat line across the axis — show an empty state instead
   if (!points.length || !points.some((p) => p.amount > 0)) {
-    return <div className="pk-trend-empty" style={{ height }}>No data yet</div>
+    return <div className="pk-trend-empty">No data yet</div>
   }
   const w = 320, h = height, pad = 24
   const max = Math.max(1, ...points.map((p) => p.amount))
