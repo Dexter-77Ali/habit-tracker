@@ -567,6 +567,20 @@ Returns `{ claimable: bool, reason: string, current?, needed? }`
 
 ---
 
+## Skin System (whole-app premium skins)
+
+A SECOND styling dimension layered over themes. `settings.skin` (default `'classic'`) applied as `data-skin` on `<html>` via a `useEffect` in App.jsx (beside the theme effect); synced free via `ht_settings`. Spec/handoff: `docs/redesign/BUILD_PROMPT.md` + `docs/redesign/tokens/*.md`; target renders: `public/showcase-habit-<skin>.html` + `public/showcase-<skin>.html`.
+
+- **6 options**: `classic` (today's look + the 5 themes, 100% unchanged) + 5 premium skins: **meridian** (ink/emerald/gold, dark), **terra** (warm bone/serif, light), **bolt** (neo-brutalist paper, ink outlines), **aurora** (dark aurora-glass), **halo** (soft neumorphism, light).
+- **Files**: `src/skins/{index,base,meridian,terra,bolt,aurora,halo}.css` — `index.css` imported from App.jsx AFTER App.css. Every skin rule is scoped `html[data-skin="<skin>"]` (specificity beats `[data-theme]` + equal-class App.css; **no `!important`**). `base.css` holds SkinHero/ribbon layout (those elements only exist in DOM on premium skins).
+- **Two layers**: (1) each skin re-declares the global CSS vars (`--bg --surface --primary --gradient-primary --radius-* --font-display` etc.) + body font → ~70% re-clothes automatically; (2) signature CSS for checks, cards, nav, progress, modals.
+- **Components**: `src/skins/components/SkinHero.jsx` (dashboard hero — completion figure + gauge/ribbon + streak + level; replaces `LevelBar` when `skin !== 'classic'`, classic keeps LevelBar). `charts.jsx` adds `ArcGauge` (Meridian 270°) + `BudgetRibbon` (Terra soft / Bolt ink). `src/components/pocket/skins/{Meridian,Terra,Bolt}Overview.jsx` — premium Pocket Overviews (Terra+Bolt share `RibbonOverview`); `PocketOverview.jsx` delegates via `useSkin()` (a `useSyncExternalStore` MutationObserver on `data-skin`); Aurora/Halo reuse the classic Pocket layouts fully reskinned by CSS.
+- **Switcher**: Header settings dropdown "App style" section (`SKINS` array) above the theme swatches; theme swatches hide with a hint when a premium skin is active.
+- **Fonts**: one combined Google Fonts `<link>` in index.html (Space Grotesk, Manrope, Plus Jakarta Sans, Newsreader, Hanken Grotesk, Archivo, Space Mono); families applied only under skin scopes. CSP already allowlists fonts.googleapis/gstatic.
+- **Constraints (do not break)**: pure visual layer — no data-model/logic/sync change beyond the `skin` field. Classic + 5 themes must stay pixel-identical. Category/tag identity colors stay fixed hex. Aurora glass has an `@supports not (backdrop-filter)` solid fallback + reduced blur ≤480px.
+
+---
+
 ## CSS Architecture (App.css)
 
 Single CSS file, organized by section headers:

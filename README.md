@@ -12,7 +12,7 @@ A gamified habit & task tracker with a hacker-terminal aesthetic. Build streaks,
 - **Tasks** with due dates, priorities, and auto-archive
 - **Goals** with milestones, linked habits/tasks, and progress tracking
 - **Gamification**: 18 hacker levels (Noob → Root), 28 tiered badges (Bronze → Diamond), daily challenges, streak freezes, XP rewards
-- **5 themes**: Matrix, Cyberpunk, Midnight, Crimson, Arctic
+- **5 themes** (Matrix, Cyberpunk, Midnight, Crimson, Arctic) **+ 5 premium whole-app skins**: Meridian (ink/emerald), Terra (warm editorial), Bolt (neo-brutalist), Aurora (aurora-glass), Halo (soft neumorphism) — switch in Settings → App style
 - **Sync**: email/password + Google sign-in, realtime cross-device sync via Supabase — fully offline-capable without it
 - **Mobile**: swipe-to-complete, haptic feedback, daily reminder notifications, bottom navigation, installable PWA + native APK
 - 191 hacker-themed icons + custom icon upload, markdown notes, tags, analytics heatmaps
@@ -24,6 +24,7 @@ Download the APK from [**Releases**](https://github.com/Dexter-77Ali/habit-track
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| v0.4.0 | 2026-07-10 | 🎨 5 premium whole-app skins — Meridian, Terra, Bolt, Aurora, Halo — restyling every screen; switch in Settings → App style (Classic + 5 themes still intact) |
 | v0.3.1 | 2026-07-09 | Mobile nav fix: dedicated Pocket button in the bottom bar, Pocket's tab bar now cleanly replaces the app nav (no more overlapping bars), Exit tab |
 | v0.3.0 | 2026-07-08 | 💰 Pocket Tracker: full income/expense tracker — budget ring/ledger/cards dashboards, spend calendar, stats, saving goals, dual IQD/USD currency, payday auto-reset |
 | v0.2.2 | 2026-07-08 | Security hardening (CSP headers, backup lock-down, beacon block, crash recovery) + XP-integrity fixes from a deep code review |
