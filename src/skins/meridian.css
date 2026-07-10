@@ -1,1 +1,299 @@
-/* ═══ meridian skin — all rules scoped under html[data-skin="meridian"] ═══ */
+/* ═══════════════════════════════════════════════════════════════
+   MERIDIAN — private-wealth ink + emerald + gold hairlines
+   Spec: docs/redesign/tokens/meridian.md
+   References: public/showcase-habit-meridian.html · showcase-meridian.html
+   All rules scoped html[data-skin="meridian"]. No !important.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Layer 1 · token override ─────────────────────────────── */
+html[data-skin="meridian"] {
+  --bg: #090a0e;
+  --surface: #13161d;
+  --surface-2: #1b1f28;
+  --border: rgba(255, 255, 255, .07);
+  --text: #f3f2ee;
+  --text-muted: rgba(243, 242, 238, .45);
+  --primary: #10b981;
+  --primary-light: #6ee7b7;
+  --accent: #34d399;
+  --success: #34d399;
+  --success-bg: rgba(16, 185, 129, .12);
+  --gold: #e5c07b;
+  --orange: #c99b52;
+  --danger: #f0a2b8;
+  --danger-light: #f0a2b8;
+  --cyan: #6ee7b7;
+  --gradient-primary: linear-gradient(135deg, #10b981, #059669);
+  --gradient-primary-hover: linear-gradient(135deg, #34d399, #10b981);
+  --gradient-success: linear-gradient(90deg, #10b981, #6ee7b7);
+  --shadow-glow: 0 10px 26px rgba(16, 185, 129, .35);
+  --glow: 0 20px 60px rgba(0, 0, 0, .45);
+  --glow-border: rgba(255, 255, 255, .07);
+  --radius-xs: 7px;
+  --radius-sm: 9px;
+  --radius: 11px;
+  --radius-lg: 22px;
+  --font-display: 'Space Grotesk', sans-serif;
+}
+
+html[data-skin="meridian"] body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  background:
+    radial-gradient(900px 500px at 78% -8%, rgba(16, 185, 129, .12), transparent 60%),
+    radial-gradient(700px 600px at 8% 110%, rgba(229, 192, 123, .06), transparent 60%),
+    linear-gradient(180deg, #0c0e13, #090a0e);
+  background-attachment: fixed;
+}
+html[data-skin="meridian"] :focus-visible { outline: 2px solid #6ee7b7; outline-offset: 3px; }
+
+/* ── Layer 2 · cards & surfaces ───────────────────────────── */
+html[data-skin="meridian"] .card,
+html[data-skin="meridian"] .pk-card,
+html[data-skin="meridian"] .skin-hero,
+html[data-skin="meridian"] .goal-card,
+html[data-skin="meridian"] .settings-dropdown,
+html[data-skin="meridian"] .kebab-dropdown,
+html[data-skin="meridian"] .shortcuts-panel,
+html[data-skin="meridian"] .modal,
+html[data-skin="meridian"] .auth-card {
+  background: linear-gradient(155deg, #161a22, #111319);
+  border: 1px solid rgba(255, 255, 255, .07);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+  border-radius: 22px;
+}
+html[data-skin="meridian"] .kebab-dropdown,
+html[data-skin="meridian"] .settings-dropdown { border-radius: 14px; box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.6); }
+
+/* gold hairline on hero surfaces */
+html[data-skin="meridian"] .skin-hero::before,
+html[data-skin="meridian"] .pk-hero-meridian::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 32px; right: 32px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(229, 192, 123, .5), transparent);
+}
+
+/* micro-labels: uppercase, tracked, muted */
+html[data-skin="meridian"] .card-header h3,
+html[data-skin="meridian"] .badge-shelf-title,
+html[data-skin="meridian"] .pk-section-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(243, 242, 238, .45);
+  font-weight: 600;
+}
+
+/* numerals in Space Grotesk everywhere they matter */
+html[data-skin="meridian"] .habit-xp,
+html[data-skin="meridian"] .task-xp,
+html[data-skin="meridian"] .habit-streak,
+html[data-skin="meridian"] .pk-money-primary,
+html[data-skin="meridian"] .pk-kpi-value,
+html[data-skin="meridian"] .level-title,
+html[data-skin="meridian"] .streak-count {
+  font-family: 'Space Grotesk', sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── habit & task rows ────────────────────────────────────── */
+html[data-skin="meridian"] .habit-item { border-bottom: 1px solid rgba(255, 255, 255, .05); }
+html[data-skin="meridian"] .habit-checkbox {
+  width: 26px; height: 26px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .14);
+  transition: background var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+html[data-skin="meridian"] .habit-checkbox--checked {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: transparent;
+  color: #eafff6;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, .4);
+}
+html[data-skin="meridian"] .habit-icon {
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 10px;
+  width: 34px; height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px;
+}
+html[data-skin="meridian"] .history-dot { width: 7px; height: 7px; }
+html[data-skin="meridian"] .history-dot--done { background: #10b981; }
+html[data-skin="meridian"] .history-dot--missed { background: rgba(255, 255, 255, .09); }
+html[data-skin="meridian"] .history-dot--na { background: rgba(255, 255, 255, .04); }
+html[data-skin="meridian"] .habit-streak { color: #e5c07b; }
+html[data-skin="meridian"] .habit-xp { color: rgba(243, 242, 238, .5); }
+html[data-skin="meridian"] .habit-item--checked .habit-xp { color: #6ee7b7; }
+html[data-skin="meridian"] .habit-item--checked .habit-name { color: rgba(243, 242, 238, .55); }
+
+/* task priority chips → tinted pills */
+html[data-skin="meridian"] .task-priority,
+html[data-skin="meridian"] .priority-btn { border-radius: 20px; letter-spacing: .5px; }
+html[data-skin="meridian"] .task-priority--high { color: #f0a2b8; background: rgba(240, 162, 184, .1); border: 1px solid rgba(240, 162, 184, .25); }
+html[data-skin="meridian"] .task-priority--medium { color: #e5c07b; background: rgba(229, 192, 123, .1); border: 1px solid rgba(229, 192, 123, .25); }
+html[data-skin="meridian"] .task-priority--low { color: #6ee7b7; background: rgba(16, 185, 129, .1); border: 1px solid rgba(16, 185, 129, .25); }
+
+/* ── buttons & progress ───────────────────────────────────── */
+html[data-skin="meridian"] .btn-primary {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #eafff6;
+  border-radius: 11px;
+  box-shadow: 0 10px 26px rgba(16, 185, 129, .35);
+  border: none;
+}
+html[data-skin="meridian"] .btn-primary:hover { background: linear-gradient(135deg, #34d399, #10b981); }
+html[data-skin="meridian"] .btn-ghost { border: 1px solid rgba(255, 255, 255, .1); border-radius: 11px; color: rgba(243, 242, 238, .7); }
+
+html[data-skin="meridian"] .progress-fill,
+html[data-skin="meridian"] .pk-progress-fill,
+html[data-skin="meridian"] .goal-card-progress-fill {
+  background: linear-gradient(90deg, #10b981, #6ee7b7);
+  box-shadow: 0 0 12px rgba(16, 185, 129, .5);
+}
+html[data-skin="meridian"] .progress-track,
+html[data-skin="meridian"] .pk-progress { background: rgba(255, 255, 255, .06); }
+
+/* ── header & nav ─────────────────────────────────────────── */
+html[data-skin="meridian"] .app-title { font-family: 'Space Grotesk', sans-serif; letter-spacing: -.4px; text-transform: none; color: #f3f2ee; }
+html[data-skin="meridian"] .streak-badge {
+  background: rgba(229, 192, 123, .08);
+  border: 1px solid rgba(229, 192, 123, .25);
+  border-radius: 11px;
+}
+html[data-skin="meridian"] .streak-count { color: #e5c07b; }
+html[data-skin="meridian"] .level-badge-header { border: 1px solid rgba(255, 255, 255, .08); border-radius: 11px; background: rgba(255, 255, 255, .05); }
+
+html[data-skin="meridian"] .sidebar { background: transparent; border-right: 1px solid rgba(255, 255, 255, .05); }
+html[data-skin="meridian"] .sidebar-logo {
+  background: linear-gradient(135deg, #10b981, #065f46);
+  color: #eafff6;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, .4);
+  font-family: 'Space Grotesk', sans-serif;
+}
+html[data-skin="meridian"] .sidebar-btn { border-radius: 13px; color: rgba(243, 242, 238, .32); position: relative; }
+html[data-skin="meridian"] .sidebar-btn--active {
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .08);
+  color: #6ee7b7;
+}
+html[data-skin="meridian"] .sidebar-btn--active::before {
+  content: '';
+  position: absolute;
+  left: -13px; top: 14px;
+  width: 3px; height: 18px;
+  border-radius: 2px;
+  background: #6ee7b7;
+  box-shadow: 0 0 10px #6ee7b7;
+}
+html[data-skin="meridian"] .bottom-nav,
+html[data-skin="meridian"] .pocket-tabs {
+  background: rgba(12, 14, 19, .92);
+  border-top: 1px solid rgba(255, 255, 255, .07);
+  backdrop-filter: blur(10px);
+}
+html[data-skin="meridian"] .bottom-nav-btn { color: rgba(243, 242, 238, .35); }
+html[data-skin="meridian"] .bottom-nav-btn--active { color: #6ee7b7; }
+html[data-skin="meridian"] .bottom-nav-fab {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 10px 26px rgba(16, 185, 129, .45);
+}
+
+/* ── badges, date-nav, challenges, rewards ────────────────── */
+html[data-skin="meridian"] .badge-shelf-toggle,
+html[data-skin="meridian"] .date-nav {
+  background: linear-gradient(155deg, #161a22, #111319);
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 14px;
+}
+html[data-skin="meridian"] .badge-shelf-count { color: #e5c07b; }
+html[data-skin="meridian"] .badge-family { background: rgba(255, 255, 255, .03); border-radius: 14px; }
+html[data-skin="meridian"] .challenge-item,
+html[data-skin="meridian"] .reward-item {
+  border-radius: 14px;
+  background: rgba(229, 192, 123, .06);
+  border: 1px solid rgba(229, 192, 123, .16);
+}
+html[data-skin="meridian"] .freeze-btn:hover:not(:disabled),
+html[data-skin="meridian"] .freeze-btn--active { border-color: #6ee7b7; color: #6ee7b7; }
+
+/* ── forms & modals ───────────────────────────────────────── */
+html[data-skin="meridian"] .form-input {
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 11px;
+  color: #f3f2ee;
+}
+html[data-skin="meridian"] .form-input:focus { border-color: rgba(16, 185, 129, .5); }
+html[data-skin="meridian"] .emoji-btn,
+html[data-skin="meridian"] .pk-cat-chip {
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 11px;
+}
+html[data-skin="meridian"] .emoji-btn--selected,
+html[data-skin="meridian"] .pk-cat-chip--active {
+  border-color: rgba(16, 185, 129, .6);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, .2);
+}
+
+/* ── pocket ───────────────────────────────────────────────── */
+html[data-skin="meridian"] .pocket-wordmark { font-family: 'Space Grotesk', sans-serif; color: #f3f2ee; letter-spacing: 1px; }
+html[data-skin="meridian"] .pocket-tab { border-radius: 11px; color: rgba(243, 242, 238, .4); }
+html[data-skin="meridian"] .pocket-tab--active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #eafff6;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, .3);
+}
+html[data-skin="meridian"] .pk-money-secondary,
+html[data-skin="meridian"] .pk-usd-hint { color: rgba(243, 242, 238, .4); }
+/* restraint: expense amounts ivory, not red */
+html[data-skin="meridian"] .pk-ledger-amt,
+html[data-skin="meridian"] .pk-recent-amt,
+html[data-skin="meridian"] .pk-table-amt,
+html[data-skin="meridian"] .pk-ledger-daytotal { color: #f3f2ee; }
+html[data-skin="meridian"] .pk-delta--up { color: #f0a2b8; }
+html[data-skin="meridian"] .pk-delta--down { color: #6ee7b7; }
+html[data-skin="meridian"] .pk-cal-cell { border-radius: 12px; }
+html[data-skin="meridian"] .pk-cal-cell--sel {
+  border-color: rgba(16, 185, 129, .6);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, .25), 0 0 18px rgba(16, 185, 129, .25);
+}
+html[data-skin="meridian"] .pk-seg-btn--active { background: linear-gradient(135deg, #10b981, #059669); color: #eafff6; }
+html[data-skin="meridian"] .pk-goal-suggest strong { color: #e5c07b; }
+
+/* Meridian pocket hero (rendered by MeridianOverview) */
+html[data-skin="meridian"] .pk-hero-meridian {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+}
+html[data-skin="meridian"] .pk-hero-meridian .pk-hero-figure { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 44px; letter-spacing: -1.5px; color: #f3f2ee; line-height: .9; }
+html[data-skin="meridian"] .pk-hero-stats { display: flex; margin-top: 22px; }
+html[data-skin="meridian"] .pk-hero-stat { flex: 1; padding: 0 18px; border-left: 1px solid rgba(255, 255, 255, .06); }
+html[data-skin="meridian"] .pk-hero-stat:first-child { padding-left: 0; border-left: none; }
+html[data-skin="meridian"] .pk-hero-stat .pk-stat-label { font-size: 10px; letter-spacing: 1.5px; }
+html[data-skin="meridian"] .pk-hero-safe { color: #e5c07b; }
+
+/* ── misc ─────────────────────────────────────────────────── */
+html[data-skin="meridian"] .save-indicator { background: rgba(16, 185, 129, .12); border: 1px solid rgba(16, 185, 129, .25); color: #6ee7b7; border-radius: 20px; }
+html[data-skin="meridian"] .celebration-toast,
+html[data-skin="meridian"] .celebration-banner {
+  background: linear-gradient(155deg, #161a22, #111319);
+  border: 1px solid rgba(229, 192, 123, .3);
+  border-radius: 16px;
+}
+html[data-skin="meridian"] .auth-title { font-family: 'Space Grotesk', sans-serif; color: #f3f2ee; }
+html[data-skin="meridian"] .auth-submit { background: linear-gradient(135deg, #10b981, #059669); color: #eafff6; border-radius: 11px; }
+
+@media (max-width: 480px) {
+  html[data-skin="meridian"] .skin-hero::before { left: 20px; right: 20px; }
+}

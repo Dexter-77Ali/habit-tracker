@@ -6,13 +6,22 @@ import {
 } from '../../utils/pocketUtils'
 import { dateFromKey } from '../../utils/dateUtils'
 import ExpenseHistory from './ExpenseHistory'
+import { useSkin } from '../../skins/useSkin'
+import MeridianOverview from './skins/MeridianOverview'
+
+// Premium skins bring their own Overview renderer; classic keeps ui.dashboardStyle.
+const SKIN_OVERVIEWS = { meridian: MeridianOverview }
 
 export default function PocketOverview(props) {
   const { income, expenses, categories, ui, activeMonth, setActiveMonth, showHistory, onCloseHistory } = props
+  const skin = useSkin()
 
   if (showHistory) {
     return <ExpenseHistory expenses={expenses} categories={categories} ui={ui} onClose={onCloseHistory} onDelete={props.onDeleteExpense} />
   }
+
+  const SkinOverview = SKIN_OVERVIEWS[skin]
+  if (SkinOverview) return <SkinOverview {...props} />
 
   const budget = budgetForMonth(activeMonth, income)
   const spentAmt = spent(expenses, activeMonth, income)

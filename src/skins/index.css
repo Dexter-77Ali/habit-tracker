@@ -5,6 +5,7 @@
    classic (data-skin="classic") and the 5 themes are untouchable.
    No !important anywhere. See docs/redesign/BUILD_PROMPT.md.
 ═══════════════════════════════════════════════════════════════ */
+@import './base.css';
 @import './meridian.css';
 @import './terra.css';
 @import './bolt.css';

@@ -36,6 +36,7 @@ import GoalsSummaryCard from './components/GoalsSummaryCard'
 import AnalyticsPage from './components/AnalyticsPage'
 import DailyChallenges from './components/DailyChallenges'
 import PocketTracker from './components/pocket/PocketTracker'
+import SkinHero from './skins/components/SkinHero'
 import './App.css'
 import './skins/index.css' // premium skins — must come AFTER App.css (specificity)
 
@@ -734,7 +735,19 @@ export default function App() {
 
         {currentPage === 'dashboard' && (
           <>
-            <LevelBar allTimeXP={profile.allTimeXP} />
+            {(settings.skin || 'classic') === 'classic' ? (
+              <LevelBar allTimeXP={profile.allTimeXP} />
+            ) : (
+              <SkinHero
+                skin={settings.skin}
+                habits={habits}
+                logs={logs}
+                today={today}
+                streak={streak}
+                allTimeXP={profile.allTimeXP}
+                dayComplete={dayComplete}
+              />
+            )}
             <BadgeShelf profile={profile} streak={streak} stats={badgeStats} />
 
             <DateNav
