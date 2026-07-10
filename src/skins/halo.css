@@ -1,1 +1,200 @@
-/* ═══ halo skin — all rules scoped under html[data-skin="halo"] ═══ */
+/* ═══════════════════════════════════════════════════════════════
+   HALO — soft neumorphism on #e6e9f2, indigo accent
+   Spec: docs/redesign/tokens/halo.md
+   References: public/showcase-habit-halo.html · showcase-halo.html
+   Everything shares the base color; depth is ONLY light (dual shadows).
+   Raised = -9/-9 white + 9/9 shadow; pressed = same, inset.
+   All rules scoped html[data-skin="halo"]. No !important.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Layer 1 · token override ─────────────────────────────── */
+html[data-skin="halo"] {
+  --bg: #e6e9f2;
+  --surface: #e6e9f2;
+  --surface-2: #e6e9f2;
+  --border: transparent;               /* neumorphism has no borders */
+  --text: #363b52;
+  --text-muted: #8a90a6;
+  --primary: #6d5efc;
+  --primary-light: #8ea2ff;
+  --accent: #6d5efc;
+  --success: #2fb98a;
+  --success-bg: rgba(47, 185, 138, .12);
+  --gold: #f7cf6b;
+  --orange: #f7a06b;
+  --danger: #f0699b;
+  --danger-light: #f0699b;
+  --cyan: #6d5efc;
+  --gradient-primary: linear-gradient(135deg, #8ea2ff, #6d5efc);
+  --gradient-primary-hover: linear-gradient(135deg, #9db0ff, #7d6efc);
+  --gradient-success: linear-gradient(90deg, #8ea2ff, #6d5efc);
+  --shadow-glow: 6px 6px 14px rgba(163, 177, 198, .6), -6px -6px 14px #ffffff;
+  --glow: 9px 9px 22px rgba(163, 177, 198, .6), -9px -9px 22px #ffffff;
+  --glow-border: transparent;
+  --shadow-xs: 3px 3px 7px rgba(163, 177, 198, .5), -3px -3px 7px #ffffff;
+  --shadow-sm: 5px 5px 12px rgba(163, 177, 198, .55), -5px -5px 12px #ffffff;
+  --shadow: 9px 9px 22px rgba(163, 177, 198, .6), -9px -9px 22px #ffffff;
+  --shadow-lg: 12px 12px 30px rgba(163, 177, 198, .6), -12px -12px 30px #ffffff;
+  --radius-xs: 12px;
+  --radius-sm: 14px;
+  --radius: 14px;
+  --radius-lg: 26px;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+}
+
+html[data-skin="halo"] body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: #e6e9f2; color: #363b52; }
+html[data-skin="halo"] :focus-visible { outline: 2px solid #6d5efc; outline-offset: 3px; }
+
+/* ── raised surfaces ──────────────────────────────────────── */
+html[data-skin="halo"] .card,
+html[data-skin="halo"] .pk-card,
+html[data-skin="halo"] .skin-hero,
+html[data-skin="halo"] .goal-card,
+html[data-skin="halo"] .modal,
+html[data-skin="halo"] .settings-dropdown,
+html[data-skin="halo"] .kebab-dropdown,
+html[data-skin="halo"] .shortcuts-panel,
+html[data-skin="halo"] .auth-card,
+html[data-skin="halo"] .date-nav,
+html[data-skin="halo"] .badge-shelf-toggle {
+  background: #e6e9f2;
+  border: none;
+  box-shadow: 9px 9px 22px rgba(163, 177, 198, .6), -9px -9px 22px #ffffff;
+  border-radius: 26px;
+}
+
+html[data-skin="halo"] .card-header h3,
+html[data-skin="halo"] .badge-shelf-title,
+html[data-skin="halo"] .pk-section-title { color: #8a90a6; letter-spacing: .5px; text-transform: uppercase; font-size: 11px; font-weight: 700; }
+html[data-skin="halo"] .app-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; text-transform: none; letter-spacing: -.5px; color: #363b52; }
+html[data-skin="halo"] .habit-name,
+html[data-skin="halo"] .task-name { color: #363b52; }
+html[data-skin="halo"] .habit-xp,
+html[data-skin="halo"] .task-xp,
+html[data-skin="halo"] .pk-money-primary,
+html[data-skin="halo"] .pk-kpi-value,
+html[data-skin="halo"] .streak-count,
+html[data-skin="halo"] .skin-hero-count { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; }
+
+/* ── habit rows: check presses IN when done ───────────────── */
+html[data-skin="halo"] .habit-item { border-bottom: 1px solid rgba(163, 177, 198, .2); }
+html[data-skin="halo"] .habit-checkbox {
+  width: 28px; height: 28px;
+  border-radius: 10px;
+  background: #e6e9f2;
+  border: none;
+  box-shadow: 4px 4px 9px rgba(163, 177, 198, .6), -4px -4px 9px #ffffff;
+}
+html[data-skin="halo"] .habit-checkbox--checked {
+  color: #6d5efc;
+  box-shadow: inset 4px 4px 9px rgba(163, 177, 198, .65), inset -4px -4px 9px #ffffff;
+}
+html[data-skin="halo"] .habit-icon {
+  background: #e6e9f2;
+  border: none;
+  border-radius: 14px;
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 5px;
+  box-shadow: 4px 4px 9px rgba(163, 177, 198, .5), -4px -4px 9px #ffffff;
+}
+html[data-skin="halo"] .history-dot--done { background: #6d5efc; }
+html[data-skin="halo"] .history-dot--missed { background: #cfd4e4; }
+html[data-skin="halo"] .history-dot--na { background: #dde1ee; }
+html[data-skin="halo"] .habit-streak { color: #6d5efc; }
+
+html[data-skin="halo"] .task-priority { border-radius: 12px; }
+html[data-skin="halo"] .task-priority--high { color: #f0699b; background: rgba(240, 105, 155, .12); }
+html[data-skin="halo"] .task-priority--medium { color: #d89a2e; background: rgba(247, 207, 107, .18); }
+html[data-skin="halo"] .task-priority--low { color: #2fb98a; background: rgba(47, 185, 138, .14); }
+
+/* ── buttons & progress (pressed tracks) ──────────────────── */
+html[data-skin="halo"] .btn-primary {
+  background: linear-gradient(135deg, #8ea2ff, #6d5efc);
+  color: #fff;
+  border-radius: 14px;
+  box-shadow: 4px 4px 12px rgba(109, 94, 252, .35), -3px -3px 9px #ffffff;
+  border: none;
+}
+html[data-skin="halo"] .btn-ghost {
+  background: #e6e9f2;
+  border: none;
+  border-radius: 14px;
+  color: #4b5069;
+  box-shadow: 4px 4px 9px rgba(163, 177, 198, .5), -4px -4px 9px #ffffff;
+}
+html[data-skin="halo"] .btn-ghost:active { box-shadow: inset 3px 3px 7px rgba(163, 177, 198, .6), inset -3px -3px 7px #ffffff; }
+html[data-skin="halo"] .progress-track,
+html[data-skin="halo"] .pk-progress,
+html[data-skin="halo"] .skin-hero-track {
+  background: #e6e9f2;
+  box-shadow: inset 3px 3px 7px rgba(163, 177, 198, .6), inset -3px -3px 7px #ffffff;
+  height: 12px;
+}
+html[data-skin="halo"] .progress-fill,
+html[data-skin="halo"] .pk-progress-fill,
+html[data-skin="halo"] .goal-card-progress-fill,
+html[data-skin="halo"] .skin-hero-fill {
+  background: linear-gradient(90deg, #8ea2ff, #6d5efc);
+  box-shadow: 2px 2px 5px rgba(109, 94, 252, .4);
+}
+
+/* ── header & nav (active = pressed tile) ─────────────────── */
+html[data-skin="halo"] .streak-badge { background: #e6e9f2; border: none; border-radius: 14px; box-shadow: inset 3px 3px 7px rgba(163, 177, 198, .55), inset -3px -3px 7px #ffffff; }
+html[data-skin="halo"] .streak-count { color: #6d5efc; }
+html[data-skin="halo"] .level-badge-header { background: #e6e9f2; border: none; border-radius: 14px; box-shadow: 4px 4px 9px rgba(163, 177, 198, .5), -4px -4px 9px #ffffff; }
+
+html[data-skin="halo"] .sidebar { background: #e6e9f2; border-right: none; box-shadow: 6px 0 18px rgba(163, 177, 198, .3); }
+html[data-skin="halo"] .sidebar-logo { background: linear-gradient(135deg, #8ea2ff, #6d5efc); color: #fff; border-radius: 16px; box-shadow: 4px 4px 10px rgba(109, 94, 252, .35); font-family: 'Plus Jakarta Sans', sans-serif; }
+html[data-skin="halo"] .sidebar-btn { border-radius: 14px; color: #9aa0b8; box-shadow: 4px 4px 9px rgba(163, 177, 198, .45), -4px -4px 9px #ffffff; }
+html[data-skin="halo"] .sidebar-btn--active { color: #6d5efc; box-shadow: inset 4px 4px 9px rgba(163, 177, 198, .6), inset -4px -4px 9px #ffffff; }
+html[data-skin="halo"] .bottom-nav,
+html[data-skin="halo"] .pocket-tabs { background: #e6e9f2; border-top: none; box-shadow: 0 -6px 18px rgba(163, 177, 198, .3); }
+html[data-skin="halo"] .bottom-nav-btn { color: #9aa0b8; }
+html[data-skin="halo"] .bottom-nav-btn--active { color: #6d5efc; }
+html[data-skin="halo"] .bottom-nav-fab { background: linear-gradient(135deg, #8ea2ff, #6d5efc); box-shadow: 4px 4px 12px rgba(109, 94, 252, .4); color: #fff; }
+
+/* ── badges, challenges, rewards ──────────────────────────── */
+html[data-skin="halo"] .badge-shelf-count { color: #6d5efc; }
+html[data-skin="halo"] .badge-family { background: #e6e9f2; border: none; border-radius: 16px; box-shadow: 4px 4px 9px rgba(163, 177, 198, .4), -4px -4px 9px #ffffff; }
+html[data-skin="halo"] .challenge-item,
+html[data-skin="halo"] .reward-item { border-radius: 18px; background: #e6e9f2; border: none; box-shadow: inset 3px 3px 7px rgba(163, 177, 198, .5), inset -3px -3px 7px #ffffff; }
+html[data-skin="halo"] .freeze-btn { border: none; box-shadow: 3px 3px 7px rgba(163, 177, 198, .45), -3px -3px 7px #ffffff; }
+html[data-skin="halo"] .freeze-btn--active { color: #6d5efc; box-shadow: inset 3px 3px 7px rgba(163, 177, 198, .6), inset -3px -3px 7px #ffffff; }
+
+/* ── forms (inset wells) ──────────────────────────────────── */
+html[data-skin="halo"] .form-input {
+  background: #e6e9f2;
+  border: none;
+  border-radius: 14px;
+  color: #363b52;
+  box-shadow: inset 4px 4px 9px rgba(163, 177, 198, .6), inset -4px -4px 9px #ffffff;
+}
+html[data-skin="halo"] .emoji-btn,
+html[data-skin="halo"] .pk-cat-chip { background: #e6e9f2; border: none; border-radius: 14px; box-shadow: 4px 4px 9px rgba(163, 177, 198, .45), -4px -4px 9px #ffffff; }
+html[data-skin="halo"] .emoji-btn--selected,
+html[data-skin="halo"] .pk-cat-chip--active { color: #6d5efc; box-shadow: inset 3px 3px 7px rgba(163, 177, 198, .6), inset -3px -3px 7px #ffffff; }
+
+/* ── pocket ───────────────────────────────────────────────── */
+html[data-skin="halo"] .pocket-wordmark { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: #363b52; letter-spacing: -.5px; }
+html[data-skin="halo"] .pocket-tab { border-radius: 14px; color: #8a90a6; }
+html[data-skin="halo"] .pocket-tab--active { background: linear-gradient(135deg, #8ea2ff, #6d5efc); color: #fff; box-shadow: 4px 4px 10px rgba(109, 94, 252, .35); }
+html[data-skin="halo"] .pk-ledger-amt,
+html[data-skin="halo"] .pk-recent-amt,
+html[data-skin="halo"] .pk-table-amt,
+html[data-skin="halo"] .pk-ledger-daytotal { color: #f0699b; }
+html[data-skin="halo"] .pk-delta--up { color: #f0699b; }
+html[data-skin="halo"] .pk-delta--down { color: #2fb98a; }
+html[data-skin="halo"] .pk-cal-cell { border: none; border-radius: 14px; box-shadow: 3px 3px 7px rgba(163, 177, 198, .4), -3px -3px 7px #ffffff; }
+html[data-skin="halo"] .pk-cal-cell--sel { color: #6d5efc; box-shadow: inset 3px 3px 7px rgba(163, 177, 198, .6), inset -3px -3px 7px #ffffff; }
+html[data-skin="halo"] .pk-seg-btn--active { background: linear-gradient(135deg, #8ea2ff, #6d5efc); color: #fff; }
+html[data-skin="halo"] .pk-kpi-value { color: #363b52; }
+html[data-skin="halo"] .pk-goal-suggest strong { color: #2fb98a; }
+
+/* ── misc ─────────────────────────────────────────────────── */
+html[data-skin="halo"] .save-indicator { background: #e6e9f2; color: #6d5efc; border: none; border-radius: 20px; box-shadow: 3px 3px 7px rgba(163, 177, 198, .45), -3px -3px 7px #ffffff; }
+html[data-skin="halo"] .celebration-toast,
+html[data-skin="halo"] .celebration-banner { background: #e6e9f2; border: none; border-radius: 20px; box-shadow: 12px 12px 30px rgba(163, 177, 198, .6), -12px -12px 30px #ffffff; color: #363b52; }
+html[data-skin="halo"] .auth-page { background: #e6e9f2; }
+html[data-skin="halo"] .auth-title { font-family: 'Plus Jakarta Sans', sans-serif; color: #363b52; }
+html[data-skin="halo"] .auth-submit { background: linear-gradient(135deg, #8ea2ff, #6d5efc); color: #fff; border-radius: 14px; }
