@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terra — Habit + Task Tracker · web + mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#ded3c1;min-height:100vh;font-family:'Hanken Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:44px clamp(16px,4vw,56px) 90px}
+  .head{max-width:1180px;margin:0 auto 34px;color:#2c2620}
+  .eyebrow{font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;opacity:.6;font-weight:600;margin-bottom:10px}
+  .head h1{font-family:'Newsreader',serif;font-weight:600;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.02em;margin-bottom:8px}
+  .head h1 i{font-style:italic}
+  .sub{opacity:.78;font-size:.95rem;max-width:64ch;line-height:1.55}
+  .swatches{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .sw{display:flex;align-items:center;gap:8px;font-size:.72rem;opacity:.85;border:1px solid rgba(128,128,128,.3);border-radius:999px;padding:5px 11px 5px 6px}
+  .sw i{width:14px;height:14px;border-radius:4px;display:inline-block}
+  .panel{max-width:1180px;margin:0 auto}
+  .cap{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;opacity:.5;margin-bottom:14px;font-weight:600}
+  .webwrap{overflow-x:auto;padding-bottom:8px}
+  .phones{display:flex;justify-content:center}
+  a,button{font-family:inherit}
+  [tabindex]:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid #c65f3c;outline-offset:3px;border-radius:6px}
+  @keyframes ptFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .rise{animation:ptFade .7s cubic-bezier(.2,.7,.3,1) both}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+  <header class="head">
+    <div class="eyebrow">Habit + Task Tracker · premium skin</div>
+    <h1>Terra, <i>warm &amp; editorial</i></h1>
+    <p class="sub">The same bone &amp; espresso language as Pocket, now on the day's ritual: terracotta/ochre/sage accents, serif Newsreader numerals, and a segmented ribbon that fills as habits are kept.</p>
+    <div class="swatches"><span class="sw"><i style="background:#ded3c1"></i>#ded3c1</span><span class="sw"><i style="background:#c65f3c"></i>#c65f3c</span><span class="sw"><i style="background:#7a8b6f"></i>#7a8b6f</span><span class="sw"><i style="background:#2c2620"></i>#2c2620</span></div>
+  </header>
+
+  <!-- ============================ WEB ============================ -->
+  <section class="panel"><div class="cap">Web · desktop</div><div class="webwrap"><div class="rise" style="width:1140px;border-radius:26px;overflow:hidden;background:#efe7d8;border:1px solid #ddd0bb;box-shadow:0 40px 100px rgba(70,52,36,.28);">
+    <div style="display:flex;">
+      <!-- left rail -->
+      <nav aria-label="Primary" style="width:210px;flex-shrink:0;background:#e7ddcc;border-right:1px solid #d8cab3;padding:26px 18px;display:flex;flex-direction:column;gap:4px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 8px 22px;">
+          <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#c65f3c,#a94b2d);display:flex;align-items:center;justify-content:center;font-family:'Newsreader',serif;font-weight:600;font-size:15px;color:#fdf6ec;">T</div>
+          <span style="font-family:'Newsreader',serif;font-weight:500;font-size:18px;color:#2c2620;">Terra</span>
+        </div>
+        <a href="#" style="display:flex;align-items:center;gap:11px;text-decoration:none;padding:10px 12px;border-radius:11px;background:#fffdf8;border:1px solid #e6dcc9;box-shadow:0 6px 16px rgba(120,90,60,.07);font-size:13px;color:#2c2620;font-weight:600;">◎ <span>Today</span></a>
+        <a href="#" style="display:flex;align-items:center;gap:11px;text-decoration:none;padding:10px 12px;border-radius:11px;font-size:13px;color:#8a7f6f;">▤ <span>Habits</span></a>
+        <a href="#" style="display:flex;align-items:center;gap:11px;text-decoration:none;padding:10px 12px;border-radius:11px;font-size:13px;color:#8a7f6f;">◈ <span>Goals</span></a>
+        <a href="#" style="display:flex;align-items:center;gap:11px;text-decoration:none;padding:10px 12px;border-radius:11px;font-size:13px;color:#8a7f6f;">◇ <span>Analytics</span></a>
+        <a href="#" style="display:flex;align-items:center;gap:11px;text-decoration:none;padding:10px 12px;border-radius:11px;font-size:13px;color:#8a7f6f;">◐ <span>Pocket</span></a>
+        <a href="#" style="display:flex;align-items:center;gap:11px;text-decoration:none;padding:10px 12px;border-radius:11px;font-size:13px;color:#8a7f6f;">⚙ <span>Settings</span></a>
+        <div style="margin-top:auto;padding:14px 12px 4px;border-top:1px solid #d8cab3;">
+          <div style="font-size:11px;letter-spacing:1.5px;color:#a59a89;">LEVEL 12</div>
+          <div style="font-family:'Newsreader',serif;font-style:italic;font-size:15px;color:#2c2620;margin-top:3px;">Operator</div>
+        </div>
+      </nav>
+
+      <!-- main -->
+      <div style="flex:1;padding:26px 34px 36px;min-width:0;">
+        <!-- top bar -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:22px;border-bottom:1px solid #d8cab3;margin-bottom:28px;">
+          <div>
+            <div style="font-family:'Newsreader',serif;font-style:italic;font-size:15px;color:#8a7f6f;">Thursday · July 9</div>
+            <div style="font-family:'Newsreader',serif;font-weight:500;font-size:27px;color:#2c2620;letter-spacing:-.01em;margin-top:2px;">Good evening, Hussien</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="display:flex;align-items:center;gap:8px;background:#fffdf8;border:1px solid #e2d7c3;border-radius:11px;padding:9px 15px;font-size:13px;color:#2c2620;">🔥 <span style="font-family:'Newsreader',serif;font-size:16px;">47</span> <span style="color:#a59a89;font-size:12px;">day streak · best</span></div>
+            <button style="display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#c65f3c,#a94b2d);border:0;border-radius:11px;padding:11px 18px;font-size:13px;font-weight:600;color:#fdf6ec;box-shadow:0 10px 24px rgba(166,75,45,.3);cursor:pointer;"><span style="font-size:15px;line-height:1;">+</span> Add habit</button>
+          </div>
+        </div>
+
+        <!-- hero row -->
+        <div style="display:flex;gap:22px;">
+          <!-- signature hero -->
+          <div style="flex:1.6;position:relative;border-radius:22px;padding:30px 34px;background:linear-gradient(160deg,#fffdf8,#f6efe1);border:1px solid #e6dcc9;box-shadow:0 2px 0 #fffefb inset, 0 16px 40px rgba(120,90,60,.1);overflow:hidden;">
+            <div style="position:absolute;top:-40px;right:-30px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(198,95,60,.12),transparent 70%);"></div>
+            <div style="position:relative;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div style="font-family:'Newsreader',serif;font-style:italic;font-size:16px;color:#8a7f6f;">Today's ritual</div>
+                <span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#5e6f52;background:rgba(122,139,111,.14);border:1px solid rgba(122,139,111,.3);border-radius:20px;padding:5px 12px;"><span style="width:6px;height:6px;border-radius:50%;background:#7a8b6f;"></span>On pace</span>
+              </div>
+              <div style="display:flex;align-items:flex-end;gap:14px;margin-top:14px;">
+                <div style="font-family:'Newsreader',serif;font-weight:500;font-size:72px;line-height:.82;letter-spacing:-1px;color:#2c2620;">2<span style="color:#a59a89;font-size:40px;"> / 5</span></div>
+                <div style="font-size:15px;color:#8a7f6f;padding-bottom:10px;">habits kept</div>
+              </div>
+              <div style="font-family:'Newsreader',serif;font-style:italic;font-size:15px;color:#c65f3c;margin-top:12px;">+50 XP earned today · 3 more to hold the streak</div>
+
+              <!-- SIGNATURE ribbon: 2 filled, 3 hatch -->
+              <div style="margin-top:26px;">
+                <div role="img" aria-label="2 of 5 habits kept today" style="display:flex;gap:5px;height:14px;">
+                  <div style="flex:1;border-radius:8px;background:#c65f3c;"></div>
+                  <div style="flex:1;border-radius:8px;background:#d9a441;"></div>
+                  <div style="flex:1;border-radius:8px;background:repeating-linear-gradient(45deg,#e8ddc9,#e8ddc9 5px,#ded0b6 5px,#ded0b6 10px);"></div>
+                  <div style="flex:1;border-radius:8px;background:repeating-linear-gradient(45deg,#e8ddc9,#e8ddc9 5px,#ded0b6 5px,#ded0b6 10px);"></div>
+                  <div style="flex:1;border-radius:8px;background:repeating-linear-gradient(45deg,#e8ddc9,#e8ddc9 5px,#ded0b6 5px,#ded0b6 10px);"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:13px;">
+                  <span style="color:#6f6558;">Kept <strong style="color:#2c2620;font-weight:600;">2</strong> · Remaining <strong style="color:#2c2620;font-weight:600;">3</strong></span>
+                  <span style="color:#6f6558;">Streak <strong style="color:#2c2620;font-weight:600;font-family:'Newsreader',serif;">47</strong> days</span>
+                </div>
+              </div>
+
+              <!-- level XP progress -->
+              <div style="margin-top:26px;padding-top:22px;border-top:1px solid #ece1cd;">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
+                  <span style="font-size:13px;color:#6f6558;"><strong style="color:#2c2620;font-family:'Newsreader',serif;font-size:16px;">Level 12</strong> · Operator</span>
+                  <span style="font-family:'Newsreader',serif;font-style:italic;font-size:13px;color:#c65f3c;">640 XP to Architect</span>
+                </div>
+                <div style="height:10px;border-radius:6px;background:#ece1cd;overflow:hidden;"><div style="height:100%;width:64%;background:linear-gradient(90deg,#c65f3c,#d9a441);border-radius:6px;"></div></div>
+                <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:#a59a89;"><span>Operator</span><span>64% · next: Architect</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- right: scores + reward -->
+          <div style="width:300px;display:flex;flex-direction:column;gap:16px;">
+            <div style="border-radius:22px;padding:20px 22px;background:#fffdf8;border:1px solid #e6dcc9;box-shadow:0 12px 30px rgba(120,90,60,.08);">
+              <div style="font-family:'Newsreader',serif;font-style:italic;font-size:15px;color:#2c2620;margin-bottom:16px;">Where your focus went</div>
+              <!-- Day -->
+              <div style="margin-bottom:15px;">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#6f6558;"><span style="letter-spacing:.5px;">DAY</span><span style="font-family:'Newsreader',serif;font-size:15px;color:#2c2620;">50 <span style="color:#a59a89;font-size:12px;">/ 125</span></span></div>
+                <div style="height:7px;border-radius:5px;background:#ece1cd;margin-top:6px;overflow:hidden;"><div style="height:100%;width:40%;background:#c65f3c;border-radius:5px;"></div></div>
+              </div>
+              <!-- Week -->
+              <div style="margin-bottom:15px;">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#6f6558;"><span style="letter-spacing:.5px;">WEEK</span><span style="font-family:'Newsreader',serif;font-size:15px;color:#2c2620;">720 <span style="color:#a59a89;font-size:12px;">/ 875</span></span></div>
+                <div style="height:7px;border-radius:5px;background:#ece1cd;margin-top:6px;overflow:hidden;"><div style="height:100%;width:82%;background:#d9a441;border-radius:5px;"></div></div>
+              </div>
+              <!-- Month -->
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#6f6558;"><span style="letter-spacing:.5px;">MONTH</span><span style="font-family:'Newsreader',serif;font-size:15px;color:#2c2620;">2,640 <span style="color:#a59a89;font-size:12px;">/ 3,720</span></span></div>
+                <div style="height:7px;border-radius:5px;background:#ece1cd;margin-top:6px;overflow:hidden;"><div style="height:100%;width:71%;background:#7a8b6f;border-radius:5px;"></div></div>
+              </div>
+            </div>
+
+            <!-- reward (espresso card for rhythm) -->
+            <div style="border-radius:22px;padding:22px 24px;background:#2c2620;box-shadow:0 12px 30px rgba(60,44,30,.25);">
+              <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-family:'Newsreader',serif;font-style:italic;font-size:15px;color:#c9a98a;">Reward ready</div><span style="font-family:'Newsreader',serif;font-size:14px;color:#d9a441;">200 XP</span></div>
+              <div style="display:flex;align-items:center;gap:12px;margin-top:14px;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#3a332a;display:flex;align-items:center;justify-content:center;font-size:22px;">☕</div>
+                <div style="flex:1;"><div style="font-size:14px;color:#f4efe6;">Flat white</div><div style="font-size:11px;color:#a59683;">You've banked enough XP</div></div>
+              </div>
+              <button style="width:100%;margin-top:16px;background:linear-gradient(135deg,#c65f3c,#a94b2d);border:0;border-radius:11px;padding:11px;font-size:13px;font-weight:600;color:#fdf6ec;cursor:pointer;">Claim</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- lower: habits + tasks/challenge -->
+        <div style="display:flex;gap:22px;margin-top:22px;">
+          <!-- habits list -->
+          <div style="flex:1.6;border-radius:22px;padding:24px 28px;background:#fffdf8;border:1px solid #e6dcc9;box-shadow:0 12px 30px rgba(120,90,60,.08);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;"><div style="font-family:'Newsreader',serif;font-style:italic;font-size:16px;color:#2c2620;">Today's habits</div><div style="font-size:12px;color:#a59a89;">5 habits</div></div>
+
+            <!-- habit row template -->
+            <!-- 1 DONE -->
+            <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #f0e6d4;">
+              <button aria-pressed="true" aria-label="Morning exercise kept" style="width:26px;height:26px;flex-shrink:0;border-radius:8px;border:0;background:#c65f3c;color:#fdf6ec;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;">✓</button>
+              <div style="width:34px;height:34px;border-radius:11px;background:#f4ece0;display:flex;align-items:center;justify-content:center;font-size:16px;">🏃</div>
+              <div style="flex:1;min-width:0;"><div style="font-size:14px;color:#2c2620;">Morning exercise</div><div style="font-size:11px;color:#a59a89;margin-top:2px;">🔥 streak <span style="font-family:'Newsreader',serif;color:#6f6558;">12</span></div></div>
+              <div style="display:flex;gap:4px;">
+                <i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i>
+              </div>
+              <div style="width:64px;text-align:right;font-family:'Newsreader',serif;font-size:15px;color:#c65f3c;">+30 <span style="font-size:11px;color:#a59a89;">XP</span></div>
+            </div>
+            <!-- 2 DONE -->
+            <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #f0e6d4;">
+              <button aria-pressed="true" aria-label="Read 20 minutes kept" style="width:26px;height:26px;flex-shrink:0;border-radius:8px;border:0;background:#c65f3c;color:#fdf6ec;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;">✓</button>
+              <div style="width:34px;height:34px;border-radius:11px;background:#f4ece0;display:flex;align-items:center;justify-content:center;font-size:16px;">📖</div>
+              <div style="flex:1;min-width:0;"><div style="font-size:14px;color:#2c2620;">Read 20 minutes</div><div style="font-size:11px;color:#a59a89;margin-top:2px;">🔥 streak <span style="font-family:'Newsreader',serif;color:#6f6558;">8</span></div></div>
+              <div style="display:flex;gap:4px;">
+                <i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i>
+              </div>
+              <div style="width:64px;text-align:right;font-family:'Newsreader',serif;font-size:15px;color:#c65f3c;">+20 <span style="font-size:11px;color:#a59a89;">XP</span></div>
+            </div>
+            <!-- 3 not done -->
+            <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #f0e6d4;">
+              <button aria-pressed="false" aria-label="Drink 2L water not kept" style="width:26px;height:26px;flex-shrink:0;border-radius:8px;border:1.5px solid #d8cab3;background:transparent;cursor:pointer;"></button>
+              <div style="width:34px;height:34px;border-radius:11px;background:#f4ece0;display:flex;align-items:center;justify-content:center;font-size:16px;">💧</div>
+              <div style="flex:1;min-width:0;"><div style="font-size:14px;color:#2c2620;">Drink 2L water</div><div style="font-size:11px;color:#a59a89;margin-top:2px;">streak <span style="font-family:'Newsreader',serif;color:#6f6558;">0</span> · start today</div></div>
+              <div style="display:flex;gap:4px;">
+                <i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#c65f3c;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i>
+              </div>
+              <div style="width:64px;text-align:right;font-family:'Newsreader',serif;font-size:15px;color:#8a7f6f;">+10 <span style="font-size:11px;color:#a59a89;">XP</span></div>
+            </div>
+            <!-- 4 not done -->
+            <div style="display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid #f0e6d4;">
+              <button aria-pressed="false" aria-label="Evening stillness not kept" style="width:26px;height:26px;flex-shrink:0;border-radius:8px;border:1.5px solid #d8cab3;background:transparent;cursor:pointer;"></button>
+              <div style="width:34px;height:34px;border-radius:11px;background:#f4ece0;display:flex;align-items:center;justify-content:center;font-size:16px;">🧘</div>
+              <div style="flex:1;min-width:0;"><div style="font-size:14px;color:#2c2620;">Evening stillness</div><div style="font-size:11px;color:#a59a89;margin-top:2px;">🔥 streak <span style="font-family:'Newsreader',serif;color:#6f6558;">4</span></div></div>
+              <div style="display:flex;gap:4px;">
+                <i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#7a8b6f;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#7a8b6f;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#7a8b6f;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#7a8b6f;display:block;"></i>
+              </div>
+              <div style="width:64px;text-align:right;font-family:'Newsreader',serif;font-size:15px;color:#8a7f6f;">+15 <span style="font-size:11px;color:#a59a89;">XP</span></div>
+            </div>
+            <!-- 5 not done -->
+            <div style="display:flex;align-items:center;gap:14px;padding:13px 0;">
+              <button aria-pressed="false" aria-label="Write one page not kept" style="width:26px;height:26px;flex-shrink:0;border-radius:8px;border:1.5px solid #d8cab3;background:transparent;cursor:pointer;"></button>
+              <div style="width:34px;height:34px;border-radius:11px;background:#f4ece0;display:flex;align-items:center;justify-content:center;font-size:16px;">✏️</div>
+              <div style="flex:1;min-width:0;"><div style="font-size:14px;color:#2c2620;">Write one page</div><div style="font-size:11px;color:#a59a89;margin-top:2px;">🔥 streak <span style="font-family:'Newsreader',serif;color:#6f6558;">23</span></div></div>
+              <div style="display:flex;gap:4px;">
+                <i style="width:6px;height:6px;border-radius:50%;background:#b07a4f;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#b07a4f;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#b07a4f;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#b07a4f;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#e6dcc9;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#b07a4f;display:block;"></i><i style="width:6px;height:6px;border-radius:50%;background:#b07a4f;display:block;"></i>
+              </div>
+              <div style="width:64px;text-align:right;font-family:'Newsreader',serif;font-size:15px;color:#8a7f6f;">+25 <span style="font-size:11px;color:#a59a89;">XP</span></div>
+            </div>
+          </div>
+
+          <!-- right: tasks + challenge -->
+          <div style="width:300px;display:flex;flex-direction:column;gap:16px;">
+            <div style="border-radius:22px;padding:22px 24px;background:#fffdf8;border:1px solid #e6dcc9;box-shadow:0 12px 30px rgba(120,90,60,.08);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div style="font-family:'Newsreader',serif;font-style:italic;font-size:16px;color:#2c2620;">Tasks</div><div style="font-size:12px;color:#a59a89;">1 / 3 done</div></div>
+              <!-- task DONE -->
+              <div style="display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #f0e6d4;">
+                <button aria-pressed="true" aria-label="Reply to client email done" style="width:22px;height:22px;flex-shrink:0;border-radius:7px;border:0;background:#c65f3c;color:#fdf6ec;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;">✓</button>
+                <div style="flex:1;min-width:0;"><div style="font-size:13px;color:#8a7f6f;text-decoration:line-through;">Reply to client email</div><div style="margin-top:4px;"><span style="font-size:10px;color:#a94b2d;background:rgba(198,95,60,.12);border-radius:20px;padding:2px 8px;">High</span></div></div>
+                <div style="font-family:'Newsreader',serif;font-size:14px;color:#c65f3c;">+15</div>
+              </div>
+              <!-- task -->
+              <div style="display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #f0e6d4;">
+                <button aria-pressed="false" aria-label="Draft project proposal" style="width:22px;height:22px;flex-shrink:0;border-radius:7px;border:1.5px solid #d8cab3;background:transparent;cursor:pointer;"></button>
+                <div style="flex:1;min-width:0;"><div style="font-size:13px;color:#2c2620;">Draft project proposal</div><div style="margin-top:4px;"><span style="font-size:10px;color:#8a6a2a;background:rgba(217,164,65,.16);border-radius:20px;padding:2px 8px;">Medium</span></div></div>
+                <div style="font-family:'Newsreader',serif;font-size:14px;color:#8a7f6f;">+25</div>
+              </div>
+              <!-- task -->
+              <div style="display:flex;align-items:center;gap:11px;padding:11px 0;">
+                <button aria-pressed="false" aria-label="Grocery run" style="width:22px;height:22px;flex-shrink:0;border-radius:7px;border:1.5px solid #d8cab3;background:transparent;cursor:pointer;"></button>
+                <div style="flex:1;min-width:0;"><div style="font-size:13px;color:#2c2620;">Grocery run</div><div style="margin-top:4px;"><span style="font-size:10px;color:#5e6f52;background:rgba(122,139,111,.16);border-radius:20px;padding:2px 8px;">Low</span></div></div>
+                <div style="font-family:'Newsreader',serif;font-size:14px;color:#8a7f6f;">+10</div>
+              </div>
+            </div>
+
+            <!-- daily challenge -->
+            <div style="border-radius:22px;padding:20px 22px;background:linear-gradient(160deg,#fffdf8,#f6efe1);border:1px solid #e6dcc9;box-shadow:0 12px 30px rgba(120,90,60,.08);">
+              <div style="display:flex;align-items:center;gap:9px;"><span style="font-size:16px;">🎯</span><div style="font-family:'Newsreader',serif;font-style:italic;font-size:15px;color:#2c2620;">Daily challenge</div></div>
+              <div style="font-size:13px;color:#6f6558;line-height:1.5;margin-top:10px;">Finish <strong style="color:#2c2620;">3 habits before noon</strong></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;"><div style="height:6px;flex:1;border-radius:4px;background:#ece1cd;overflow:hidden;margin-right:12px;"><div style="height:100%;width:66%;background:#d9a441;border-radius:4px;"></div></div><span style="font-family:'Newsreader',serif;font-size:14px;color:#c65f3c;">+20 XP</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div></section>
+
+  <!-- ============================ MOBILE ============================ -->
+  <section class="panel" style="margin-top:56px"><div class="cap">Mobile · app</div><div class="phones"><div class="rise" style="width:340px;border-radius:44px;padding:11px;background:linear-gradient(160deg,#efe7d8,#cdbfa8);box-shadow:0 40px 100px rgba(70,52,36,.32);flex-shrink:0;">
+    <div style="border-radius:34px;overflow:hidden;background:#efe7d8;position:relative;">
+      <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:12px;color:#6f6558;"><span style="font-weight:600;">9:41</span><span>􀙇 􀖇 􀛨</span></div>
+      <div style="padding:8px 20px 26px;">
+        <!-- greeting -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+          <div><div style="font-family:'Newsreader',serif;font-style:italic;font-size:14px;color:#8a7f6f;">Thursday · July 9</div><div style="font-family:'Newsreader',serif;font-weight:500;font-size:19px;color:#2c2620;">Good evening, Hussien</div></div>
+          <div style="display:flex;align-items:center;gap:6px;background:#fffdf8;border:1px solid #e2d7c3;border-radius:20px;padding:6px 11px;font-size:12px;">🔥 <span style="font-family:'Newsreader',serif;font-size:14px;color:#2c2620;">47</span></div>
+        </div>
+
+        <!-- hero -->
+        <div style="position:relative;border-radius:24px;padding:24px 22px;background:linear-gradient(160deg,#fffdf8,#f6efe1);border:1px solid #e6dcc9;box-shadow:0 12px 30px rgba(120,90,60,.1);overflow:hidden;">
+          <div style="position:absolute;top:-30px;right:-20px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(198,95,60,.12),transparent 70%);"></div>
+          <div style="position:relative;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-family:'Newsreader',serif;font-style:italic;font-size:14px;color:#8a7f6f;">Today's ritual</span><span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#5e6f52;background:rgba(122,139,111,.14);border:1px solid rgba(122,139,111,.3);border-radius:20px;padding:3px 10px;"><span style="width:5px;height:5px;border-radius:50%;background:#7a8b6f;"></span>On pace</span></div>
+            <div style="display:flex;align-items:flex-end;gap:10px;margin-top:12px;"><div style="font-family:'Newsreader',serif;font-weight:500;font-size:52px;line-height:.82;letter-spacing:-1px;color:#2c2620;">2<span style="color:#a59a89;font-size:28px;"> / 5</span></div><div style="font-size:13px;color:#8a7f6f;padding-bottom:7px;">habits kept</div></div>
+            <div style="font-family:'Newsreader',serif;font-style:italic;font-size:13px;color:#c65f3c;margin-top:8px;">+50 XP today · streak 47</div>
+            <!-- ribbon -->
+            <div role="img" aria-label="2 of 5 habits kept" style="margin-top:16px;display:flex;gap:5px;height:12px;">
+              <div style="flex:1;border-radius:7px;background:#c65f3c;"></div><div style="flex:1;border-radius:7px;background:#d9a441;"></div><div style="flex:1;border-radius:7px;background:repeating-linear-gradient(45deg,#e8ddc9,#e8ddc9 4px,#ded0b6 4px,#ded0b6 8px);"></div><div style="flex:1;border-radius:7px;background:repeating-linear-gradient(45deg,#e8ddc9,#e8ddc9 4px,#ded0b6 4px,#ded0b6 8px);"></div><div style="flex:1;border-radius:7px;background:repeating-linear-gradient(45deg,#e8ddc9,#e8ddc9 4px,#ded0b6 4px,#ded0b6 8px);"></div>
+            </div>
+            <!-- level -->
+            <div style="margin-top:18px;padding-top:16px;border-top:1px solid #ece1cd;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#6f6558;margin-bottom:8px;"><span><strong style="color:#2c2620;font-family:'Newsreader',serif;">Lvl 12</strong> · Operator</span><span style="font-family:'Newsreader',serif;font-style:italic;color:#c65f3c;">640 to Architect</span></div>
+              <div style="height:8px;border-radius:5px;background:#ece1cd;overflow:hidden;"><div style="height:100%;width:64%;background:linear-gradient(90deg,#c65f3c,#d9a441);border-radius:5px;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- scores strip -->
+        <div style="display:flex;gap:10px;margin-top:14px;">
+          <div style="flex:1;border-radius:16px;padding:13px;background:#fffdf8;border:1px solid #e6dcc9;"><div style="font-size:10px;letter-spacing:1px;color:#a59a89;">DAY</div><div style="font-family:'Newsreader',serif;font-size:15px;color:#2c2620;margin-top:3px;">50<span style="font-size:11px;color:#a59a89;">/125</span></div></div>
+          <div style="flex:1;border-radius:16px;padding:13px;background:#fffdf8;border:1px solid #e6dcc9;"><div style="font-size:10px;letter-spacing:1px;color:#a59a89;">WEEK</div><div style="font-family:'Newsreader',serif;font-size:15px;color:#2c2620;margin-top:3px;">720<span style="font-size:11px;color:#a59a89;">/875</span></div></div>
+          <div style="flex:1;border-radius:16px;padding:13px;background:#fffdf8;border:1px solid #e6dcc9;"><div style="font-size:10px;letter-spacing:1px;color:#a59a89;">MONTH</div><div style="font-family:'Newsreader',serif;font-size:15px;color:#c65f3c;margin-top:3px;">2,640</div></div>
+        </div>
+
+        <!-- habits condensed -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:22px 2px 12px;"><span style="font-family:'Newsreader',serif;font-style:italic;font-size:15px;color:#2c2620;">Today's habits</span><span style="font-size:12px;color:#c65f3c;">All</span></div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #e2d7c3;">
+          <button aria-pressed="true" aria-label="Morning exercise kept" style="width:24px;height:24px;flex-shrink:0;border-radius:8px;border:0;background:#c65f3c;color:#fdf6ec;font-size:13px;cursor:pointer;">✓</button>
+          <div style="width:32px;height:32px;border-radius:10px;background:#f4ece0;display:flex;align-items:center;justify-content:center;font-size:15px;">🏃</div>
+          <div style="flex:1;"><div style="font-size:13px;color:#2c2620;">Morning exercise</div><div style="font-size:11px;color:#a59a89;">🔥 <span style="font-family:'Newsreader',serif;">12</span></div></div>
+          <div style="font-family:'Newsreader',serif;font-size:14px;color:#c65f3c;">+30</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #e2d7c3;">
+          <button aria-pressed="true" aria-label="Read 20 minutes kept" style="width:24px;height:24px;flex-shrink:0;border-radius:8px;border:0;background:#c65f3c;color:#fdf6ec;font-size:13px;cursor:pointer;">✓</button>
+          <div style="width:32px;height:32px;border-radius:10px;background:#f4ece0;display:flex;align-items:center;justify-content:center;font-size:15px;">📖</div>
+          <div style="flex:1;"><div style="font-size:13px;color:#2c2620;">Read 20 minutes</div><div style="font-size:11px;color:#a59a89;">🔥 <span style="font-family:'Newsreader',serif;">8</span></div></div>
+          <div style="font-family:'Newsreader',serif;font-size:14px;color:#c65f3c;">+20</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;">
+          <button aria-pressed="false" aria-label="Drink 2L water not kept" style="width:24px;height:24px;flex-shrink:0;border-radius:8px;border:1.5px solid #d8cab3;background:transparent;cursor:pointer;"></button>
+          <div style="width:32px;height:32px;border-radius:10px;background:#f4ece0;display:flex;align-items:center;justify-content:center;font-size:15px;">💧</div>
+          <div style="flex:1;"><div style="font-size:13px;color:#2c2620;">Drink 2L water</div><div style="font-size:11px;color:#a59a89;">streak <span style="font-family:'Newsreader',serif;">0</span></div></div>
+          <div style="font-family:'Newsreader',serif;font-size:14px;color:#8a7f6f;">+10</div>
+        </div>
+
+        <!-- reward -->
+        <div style="margin-top:16px;border-radius:18px;padding:16px 18px;background:#2c2620;display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#3a332a;display:flex;align-items:center;justify-content:center;font-size:20px;">☕</div>
+          <div style="flex:1;"><div style="font-size:13px;color:#f4efe6;">Flat white</div><div style="font-size:11px;color:#a59683;font-family:'Newsreader',serif;font-style:italic;">200 XP · ready</div></div>
+          <button style="background:linear-gradient(135deg,#c65f3c,#a94b2d);border:0;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:600;color:#fdf6ec;cursor:pointer;">Claim</button>
+        </div>
+      </div>
+
+      <!-- bottom bar + FAB -->
+      <div style="position:relative;height:64px;background:#fffdf8;border-top:1px solid #e6dcc9;display:flex;align-items:center;justify-content:space-around;font-size:18px;color:#a59a89;"><span style="color:#c65f3c;">◎</span><span>▤</span><span style="width:40px;"></span><span>◇</span><span>⚙</span>
+        <button aria-label="Add habit" style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);width:52px;height:52px;border:0;border-radius:50%;background:linear-gradient(135deg,#c65f3c,#a94b2d);display:flex;align-items:center;justify-content:center;font-size:26px;color:#fdf6ec;box-shadow:0 12px 28px rgba(166,75,45,.5);cursor:pointer;">+</button>
+      </div>
+    </div>
+  </div></div></section>
+</body></html>

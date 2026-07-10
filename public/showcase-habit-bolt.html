@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolt — Habit + Task Tracker · web + mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#d9d2c2;min-height:100vh;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:44px clamp(16px,4vw,56px) 90px}
+  .head{max-width:1180px;margin:0 auto 34px;color:#181410}
+  .eyebrow{font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;opacity:.6;font-weight:600;margin-bottom:10px}
+  .head h1{font-family:Archivo;font-weight:600;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.02em;margin-bottom:8px}
+  .head h1 i{font-style:italic}
+  .sub{opacity:.78;font-size:.95rem;max-width:64ch;line-height:1.55}
+  .swatches{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .sw{display:flex;align-items:center;gap:8px;font-size:.72rem;opacity:.85;border:1px solid rgba(128,128,128,.3);border-radius:999px;padding:5px 11px 5px 6px}
+  .sw i{width:14px;height:14px;border-radius:4px;display:inline-block}
+  .panel{max-width:1180px;margin:0 auto}
+  .cap{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;opacity:.5;margin-bottom:14px;font-weight:600}
+  .webwrap{overflow-x:auto;padding-bottom:8px}
+  .phones{display:flex;justify-content:center}
+  .b-app{animation:ptFade .5s ease both}
+  a:focus-visible,[tabindex]:focus-visible,.tapp:focus-visible{outline:3px solid #2f4bff;outline-offset:2px}
+  /* tactile press on interactive blocks */
+  .tapp{cursor:pointer;transition:transform .08s,box-shadow .08s}
+  .tapp:active{transform:translate(2px,2px)}
+  .tapp.sh:active{box-shadow:2px 2px 0 #181410!important}
+  @keyframes ptFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+  <header class="head">
+    <div class="eyebrow">Habit + Task Tracker · premium skin</div>
+    <h1>Bolt <i>on paper</i></h1>
+    <p class="sub">Neo-brutalist paper on the habit dashboard: flat solid fills, 2.5px near-black ink outlines on everything, hard offset shadows with no blur, zero border-radius, Archivo headings + Space Mono ledger numbers. Same language as the Pocket screen — only the content changes.</p>
+    <div class="swatches"><span class="sw"><i style="background:#d9d2c2"></i>#d9d2c2</span><span class="sw"><i style="background:#2f4bff"></i>#2f4bff</span><span class="sw"><i style="background:#c6f24e"></i>#c6f24e</span><span class="sw"><i style="background:#181410"></i>#181410</span></div>
+  </header>
+
+  <section class="panel"><div class="cap">Web · desktop</div><div class="webwrap"><div class="b-app" style="width:1140px;border:3px solid #181410;background:#ece7da;box-shadow:10px 10px 0 #181410;">
+      <div style="display:flex;">
+        <!-- left rail -->
+        <div style="width:196px;flex-shrink:0;border-right:3px solid #181410;background:#ece7da;padding:22px 16px;display:flex;flex-direction:column;gap:26px;">
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#fff;">H</div><span style="font-family:'Archivo',sans-serif;font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:-.5px;">Habits</span></div>
+          <nav style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;">
+            <span class="tapp" tabindex="0" style="background:#181410;color:#ece7da;border:2.5px solid #181410;box-shadow:3px 3px 0 #181410;padding:10px 12px;">Today</span>
+            <span class="tapp" tabindex="0" style="color:#5c554a;padding:10px 12px;">Habits</span>
+            <span class="tapp" tabindex="0" style="color:#5c554a;padding:10px 12px;">Goals</span>
+            <span class="tapp" tabindex="0" style="color:#5c554a;padding:10px 12px;">Analytics</span>
+            <span class="tapp" tabindex="0" style="color:#5c554a;padding:10px 12px;">Pocket</span>
+            <span class="tapp" tabindex="0" style="color:#5c554a;padding:10px 12px;">Settings</span>
+          </nav>
+          <div style="margin-top:auto;border:2.5px solid #181410;background:#c6f24e;padding:12px 13px;">
+            <div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#3d4a12;">CURRENT STREAK</div>
+            <div style="display:flex;align-items:flex-end;gap:6px;margin-top:4px;"><span style="font-family:'Space Mono',monospace;font-weight:700;font-size:30px;line-height:1;color:#181410;">47</span><span style="font-size:11px;font-weight:800;color:#3d4a12;padding-bottom:4px;">DAYS 🔥</span></div>
+            <div style="font-size:10px;font-weight:700;color:#3d4a12;margin-top:3px;">Personal best</div>
+          </div>
+        </div>
+
+        <!-- main -->
+        <div style="flex:1;padding:24px 30px 32px;">
+          <!-- top bar -->
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:20px;border-bottom:3px solid #181410;margin-bottom:24px;">
+            <div>
+              <div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;margin-bottom:5px;">Thursday · July 9</div>
+              <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:26px;text-transform:uppercase;letter-spacing:-.8px;">Good evening, Hussien</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;text-transform:uppercase;color:#181410;background:#c6f24e;border:2.5px solid #181410;padding:6px 11px;">● Level 12 · Operator</span>
+              <span class="tapp sh" tabindex="0" style="background:#2f4bff;border:2.5px solid #181410;box-shadow:4px 4px 0 #181410;padding:9px 15px;font-size:12px;font-weight:800;text-transform:uppercase;color:#fff;">+ Add habit</span>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:22px;">
+            <!-- hero: today completion -->
+            <div style="flex:1.5;border:2.5px solid #181410;background:#fbf9f3;box-shadow:6px 6px 0 #181410;padding:24px 26px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;">Today's habits kept</div>
+                <span style="font-size:11px;font-weight:800;text-transform:uppercase;color:#fff;background:#2f4bff;border:2.5px solid #181410;padding:4px 10px;">+50 XP today</span>
+              </div>
+              <div style="display:flex;align-items:flex-end;gap:12px;margin-top:12px;">
+                <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:60px;line-height:.86;letter-spacing:-3px;color:#181410;">2<span style="font-size:34px;color:#5c554a;">/5</span></div>
+                <div style="font-size:13px;font-weight:700;color:#5c554a;padding-bottom:9px;">HABITS DONE</div>
+              </div>
+              <!-- signature segmented completion bar: 5 segments, 2 done -->
+              <div style="margin-top:20px;display:flex;height:26px;border:2.5px solid #181410;">
+                <div style="flex:1;background:#2f4bff;border-right:2.5px solid #181410;"></div>
+                <div style="flex:1;background:#c6f24e;border-right:2.5px solid #181410;"></div>
+                <div style="flex:1;background:repeating-linear-gradient(45deg,#ece7da,#ece7da 6px,#d9d2c2 6px,#d9d2c2 12px);border-right:2.5px solid #181410;"></div>
+                <div style="flex:1;background:repeating-linear-gradient(45deg,#ece7da,#ece7da 6px,#d9d2c2 6px,#d9d2c2 12px);border-right:2.5px solid #181410;"></div>
+                <div style="flex:1;background:repeating-linear-gradient(45deg,#ece7da,#ece7da 6px,#d9d2c2 6px,#d9d2c2 12px);"></div>
+              </div>
+
+              <!-- level / XP progress -->
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px;margin-bottom:9px;">
+                <span style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;">Level 12 · Operator → Architect</span>
+                <span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#181410;">640 XP TO GO</span>
+              </div>
+              <div style="height:18px;border:2.5px solid #181410;background:#ece7da;"><div style="height:100%;width:64%;background:#2f4bff;border-right:2.5px solid #181410;"></div></div>
+              <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:11px;font-weight:700;color:#5c554a;"><span>64% TO NEXT LEVEL</span><span>NEXT: <span style="color:#181410;">ARCHITECT</span></span></div>
+
+              <!-- daily challenge -->
+              <div style="margin-top:20px;display:flex;align-items:center;gap:14px;border:2.5px solid #181410;background:#c6f24e;padding:13px 16px;">
+                <div style="width:38px;height:38px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:19px;">🎯</div>
+                <div style="flex:1;"><div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#3d4a12;">DAILY CHALLENGE</div><div style="font-size:13px;font-weight:800;color:#181410;">Finish 3 habits before noon</div></div>
+                <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:#181410;">+20 XP</div>
+              </div>
+            </div>
+
+            <!-- right: scores + reward -->
+            <div style="width:308px;display:flex;flex-direction:column;gap:20px;">
+              <div style="border:2.5px solid #181410;background:#fbf9f3;box-shadow:6px 6px 0 #181410;padding:19px 21px;">
+                <div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;margin-bottom:15px;">Score</div>
+                <!-- day -->
+                <div style="margin-bottom:13px;">
+                  <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:5px;"><span style="color:#5c554a;">DAY</span><span style="font-family:'Space Mono',monospace;color:#181410;">50 / 125</span></div>
+                  <div style="height:12px;border:2px solid #181410;background:#ece7da;"><div style="height:100%;width:40%;background:#2f4bff;"></div></div>
+                </div>
+                <!-- week -->
+                <div style="margin-bottom:13px;">
+                  <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:5px;"><span style="color:#5c554a;">WEEK</span><span style="font-family:'Space Mono',monospace;color:#181410;">720 / 875</span></div>
+                  <div style="height:12px;border:2px solid #181410;background:#ece7da;"><div style="height:100%;width:82%;background:#2f4bff;"></div></div>
+                </div>
+                <!-- month -->
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:5px;"><span style="color:#5c554a;">MONTH</span><span style="font-family:'Space Mono',monospace;color:#181410;">2,640 / 3,720</span></div>
+                  <div style="height:12px;border:2px solid #181410;background:#ece7da;"><div style="height:100%;width:71%;background:#c6f24e;"></div></div>
+                </div>
+              </div>
+
+              <!-- reward -->
+              <div style="border:2.5px solid #181410;background:#2f4bff;box-shadow:6px 6px 0 #181410;padding:19px 21px;">
+                <div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c6d0ff;">Reward ready</div>
+                <div style="display:flex;align-items:center;gap:12px;margin-top:12px;">
+                  <div style="width:44px;height:44px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:22px;">☕</div>
+                  <div style="flex:1;"><div style="font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:-.3px;color:#fff;">Flat white</div><div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#c6f24e;">200 XP</div></div>
+                </div>
+                <span class="tapp sh" tabindex="0" style="display:block;text-align:center;margin-top:14px;background:#c6f24e;border:2.5px solid #181410;box-shadow:4px 4px 0 #181410;padding:9px;font-size:12px;font-weight:800;text-transform:uppercase;color:#181410;">Claim reward</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- lower: habits + tasks -->
+          <div style="display:flex;gap:22px;margin-top:22px;">
+            <!-- habits list -->
+            <div style="flex:1.5;border:2.5px solid #181410;background:#fbf9f3;box-shadow:6px 6px 0 #181410;padding:22px 24px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#181410;">Habits</div><div style="font-size:11px;font-weight:700;color:#5c554a;">2 / 5 KEPT</div></div>
+              <div style="display:flex;flex-direction:column;">
+                <!-- habit row template -->
+                <!-- 1 morning exercise DONE -->
+                <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:2px solid #e6ded0;">
+                  <span class="tapp" tabindex="0" role="checkbox" aria-checked="true" style="width:26px;height:26px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:15px;flex-shrink:0;">✓</span>
+                  <div style="width:34px;height:34px;border:2.5px solid #181410;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🏃</div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:800;color:#181410;">Morning exercise</div><div style="font-size:11px;font-weight:700;color:#5c554a;">STREAK <span style="font-family:'Space Mono',monospace;color:#181410;">12</span></div></div>
+                  <div style="display:flex;gap:5px;flex-shrink:0;">
+                    <span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span>
+                  </div>
+                  <div style="width:64px;text-align:right;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#181410;flex-shrink:0;">+30 XP</div>
+                </div>
+                <!-- 2 read DONE -->
+                <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:2px solid #e6ded0;">
+                  <span class="tapp" tabindex="0" role="checkbox" aria-checked="true" style="width:26px;height:26px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:15px;flex-shrink:0;">✓</span>
+                  <div style="width:34px;height:34px;border:2.5px solid #181410;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">📖</div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:800;color:#181410;">Read 20 minutes</div><div style="font-size:11px;font-weight:700;color:#5c554a;">STREAK <span style="font-family:'Space Mono',monospace;color:#181410;">8</span></div></div>
+                  <div style="display:flex;gap:5px;flex-shrink:0;">
+                    <span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span>
+                  </div>
+                  <div style="width:64px;text-align:right;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#181410;flex-shrink:0;">+20 XP</div>
+                </div>
+                <!-- 3 water not done -->
+                <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:2px solid #e6ded0;">
+                  <span class="tapp" tabindex="0" role="checkbox" aria-checked="false" style="width:26px;height:26px;border:2.5px solid #181410;background:#fbf9f3;flex-shrink:0;"></span>
+                  <div style="width:34px;height:34px;border:2.5px solid #181410;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">💧</div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:800;color:#181410;">Drink 2L water</div><div style="font-size:11px;font-weight:700;color:#5c554a;">STREAK <span style="font-family:'Space Mono',monospace;color:#181410;">0</span></div></div>
+                  <div style="display:flex;gap:5px;flex-shrink:0;">
+                    <span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span>
+                  </div>
+                  <div style="width:64px;text-align:right;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#181410;flex-shrink:0;">+10 XP</div>
+                </div>
+                <!-- 4 stillness not done -->
+                <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:2px solid #e6ded0;">
+                  <span class="tapp" tabindex="0" role="checkbox" aria-checked="false" style="width:26px;height:26px;border:2.5px solid #181410;background:#fbf9f3;flex-shrink:0;"></span>
+                  <div style="width:34px;height:34px;border:2.5px solid #181410;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">🧘</div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:800;color:#181410;">Evening stillness</div><div style="font-size:11px;font-weight:700;color:#5c554a;">STREAK <span style="font-family:'Space Mono',monospace;color:#181410;">4</span></div></div>
+                  <div style="display:flex;gap:5px;flex-shrink:0;">
+                    <span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span>
+                  </div>
+                  <div style="width:64px;text-align:right;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#181410;flex-shrink:0;">+15 XP</div>
+                </div>
+                <!-- 5 write not done -->
+                <div style="display:flex;align-items:center;gap:14px;padding:11px 0;">
+                  <span class="tapp" tabindex="0" role="checkbox" aria-checked="false" style="width:26px;height:26px;border:2.5px solid #181410;background:#fbf9f3;flex-shrink:0;"></span>
+                  <div style="width:34px;height:34px;border:2.5px solid #181410;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;">✏️</div>
+                  <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:800;color:#181410;">Write one page</div><div style="font-size:11px;font-weight:700;color:#5c554a;">STREAK <span style="font-family:'Space Mono',monospace;color:#181410;">23</span></div></div>
+                  <div style="display:flex;gap:5px;flex-shrink:0;">
+                    <span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#ece7da;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span><span style="width:11px;height:11px;border:2px solid #181410;background:#2f4bff;"></span>
+                  </div>
+                  <div style="width:64px;text-align:right;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#181410;flex-shrink:0;">+25 XP</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- tasks list -->
+            <div style="width:308px;border:2.5px solid #181410;background:#fbf9f3;box-shadow:6px 6px 0 #181410;padding:20px 22px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;">Tasks</div><div style="font-size:11px;font-weight:700;color:#5c554a;">1 / 3</div></div>
+              <!-- task done -->
+              <div style="display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:2px solid #e6ded0;">
+                <span class="tapp" tabindex="0" role="checkbox" aria-checked="true" style="width:24px;height:24px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px;flex-shrink:0;">✓</span>
+                <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:800;color:#5c554a;text-decoration:line-through;">Reply to client email</div><div style="margin-top:4px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#fff;background:#ff5a3c;border:2px solid #181410;padding:2px 6px;">High</span></div></div>
+                <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#181410;flex-shrink:0;">+15</div>
+              </div>
+              <!-- task medium -->
+              <div style="display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:2px solid #e6ded0;">
+                <span class="tapp" tabindex="0" role="checkbox" aria-checked="false" style="width:24px;height:24px;border:2.5px solid #181410;background:#fbf9f3;flex-shrink:0;"></span>
+                <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:800;color:#181410;">Draft project proposal</div><div style="margin-top:4px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#181410;background:#ffb43a;border:2px solid #181410;padding:2px 6px;">Medium</span></div></div>
+                <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#181410;flex-shrink:0;">+25</div>
+              </div>
+              <!-- task low -->
+              <div style="display:flex;align-items:center;gap:11px;padding:11px 0;">
+                <span class="tapp" tabindex="0" role="checkbox" aria-checked="false" style="width:24px;height:24px;border:2.5px solid #181410;background:#fbf9f3;flex-shrink:0;"></span>
+                <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:800;color:#181410;">Grocery run</div><div style="margin-top:4px;"><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#181410;background:#c6f24e;border:2px solid #181410;padding:2px 6px;">Low</span></div></div>
+                <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#181410;flex-shrink:0;">+10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></div></section>
+
+  <section class="panel" style="margin-top:56px"><div class="cap">Mobile · app</div><div class="phones"><div class="b-app" style="width:340px;border:3px solid #181410;background:#181410;padding:10px;box-shadow:10px 10px 0 #181410;flex-shrink:0;">
+      <div style="background:#ece7da;overflow:hidden;">
+        <div style="height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:700;color:#181410;border-bottom:2.5px solid #181410;"><span style="font-family:'Space Mono',monospace;">9:41</span><span>􀙇 􀖇 􀛨</span></div>
+        <div style="padding:16px 16px 22px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;">Thursday · July 9</div>
+            <div style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;text-transform:uppercase;background:#c6f24e;border:2.5px solid #181410;padding:4px 8px;">🔥 <span style="font-family:'Space Mono',monospace;">47</span></div>
+          </div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:19px;text-transform:uppercase;letter-spacing:-.5px;margin-bottom:14px;">Good evening, Hussien</div>
+
+          <!-- hero metric -->
+          <div style="border:2.5px solid #181410;background:#fbf9f3;box-shadow:5px 5px 0 #181410;padding:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;">Habits kept today</span><span style="font-size:9px;font-weight:800;text-transform:uppercase;color:#fff;background:#2f4bff;border:2px solid #181410;padding:3px 7px;">+50 XP</span></div>
+            <div style="display:flex;align-items:flex-end;gap:10px;margin-top:8px;"><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:44px;line-height:.86;letter-spacing:-2px;color:#181410;">2<span style="font-size:26px;color:#5c554a;">/5</span></div><div style="font-size:11px;font-weight:700;color:#5c554a;padding-bottom:6px;">LVL 12 · OPERATOR</div></div>
+            <div style="margin-top:14px;display:flex;height:20px;border:2.5px solid #181410;">
+              <div style="flex:1;background:#2f4bff;border-right:2px solid #181410;"></div>
+              <div style="flex:1;background:#c6f24e;border-right:2px solid #181410;"></div>
+              <div style="flex:1;background:repeating-linear-gradient(45deg,#ece7da,#ece7da 5px,#d9d2c2 5px,#d9d2c2 10px);border-right:2px solid #181410;"></div>
+              <div style="flex:1;background:repeating-linear-gradient(45deg,#ece7da,#ece7da 5px,#d9d2c2 5px,#d9d2c2 10px);border-right:2px solid #181410;"></div>
+              <div style="flex:1;background:repeating-linear-gradient(45deg,#ece7da,#ece7da 5px,#d9d2c2 5px,#d9d2c2 10px);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;font-weight:700;color:#5c554a;"><span>64% TO ARCHITECT</span><span style="font-family:'Space Mono',monospace;color:#181410;">640 XP</span></div>
+          </div>
+
+          <!-- scores -->
+          <div style="display:flex;gap:9px;margin-top:14px;">
+            <div style="flex:1;border:2.5px solid #181410;background:#fbf9f3;padding:11px;"><div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#5c554a;">DAY</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:13px;margin-top:3px;">50/125</div></div>
+            <div style="flex:1;border:2.5px solid #181410;background:#fbf9f3;padding:11px;"><div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#5c554a;">WEEK</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:13px;margin-top:3px;">720/875</div></div>
+            <div style="flex:1;border:2.5px solid #181410;background:#c6f24e;padding:11px;"><div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#3d4a12;">MONTH</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:13px;margin-top:3px;">2,640</div></div>
+          </div>
+
+          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:20px 2px 11px;">Today's habits</div>
+          <!-- habit 1 done -->
+          <div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:2px solid #e6ded0;">
+            <span style="width:24px;height:24px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:13px;flex-shrink:0;">✓</span>
+            <div style="width:30px;height:30px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">🏃</div>
+            <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:800;">Morning exercise</div><div style="font-size:10px;font-weight:700;color:#5c554a;">STREAK <span style="font-family:'Space Mono',monospace;color:#181410;">12</span></div></div>
+            <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;">+30</div>
+          </div>
+          <!-- habit 2 done -->
+          <div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:2px solid #e6ded0;">
+            <span style="width:24px;height:24px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:13px;flex-shrink:0;">✓</span>
+            <div style="width:30px;height:30px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">📖</div>
+            <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:800;">Read 20 minutes</div><div style="font-size:10px;font-weight:700;color:#5c554a;">STREAK <span style="font-family:'Space Mono',monospace;color:#181410;">8</span></div></div>
+            <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;">+20</div>
+          </div>
+          <!-- habit 3 not done -->
+          <div style="display:flex;align-items:center;gap:11px;padding:9px 0;">
+            <span style="width:24px;height:24px;border:2.5px solid #181410;background:#fbf9f3;flex-shrink:0;"></span>
+            <div style="width:30px;height:30px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">💧</div>
+            <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:800;">Drink 2L water</div><div style="font-size:10px;font-weight:700;color:#5c554a;">STREAK <span style="font-family:'Space Mono',monospace;color:#181410;">0</span></div></div>
+            <div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0;">+10</div>
+          </div>
+
+          <!-- reward -->
+          <div style="margin-top:16px;display:flex;align-items:center;gap:11px;border:2.5px solid #181410;background:#2f4bff;box-shadow:4px 4px 0 #181410;padding:13px;">
+            <div style="width:36px;height:36px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">☕</div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:900;text-transform:uppercase;color:#fff;">Flat white</div><div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#c6f24e;">200 XP</div></div>
+            <span class="tapp" tabindex="0" style="background:#c6f24e;border:2.5px solid #181410;padding:7px 11px;font-size:11px;font-weight:800;text-transform:uppercase;color:#181410;">Claim</span>
+          </div>
+        </div>
+
+        <!-- bottom bar -->
+        <div style="position:relative;height:60px;background:#fbf9f3;border-top:2.5px solid #181410;display:flex;align-items:center;justify-content:space-around;font-size:17px;font-weight:800;">
+          <span style="color:#2f4bff;" title="Today">◉</span><span style="color:#5c554a;" title="Habits">▦</span><span style="width:44px;"></span><span style="color:#5c554a;" title="Analytics">◇</span><span style="color:#5c554a;" title="Settings">⚙</span>
+          <div class="tapp sh" tabindex="0" style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:52px;height:52px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;box-shadow:4px 4px 0 #181410;">+</div>
+        </div>
+      </div>
+    </div></div></section>
+</body></html>

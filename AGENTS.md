@@ -809,6 +809,14 @@ The AI copilot lives OUTSIDE the app: Claude (Cowork/Claude Code with the Supaba
 - User setup for phone: claude.ai → Settings → Connectors → Supabase (official) → create a claude.ai Project with AI_COPILOT.md as knowledge.
 - The in-app chat variant (Edge Function proxy + API credits) was designed but not built — see plan history if ever wanted.
 
+## Whole-App Premium Skins (approved, NOT YET BUILT — handoff package)
+
+Five approved premium skins — **Aurora, Halo, Meridian, Terra, Bolt** — will become user-switchable whole-app looks (dashboard + goals + analytics + Pocket, web + Android) alongside `classic`. Nothing is built yet; the app is untouched.
+
+- **Build plan/prompt: [docs/redesign/BUILD_PROMPT.md](docs/redesign/BUILD_PROMPT.md)** (architecture: `settings.skin` → `data-skin` on `<html>` → CSS scoped `html[data-skin="…"]`; classic + the 5 themes stay byte-identical).
+- Token specs: `docs/redesign/tokens/<skin>.md`. Approved visual references: `public/showcase-habit-<skin>.html` (dashboard) + `public/showcase-<skin>.html` (Pocket) — review artifacts, fine to keep while building, consider excluding from a release `dist/`.
+- `public/showcase-app.html`, `showcase-obsidian.html`, `showcase-emerald.html` are from an earlier dashboard-only premium track, superseded by this system.
+
 ## Git / Release Workflow (standing rules)
 
 1. **After every change**: security-check the new code, update this file, then `git add -A && git commit && git push` (repo: github.com/Dexter-77Ali/habit-tracker, public).

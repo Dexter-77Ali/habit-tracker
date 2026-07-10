@@ -1,0 +1,387 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halo — Habit + Task Tracker · web + mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#e6e9f2;min-height:100vh;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:44px clamp(16px,4vw,56px) 90px}
+  .head{max-width:1180px;margin:0 auto 34px;color:#363b52}
+  .eyebrow{font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;opacity:.6;font-weight:600;margin-bottom:10px}
+  .head h1{font-family:'Plus Jakarta Sans';font-weight:600;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.02em;margin-bottom:8px}
+  .head h1 i{font-style:italic}
+  .sub{opacity:.78;font-size:.95rem;max-width:64ch;line-height:1.55}
+  .swatches{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .sw{display:flex;align-items:center;gap:8px;font-size:.72rem;opacity:.85;border:1px solid rgba(128,128,128,.3);border-radius:999px;padding:5px 11px 5px 6px}
+  .sw i{width:14px;height:14px;border-radius:4px;display:inline-block}
+  .panel{max-width:1180px;margin:0 auto}
+  .cap{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;opacity:.5;margin-bottom:14px;font-weight:600}
+  .webwrap{overflow-x:auto;padding-bottom:8px}
+  .phones{display:flex;justify-content:center}
+  @keyframes ptFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* ---- Halo neumorphic system ---- */
+  .halo{font-family:'Plus Jakarta Sans',sans-serif;color:#363b52}
+  .raised{background:#e6e9f2;box-shadow:9px 9px 22px rgba(163,177,198,.6),-9px -9px 22px #ffffff}
+  .card{background:#e6e9f2;border-radius:26px;box-shadow:9px 9px 22px rgba(163,177,198,.6),-9px -9px 22px #ffffff}
+  .inset{background:#e6e9f2;box-shadow:inset 4px 4px 9px rgba(163,177,198,.65),inset -4px -4px 9px #ffffff}
+  .well{background:#e6e9f2;box-shadow:inset 3px 3px 7px rgba(163,177,198,.55),inset -3px -3px 7px #ffffff}
+  .tile{background:#e6e9f2;box-shadow:5px 5px 11px rgba(163,177,198,.5),-5px -5px 11px #ffffff}
+  .tile-sm{background:#e6e9f2;box-shadow:3px 3px 7px rgba(163,177,198,.55),-3px -3px 7px #ffffff}
+  .grad{background:linear-gradient(135deg,#8ea2ff,#6d5efc)}
+  .num{font-variant-numeric:tabular-nums}
+  .lbl{font-size:12px;color:#8a90a6;letter-spacing:.5px}
+  .eyecap{font-size:13px;color:#8a90a6;letter-spacing:.5px}
+  a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid #6d5efc;outline-offset:3px;border-radius:12px}
+
+  /* habit check tile */
+  .chk{width:38px;height:38px;border-radius:13px;background:#e6e9f2;box-shadow:5px 5px 11px rgba(163,177,198,.5),-5px -5px 11px #ffffff;display:flex;align-items:center;justify-content:center;font-size:16px;color:#9aa0b8;flex-shrink:0;cursor:pointer;transition:.2s}
+  .chk.done{box-shadow:inset 4px 4px 9px rgba(109,94,252,.5),inset -4px -4px 9px rgba(255,255,255,.9);background:linear-gradient(135deg,#8ea2ff,#6d5efc);color:#fff}
+  /* history dots */
+  .dots{display:flex;gap:5px;align-items:center}
+  .dot{width:8px;height:8px;border-radius:50%}
+  .dot.on{background:#6d5efc;box-shadow:1px 1px 2px rgba(109,94,252,.4)}
+  .dot.off{background:#e6e9f2;box-shadow:inset 1px 1px 2px rgba(163,177,198,.7),inset -1px -1px 2px #fff}
+  /* priority chips */
+  .chip{font-size:11px;font-weight:700;border-radius:9px;padding:4px 9px;letter-spacing:.3px}
+  .p-high{color:#f0699b;background:#e6e9f2;box-shadow:inset 2px 2px 5px rgba(163,177,198,.5),inset -2px -2px 5px #fff}
+  .p-med{color:#6d5efc;background:#e6e9f2;box-shadow:inset 2px 2px 5px rgba(163,177,198,.5),inset -2px -2px 5px #fff}
+  .p-low{color:#2fb98a;background:#e6e9f2;box-shadow:inset 2px 2px 5px rgba(163,177,198,.5),inset -2px -2px 5px #fff}
+  .xp{font-weight:700;font-size:13px;color:#6d5efc}
+  .flame{font-size:12px;color:#8a90a6;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+</style>
+</head><body>
+  <header class="head">
+    <div class="eyebrow">Habit + Task Tracker · premium skin</div>
+    <h1>Halo</h1>
+    <p class="sub">Soft neumorphism on the habit dashboard: every surface is the same #e6e9f2 base, shaped only by extruded (raised) and debossed (inset) light-shadows; today's completion lives in an inset ring, each kept habit presses in and glows indigo. Calm indigo accent; Plus Jakarta Sans.</p>
+    <div class="swatches"><span class="sw"><i style="background:#e6e9f2;border:1px solid rgba(128,128,128,.3)"></i>#e6e9f2</span><span class="sw"><i style="background:#6d5efc"></i>#6d5efc</span><span class="sw"><i style="background:#8ea2ff"></i>#8ea2ff</span><span class="sw"><i style="background:#363b52"></i>#363b52</span></div>
+  </header>
+
+  <!-- ============ WEB ============ -->
+  <section class="panel"><div class="cap">Web · desktop</div><div class="webwrap">
+    <div class="halo" style="width:1180px;border-radius:30px;overflow:hidden;background:#e6e9f2;box-shadow:0 40px 120px rgba(0,0,0,.5);animation:ptFade .7s ease both;">
+      <div style="display:flex;">
+        <!-- left rail -->
+        <nav aria-label="Primary" style="width:88px;padding:28px 0;display:flex;flex-direction:column;align-items:center;gap:20px;">
+          <div class="raised" style="width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#6d5efc;box-shadow:6px 6px 14px rgba(163,177,198,.6),-6px -6px 14px #fff;">H</div>
+          <a href="#" title="Today" aria-current="page" class="inset" style="width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#6d5efc;text-decoration:none;">◎</a>
+          <a href="#" title="Habits" class="tile" style="width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#9aa0b8;text-decoration:none;">▤</a>
+          <a href="#" title="Goals" class="tile" style="width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#9aa0b8;text-decoration:none;">◇</a>
+          <a href="#" title="Analytics" class="tile" style="width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#9aa0b8;text-decoration:none;">◔</a>
+          <a href="#" title="Pocket" class="tile" style="width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#9aa0b8;text-decoration:none;">◐</a>
+          <a href="#" title="Settings" class="tile" style="margin-top:auto;width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#9aa0b8;text-decoration:none;">✦</a>
+        </nav>
+
+        <div style="flex:1;padding:30px 36px 36px;">
+          <!-- header row -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;">
+            <div>
+              <div class="eyecap">Good evening, Hussien</div>
+              <div style="font-weight:800;font-size:23px;color:#363b52;margin-top:3px;letter-spacing:-.5px;">Thursday · July 9</div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <div class="well" style="display:flex;align-items:center;gap:9px;border-radius:14px;padding:10px 16px;font-size:13px;color:#4b5069;">
+                <span style="font-size:15px;">🔥</span><b class="num" style="color:#363b52;">47</b> day streak <span style="color:#9aa0b8;font-size:11px;">· personal best</span>
+              </div>
+              <div class="grad" style="display:flex;align-items:center;gap:9px;border-radius:14px;padding:11px 17px;font-size:13px;font-weight:700;color:#fff;box-shadow:6px 6px 14px rgba(109,94,252,.35);">
+                <span style="opacity:.85;">Lv</span><b class="num" style="font-size:15px;">12</b> Operator
+              </div>
+            </div>
+          </div>
+
+          <!-- top row: hero + level/scores -->
+          <div style="display:flex;gap:22px;">
+            <!-- HERO signature -->
+            <div class="card" style="flex:1.5;padding:30px 32px;">
+              <div class="eyecap" style="text-transform:uppercase;">Today's completion</div>
+              <div style="display:flex;align-items:center;gap:32px;margin-top:20px;">
+                <!-- inset completion ring -->
+                <div class="raised" style="width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:7px 7px 16px rgba(163,177,198,.6),-7px -7px 16px #fff;">
+                  <div style="width:128px;height:128px;border-radius:50%;background:conic-gradient(#6d5efc 0 40%,#dfe3ee 40% 100%);display:flex;align-items:center;justify-content:center;">
+                    <div class="inset" style="width:96px;height:96px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                      <div class="num" style="font-weight:800;font-size:30px;color:#363b52;letter-spacing:-1px;line-height:1;">2<span style="color:#9aa0b8;font-size:18px;font-weight:700;">/5</span></div>
+                      <div style="font-size:11px;color:#8a90a6;margin-top:2px;">habits kept</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:15px;color:#4b5069;line-height:1.5;">You've kept <b style="color:#363b52;">2 of 5</b> habits today — <b style="color:#6d5efc;">40%</b> of the ring filled. Three left before midnight.</div>
+                  <div style="display:flex;gap:14px;margin-top:20px;">
+                    <div class="well" style="flex:1;border-radius:16px;padding:14px 16px;">
+                      <div class="lbl">Earned today</div>
+                      <div class="num" style="font-weight:800;font-size:22px;color:#6d5efc;margin-top:3px;">50 <span style="font-size:12px;color:#8a90a6;font-weight:600;">XP</span></div>
+                    </div>
+                    <div class="well" style="flex:1;border-radius:16px;padding:14px 16px;">
+                      <div class="lbl">Current streak</div>
+                      <div class="num" style="font-weight:800;font-size:22px;color:#363b52;margin-top:3px;">47 <span style="font-size:12px;color:#8a90a6;font-weight:600;">days</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- level / XP progress -->
+            <div class="card" style="width:340px;padding:26px 28px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                <div class="eyecap" style="text-transform:uppercase;">Level progress</div>
+                <div style="font-size:12px;color:#9aa0b8;">Lv 12 → 13</div>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:10px;margin-top:14px;">
+                <div class="num" style="font-weight:800;font-size:40px;color:#363b52;letter-spacing:-1.5px;line-height:.9;">12</div>
+                <div>
+                  <div style="font-weight:700;font-size:15px;color:#363b52;">Operator</div>
+                  <div style="font-size:12px;color:#8a90a6;">next: Architect</div>
+                </div>
+              </div>
+              <div class="inset" style="margin-top:20px;height:16px;border-radius:10px;padding:3px;box-shadow:inset 4px 4px 8px rgba(163,177,198,.7),inset -3px -3px 7px #fff;">
+                <div style="height:100%;width:64%;border-radius:8px;background:linear-gradient(90deg,#8ea2ff,#6d5efc);box-shadow:2px 2px 5px rgba(109,94,252,.4);"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:9px;font-size:12px;color:#8a90a6;"><span class="num" style="color:#6d5efc;font-weight:700;">64%</span><span class="num">640 XP to Architect</span></div>
+              <!-- daily challenge -->
+              <div class="well" style="margin-top:20px;border-radius:16px;padding:15px 16px;display:flex;align-items:center;gap:13px;">
+                <div class="tile-sm" style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;">🎯</div>
+                <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#363b52;">Daily challenge</div><div style="font-size:11.5px;color:#8a90a6;">Finish 3 habits before noon</div></div>
+                <div class="xp num">+20</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- bottom row: habits+tasks / scores+reward -->
+          <div style="display:flex;gap:22px;margin-top:22px;align-items:flex-start;">
+            <div style="flex:1.5;display:flex;flex-direction:column;gap:22px;">
+              <!-- HABITS -->
+              <div class="card" style="padding:24px 26px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div class="eyecap" style="text-transform:uppercase;">Habits · today</div><div style="font-size:12px;color:#6d5efc;font-weight:600;">2 of 5 kept</div></div>
+
+                <!-- habit row -->
+                <div style="display:flex;align-items:center;gap:15px;padding:11px 0;border-bottom:1px solid rgba(163,177,198,.18);">
+                  <div class="chk done" role="checkbox" aria-checked="true" tabindex="0" aria-label="Morning exercise, done">✓</div>
+                  <div class="tile-sm" style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;">🏃</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:14px;font-weight:700;color:#363b52;">Morning exercise</div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-top:5px;"><span class="flame">🔥<span class="num">12</span></span>
+                      <span class="dots"><i class="dot on"></i><i class="dot on"></i><i class="dot off"></i><i class="dot on"></i><i class="dot on"></i><i class="dot on"></i><i class="dot on"></i></span></div>
+                  </div>
+                  <div class="xp num">+30 XP</div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:15px;padding:11px 0;border-bottom:1px solid rgba(163,177,198,.18);">
+                  <div class="chk done" role="checkbox" aria-checked="true" tabindex="0" aria-label="Read 20 minutes, done">✓</div>
+                  <div class="tile-sm" style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;">📖</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:14px;font-weight:700;color:#363b52;">Read 20 minutes</div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-top:5px;"><span class="flame">🔥<span class="num">8</span></span>
+                      <span class="dots"><i class="dot off"></i><i class="dot on"></i><i class="dot on"></i><i class="dot on"></i><i class="dot off"></i><i class="dot on"></i><i class="dot on"></i></span></div>
+                  </div>
+                  <div class="xp num">+20 XP</div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:15px;padding:11px 0;border-bottom:1px solid rgba(163,177,198,.18);">
+                  <div class="chk" role="checkbox" aria-checked="false" tabindex="0" aria-label="Drink 2L water, not done"></div>
+                  <div class="tile-sm" style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;">💧</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:14px;font-weight:700;color:#4b5069;">Drink 2L water</div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-top:5px;"><span class="flame">🔥<span class="num">0</span></span>
+                      <span class="dots"><i class="dot off"></i><i class="dot off"></i><i class="dot on"></i><i class="dot off"></i><i class="dot off"></i><i class="dot off"></i><i class="dot off"></i></span></div>
+                  </div>
+                  <div class="xp num">+10 XP</div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:15px;padding:11px 0;border-bottom:1px solid rgba(163,177,198,.18);">
+                  <div class="chk" role="checkbox" aria-checked="false" tabindex="0" aria-label="Evening stillness, not done"></div>
+                  <div class="tile-sm" style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;">🧘</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:14px;font-weight:700;color:#4b5069;">Evening stillness</div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-top:5px;"><span class="flame">🔥<span class="num">4</span></span>
+                      <span class="dots"><i class="dot off"></i><i class="dot on"></i><i class="dot on"></i><i class="dot off"></i><i class="dot on"></i><i class="dot on"></i><i class="dot off"></i></span></div>
+                  </div>
+                  <div class="xp num">+15 XP</div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:15px;padding:11px 0 2px;">
+                  <div class="chk" role="checkbox" aria-checked="false" tabindex="0" aria-label="Write one page, not done"></div>
+                  <div class="tile-sm" style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;">✏️</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:14px;font-weight:700;color:#4b5069;">Write one page</div>
+                    <div style="display:flex;align-items:center;gap:12px;margin-top:5px;"><span class="flame">🔥<span class="num">23</span></span>
+                      <span class="dots"><i class="dot on"></i><i class="dot on"></i><i class="dot on"></i><i class="dot on"></i><i class="dot off"></i><i class="dot on"></i><i class="dot on"></i></span></div>
+                  </div>
+                  <div class="xp num">+25 XP</div>
+                </div>
+              </div>
+
+              <!-- TASKS -->
+              <div class="card" style="padding:24px 26px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div class="eyecap" style="text-transform:uppercase;">Tasks · today</div><div style="font-size:12px;color:#8a90a6;">1 of 3 done</div></div>
+
+                <div style="display:flex;align-items:center;gap:15px;padding:11px 0;border-bottom:1px solid rgba(163,177,198,.18);">
+                  <div class="chk done" role="checkbox" aria-checked="true" tabindex="0" aria-label="Reply to client email, done">✓</div>
+                  <div style="flex:1;font-size:14px;font-weight:700;color:#8a90a6;text-decoration:line-through;">Reply to client email</div>
+                  <span class="chip p-high">HIGH</span>
+                  <div class="xp num">+15</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:15px;padding:11px 0;border-bottom:1px solid rgba(163,177,198,.18);">
+                  <div class="chk" role="checkbox" aria-checked="false" tabindex="0" aria-label="Draft project proposal, not done"></div>
+                  <div style="flex:1;font-size:14px;font-weight:700;color:#363b52;">Draft project proposal</div>
+                  <span class="chip p-med">MEDIUM</span>
+                  <div class="xp num">+25</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:15px;padding:11px 0 2px;">
+                  <div class="chk" role="checkbox" aria-checked="false" tabindex="0" aria-label="Grocery run, not done"></div>
+                  <div style="flex:1;font-size:14px;font-weight:700;color:#363b52;">Grocery run</div>
+                  <span class="chip p-low">LOW</span>
+                  <div class="xp num">+10</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- right column: scores + reward -->
+            <div style="width:340px;display:flex;flex-direction:column;gap:22px;">
+              <div class="card" style="padding:24px 26px;">
+                <div class="eyecap" style="text-transform:uppercase;margin-bottom:18px;">Scores</div>
+
+                <div style="margin-bottom:18px;">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font-size:13px;color:#4b5069;font-weight:600;">Day</span><span class="num" style="font-size:13px;color:#8a90a6;"><b style="color:#363b52;">50</b> / 125</span></div>
+                  <div class="inset" style="height:13px;border-radius:9px;padding:2.5px;box-shadow:inset 3px 3px 7px rgba(163,177,198,.65),inset -3px -3px 7px #fff;"><div style="height:100%;width:40%;border-radius:7px;background:linear-gradient(90deg,#8ea2ff,#6d5efc);box-shadow:2px 2px 5px rgba(109,94,252,.4);"></div></div>
+                </div>
+                <div style="margin-bottom:18px;">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font-size:13px;color:#4b5069;font-weight:600;">Week</span><span class="num" style="font-size:13px;color:#8a90a6;"><b style="color:#363b52;">720</b> / 875</span></div>
+                  <div class="inset" style="height:13px;border-radius:9px;padding:2.5px;box-shadow:inset 3px 3px 7px rgba(163,177,198,.65),inset -3px -3px 7px #fff;"><div style="height:100%;width:82%;border-radius:7px;background:linear-gradient(90deg,#8ea2ff,#6d5efc);box-shadow:2px 2px 5px rgba(109,94,252,.4);"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;"><span style="font-size:13px;color:#4b5069;font-weight:600;">Month</span><span class="num" style="font-size:13px;color:#8a90a6;"><b style="color:#363b52;">2,640</b> / 3,720</span></div>
+                  <div class="inset" style="height:13px;border-radius:9px;padding:2.5px;box-shadow:inset 3px 3px 7px rgba(163,177,198,.65),inset -3px -3px 7px #fff;"><div style="height:100%;width:71%;border-radius:7px;background:linear-gradient(90deg,#8ea2ff,#6d5efc);box-shadow:2px 2px 5px rgba(109,94,252,.4);"></div></div>
+                </div>
+              </div>
+
+              <!-- reward -->
+              <div class="card" style="padding:24px 26px;">
+                <div class="eyecap" style="text-transform:uppercase;margin-bottom:16px;">Reward ready</div>
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <div class="raised" style="width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:5px 5px 12px rgba(163,177,198,.5),-5px -5px 12px #fff;">☕</div>
+                  <div style="flex:1;">
+                    <div style="font-size:15px;font-weight:700;color:#363b52;">Flat white</div>
+                    <div class="num" style="font-size:12px;color:#8a90a6;">Costs 200 XP</div>
+                  </div>
+                </div>
+                <button class="grad" style="width:100%;margin-top:18px;border:0;cursor:pointer;border-radius:14px;padding:13px;font-family:inherit;font-size:13px;font-weight:700;color:#fff;box-shadow:6px 6px 14px rgba(109,94,252,.35);">Claim · 200 XP</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- ============ MOBILE ============ -->
+  <section class="panel" style="margin-top:56px"><div class="cap">Mobile · app</div><div class="phones">
+    <div class="halo" style="width:352px;border-radius:52px;padding:12px;background:#e6e9f2;box-shadow:16px 16px 40px rgba(163,177,198,.7),-16px -16px 40px #ffffff;animation:ptFade .7s ease both;">
+      <div class="inset" style="border-radius:42px;overflow:hidden;position:relative;box-shadow:inset 5px 5px 12px rgba(163,177,198,.55),inset -5px -5px 12px #ffffff;">
+        <!-- status bar -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 30px 4px;font-size:13px;font-weight:700;color:#363b52;">
+          <span class="num">9:41</span>
+          <span style="letter-spacing:1px;color:#8a90a6;">● ● ● ▮</span>
+        </div>
+
+        <div style="padding:14px 20px 112px;">
+          <!-- greeting -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+              <div style="font-size:12px;color:#8a90a6;">Good evening, Hussien</div>
+              <div style="font-weight:800;font-size:20px;color:#363b52;margin-top:2px;letter-spacing:-.5px;">Thursday · July 9</div>
+            </div>
+            <div class="grad" style="display:flex;align-items:center;gap:5px;border-radius:13px;padding:9px 12px;font-size:12px;font-weight:700;color:#fff;box-shadow:5px 5px 12px rgba(109,94,252,.35);"><span style="opacity:.85;">Lv</span><b class="num">12</b></div>
+          </div>
+
+          <!-- streak well -->
+          <div class="well" style="display:flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;padding:10px 14px;font-size:13px;color:#4b5069;margin-bottom:18px;">
+            <span style="font-size:15px;">🔥</span><b class="num" style="color:#363b52;">47</b> day streak <span style="color:#9aa0b8;font-size:11px;">· best</span>
+          </div>
+
+          <!-- hero card signature -->
+          <div class="card" style="padding:24px 22px;margin-bottom:18px;">
+            <div class="lbl" style="text-transform:uppercase;">Today's completion</div>
+            <div style="display:flex;align-items:center;gap:20px;margin-top:16px;">
+              <div class="raised" style="width:118px;height:118px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:6px 6px 14px rgba(163,177,198,.6),-6px -6px 14px #fff;">
+                <div style="width:100px;height:100px;border-radius:50%;background:conic-gradient(#6d5efc 0 40%,#dfe3ee 40% 100%);display:flex;align-items:center;justify-content:center;">
+                  <div class="inset" style="width:74px;height:74px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                    <div class="num" style="font-weight:800;font-size:24px;color:#363b52;letter-spacing:-1px;line-height:1;">2<span style="color:#9aa0b8;font-size:14px;">/5</span></div>
+                    <div style="font-size:10px;color:#8a90a6;">kept</div>
+                  </div>
+                </div>
+              </div>
+              <div style="flex:1;">
+                <div class="well" style="border-radius:14px;padding:11px 13px;margin-bottom:10px;">
+                  <div style="font-size:10.5px;color:#8a90a6;">Earned today</div>
+                  <div class="num" style="font-weight:800;font-size:18px;color:#6d5efc;">50 <span style="font-size:11px;color:#8a90a6;">XP</span></div>
+                </div>
+                <div class="well" style="border-radius:14px;padding:11px 13px;">
+                  <div style="font-size:10.5px;color:#8a90a6;">To Architect</div>
+                  <div class="num" style="font-weight:800;font-size:18px;color:#363b52;">640 <span style="font-size:11px;color:#8a90a6;">XP</span></div>
+                </div>
+              </div>
+            </div>
+            <!-- level bar -->
+            <div class="inset" style="margin-top:18px;height:14px;border-radius:9px;padding:3px;box-shadow:inset 4px 4px 8px rgba(163,177,198,.7),inset -3px -3px 7px #fff;">
+              <div style="height:100%;width:64%;border-radius:7px;background:linear-gradient(90deg,#8ea2ff,#6d5efc);box-shadow:2px 2px 5px rgba(109,94,252,.4);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:#8a90a6;"><span>Lv 12 · Operator</span><span class="num" style="color:#6d5efc;font-weight:700;">64%</span></div>
+          </div>
+
+          <!-- habits (3 condensed) -->
+          <div class="card" style="padding:20px 20px;margin-bottom:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"><div class="lbl" style="text-transform:uppercase;">Habits</div><div style="font-size:11px;color:#6d5efc;font-weight:600;">2 / 5</div></div>
+
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(163,177,198,.18);">
+              <div class="chk done" style="width:34px;height:34px;border-radius:11px;font-size:15px;">✓</div>
+              <div style="width:32px;height:32px;font-size:15px;display:flex;align-items:center;justify-content:center;">🏃</div>
+              <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#363b52;">Morning exercise</div><div class="flame" style="margin-top:2px;">🔥<span class="num">12</span></div></div>
+              <div class="xp num" style="font-size:12px;">+30</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(163,177,198,.18);">
+              <div class="chk done" style="width:34px;height:34px;border-radius:11px;font-size:15px;">✓</div>
+              <div style="width:32px;height:32px;font-size:15px;display:flex;align-items:center;justify-content:center;">📖</div>
+              <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#363b52;">Read 20 minutes</div><div class="flame" style="margin-top:2px;">🔥<span class="num">8</span></div></div>
+              <div class="xp num" style="font-size:12px;">+20</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:9px 0 2px;">
+              <div class="chk" style="width:34px;height:34px;border-radius:11px;"></div>
+              <div style="width:32px;height:32px;font-size:15px;display:flex;align-items:center;justify-content:center;">💧</div>
+              <div style="flex:1;"><div style="font-size:13px;font-weight:700;color:#4b5069;">Drink 2L water</div><div class="flame" style="margin-top:2px;">🔥<span class="num">0</span></div></div>
+              <div class="xp num" style="font-size:12px;">+10</div>
+            </div>
+          </div>
+
+          <!-- scores mini -->
+          <div class="card" style="padding:20px 20px;">
+            <div class="lbl" style="text-transform:uppercase;margin-bottom:14px;">Scores</div>
+            <div style="margin-bottom:13px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:#4b5069;font-weight:600;">Day<span class="num" style="color:#8a90a6;"><b style="color:#363b52;">50</b>/125</span></div>
+              <div class="inset" style="height:11px;border-radius:8px;padding:2px;box-shadow:inset 3px 3px 7px rgba(163,177,198,.65),inset -3px -3px 7px #fff;"><div style="height:100%;width:40%;border-radius:6px;background:linear-gradient(90deg,#8ea2ff,#6d5efc);box-shadow:2px 2px 5px rgba(109,94,252,.4);"></div></div>
+            </div>
+            <div style="margin-bottom:13px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:#4b5069;font-weight:600;">Week<span class="num" style="color:#8a90a6;"><b style="color:#363b52;">720</b>/875</span></div>
+              <div class="inset" style="height:11px;border-radius:8px;padding:2px;box-shadow:inset 3px 3px 7px rgba(163,177,198,.65),inset -3px -3px 7px #fff;"><div style="height:100%;width:82%;border-radius:6px;background:linear-gradient(90deg,#8ea2ff,#6d5efc);box-shadow:2px 2px 5px rgba(109,94,252,.4);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;color:#4b5069;font-weight:600;">Month<span class="num" style="color:#8a90a6;"><b style="color:#363b52;">2,640</b>/3,720</span></div>
+              <div class="inset" style="height:11px;border-radius:8px;padding:2px;box-shadow:inset 3px 3px 7px rgba(163,177,198,.65),inset -3px -3px 7px #fff;"><div style="height:100%;width:71%;border-radius:6px;background:linear-gradient(90deg,#8ea2ff,#6d5efc);box-shadow:2px 2px 5px rgba(109,94,252,.4);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- bottom tab bar -->
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 26px 22px;background:#e6e9f2;box-shadow:0 -10px 24px rgba(163,177,198,.35);display:flex;justify-content:space-between;align-items:center;">
+          <a href="#" title="Today" aria-current="page" class="inset" style="width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#6d5efc;text-decoration:none;">◎</a>
+          <a href="#" title="Habits" class="tile" style="width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#9aa0b8;text-decoration:none;">▤</a>
+          <button title="Add" class="grad" style="width:56px;height:56px;border:0;cursor:pointer;border-radius:20px;box-shadow:6px 6px 16px rgba(109,94,252,.45),-4px -4px 12px #ffffff;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;margin-top:-24px;">+</button>
+          <a href="#" title="Analytics" class="tile" style="width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#9aa0b8;text-decoration:none;">◔</a>
+          <a href="#" title="Settings" class="tile" style="width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#9aa0b8;text-decoration:none;">✦</a>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</body></html>

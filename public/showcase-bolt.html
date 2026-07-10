@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolt — Pocket Tracker · web + mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#d9d2c2;min-height:100vh;font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:44px clamp(16px,4vw,56px) 90px}
+  .head{max-width:1180px;margin:0 auto 34px;color:#181410}
+  .eyebrow{font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;opacity:.6;font-weight:600;margin-bottom:10px}
+  .head h1{font-family:Archivo;font-weight:600;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.02em;margin-bottom:8px}
+  .head h1 i{font-style:italic}
+  .sub{opacity:.78;font-size:.95rem;max-width:64ch;line-height:1.55}
+  .swatches{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .sw{display:flex;align-items:center;gap:8px;font-size:.72rem;opacity:.85;border:1px solid rgba(128,128,128,.3);border-radius:999px;padding:5px 11px 5px 6px}
+  .sw i{width:14px;height:14px;border-radius:4px;display:inline-block}
+  .panel{max-width:1180px;margin:0 auto}
+  .cap{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;opacity:.5;margin-bottom:14px;font-weight:600}
+  .webwrap{overflow-x:auto;padding-bottom:8px}
+  .phones{display:flex;justify-content:center}
+  @keyframes ptFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body>
+  <header class="head">
+    <div class="eyebrow">Pocket Tracker · premium direction</div>
+    <h1>Bolt <i>on paper</i></h1>
+    <p class="sub">Neo-brutalist paper: flat solid fills, 2.5px near-black ink outlines on everything, hard offset shadows with no blur, zero border-radius, Archivo headings + Space Mono numbers.</p>
+    <div class="swatches"><span class="sw"><i style="background:#d9d2c2"></i>#d9d2c2</span><span class="sw"><i style="background:#2f4bff"></i>#2f4bff</span><span class="sw"><i style="background:#c6f24e"></i>#c6f24e</span><span class="sw"><i style="background:#181410"></i>#181410</span></div>
+  </header>
+  <section class="panel"><div class="cap">Web · desktop</div><div class="webwrap"><div style="width:1140px;border:3px solid #181410;background:#ece7da;box-shadow:10px 10px 0 #181410;">
+      <div style="padding:24px 32px 34px;">
+        <!-- top bar -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:3px solid #181410;margin-bottom:26px;">
+          <div style="display:flex;align-items:center;gap:26px;">
+            <div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#fff;">P</div><span style="font-family:'Archivo',sans-serif;font-weight:900;font-size:17px;text-transform:uppercase;letter-spacing:-.5px;">Pocket</span></div>
+            <div style="display:flex;gap:10px;font-size:12px;font-weight:700;text-transform:uppercase;">
+              <span style="background:#181410;color:#ece7da;padding:7px 13px;">Overview</span>
+              <span style="color:#5c554a;padding:7px 13px;">Calendar</span><span style="color:#5c554a;padding:7px 13px;">Stats</span><span style="color:#5c554a;padding:7px 13px;">Goals</span><span style="color:#5c554a;padding:7px 13px;">Settings</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="display:flex;align-items:center;gap:9px;background:#fbf9f3;border:2.5px solid #181410;padding:8px 14px;font-size:13px;font-weight:700;">‹ JULY 2026 ›</div>
+            <div style="background:#2f4bff;border:2.5px solid #181410;box-shadow:4px 4px 0 #181410;padding:9px 16px;font-size:13px;font-weight:800;text-transform:uppercase;color:#fff;">+ Add expense</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:22px;">
+          <!-- hero -->
+          <div style="flex:1.5;border:2.5px solid #181410;background:#fbf9f3;box-shadow:6px 6px 0 #181410;padding:26px 28px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;">Remaining this month</div>
+              <span style="display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;text-transform:uppercase;color:#181410;background:#c6f24e;border:2.5px solid #181410;padding:4px 10px;">● On track</span>
+            </div>
+            <div style="display:flex;align-items:flex-end;gap:12px;margin-top:14px;">
+              <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:60px;line-height:.86;letter-spacing:-3px;color:#181410;">765,000</div>
+              <div style="font-size:14px;font-weight:700;color:#5c554a;padding-bottom:8px;">IQD</div>
+            </div>
+            <div style="display:inline-block;font-family:'Space Mono',monospace;font-size:13px;color:#fff;background:#2f4bff;border:2.5px solid #181410;padding:3px 9px;margin-top:12px;">≈ &#36;584 · 38% LEFT</div>
+
+            <!-- budget bar -->
+            <div style="margin-top:24px;display:flex;height:22px;border:2.5px solid #181410;">
+              <div style="width:40%;background:#2f4bff;border-right:2.5px solid #181410;"></div>
+              <div style="width:13%;background:#ffb43a;border-right:2.5px solid #181410;"></div>
+              <div style="width:11%;background:#ff5a3c;border-right:2.5px solid #181410;"></div>
+              <div style="width:10%;background:#8b5cf6;border-right:2.5px solid #181410;"></div>
+              <div style="flex:1;background:repeating-linear-gradient(45deg,#ece7da,#ece7da 6px,#d9d2c2 6px,#d9d2c2 12px);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:12px;font-weight:700;"><span style="color:#5c554a;">SPENT <span style="color:#181410;">1,235,000</span></span><span style="color:#5c554a;">BUDGET <span style="color:#181410;">2,000,000</span> IQD</span></div>
+
+            <div style="display:flex;gap:12px;margin-top:24px;">
+              <div style="flex:1;border:2.5px solid #181410;background:#ece7da;padding:13px 15px;"><div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#5c554a;">INCOME</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:18px;color:#181410;margin-top:4px;">2,000,000</div></div>
+              <div style="flex:1;border:2.5px solid #181410;background:#ece7da;padding:13px 15px;"><div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#5c554a;">SPENT</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:18px;color:#181410;margin-top:4px;">1,235,000</div></div>
+              <div style="flex:1;border:2.5px solid #181410;background:#c6f24e;padding:13px 15px;"><div style="font-size:10px;font-weight:800;letter-spacing:1px;color:#3d4a12;">SAFE / DAY</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:18px;color:#181410;margin-top:4px;">34,772</div></div>
+            </div>
+          </div>
+
+          <!-- right -->
+          <div style="width:320px;display:flex;flex-direction:column;gap:22px;">
+            <div style="border:2.5px solid #181410;background:#fbf9f3;box-shadow:6px 6px 0 #181410;padding:20px 22px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;">6-Month spend</div><div style="font-size:11px;font-weight:800;color:#181410;background:#c6f24e;border:2px solid #181410;padding:2px 7px;">↓28%</div></div>
+              <div style="display:flex;align-items:flex-end;gap:8px;height:96px;">
+                <div style="flex:1;height:66%;background:#2f4bff;border:2.5px solid #181410;"></div>
+                <div style="flex:1;height:82%;background:#2f4bff;border:2.5px solid #181410;"></div>
+                <div style="flex:1;height:44%;background:#2f4bff;border:2.5px solid #181410;"></div>
+                <div style="flex:1;height:72%;background:#2f4bff;border:2.5px solid #181410;"></div>
+                <div style="flex:1;height:58%;background:#2f4bff;border:2.5px solid #181410;"></div>
+                <div style="flex:1;height:38%;background:#c6f24e;border:2.5px solid #181410;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#5c554a;margin-top:8px;"><span>FEB</span><span>APR</span><span>JUL</span></div>
+            </div>
+            <div style="border:2.5px solid #181410;background:#2f4bff;box-shadow:6px 6px 0 #181410;padding:20px 22px;">
+              <div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#c6d0ff;">Projected savings</div>
+              <div style="display:flex;align-items:flex-end;gap:8px;margin-top:10px;"><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:28px;color:#fff;">765,000</div><div style="font-size:12px;font-weight:800;color:#c6f24e;padding-bottom:5px;">38%</div></div>
+              <div style="font-size:12px;font-weight:600;color:#c6d0ff;margin-top:6px;">If you hold this pace to Jul 31.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- lower -->
+        <div style="display:flex;gap:22px;margin-top:22px;">
+          <div style="flex:1.5;border:2.5px solid #181410;background:#fbf9f3;box-shadow:6px 6px 0 #181410;padding:22px 26px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;"><div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#181410;">Where it went</div><div style="font-size:11px;font-weight:700;color:#5c554a;">6 CATEGORIES</div></div>
+            <div style="display:flex;flex-direction:column;gap:13px;">
+              <div style="display:flex;align-items:center;gap:14px;"><span style="width:14px;height:14px;background:#2f4bff;border:2px solid #181410;"></span><span style="width:92px;font-size:13px;font-weight:700;">Rent</span><div style="flex:1;height:12px;border:2px solid #181410;background:#ece7da;"><div style="height:100%;width:40%;background:#2f4bff;"></div></div><span style="width:80px;text-align:right;font-family:'Space Mono',monospace;font-size:12px;">500,000</span></div>
+              <div style="display:flex;align-items:center;gap:14px;"><span style="width:14px;height:14px;background:#ffb43a;border:2px solid #181410;"></span><span style="width:92px;font-size:13px;font-weight:700;">Grocery</span><div style="flex:1;height:12px;border:2px solid #181410;background:#ece7da;"><div style="height:100%;width:13%;background:#ffb43a;"></div></div><span style="width:80px;text-align:right;font-family:'Space Mono',monospace;font-size:12px;">165,000</span></div>
+              <div style="display:flex;align-items:center;gap:14px;"><span style="width:14px;height:14px;background:#ff5a3c;border:2px solid #181410;"></span><span style="width:92px;font-size:13px;font-weight:700;">Food</span><div style="flex:1;height:12px;border:2px solid #181410;background:#ece7da;"><div style="height:100%;width:11%;background:#ff5a3c;"></div></div><span style="width:80px;text-align:right;font-family:'Space Mono',monospace;font-size:12px;">130,000</span></div>
+              <div style="display:flex;align-items:center;gap:14px;"><span style="width:14px;height:14px;background:#8b5cf6;border:2px solid #181410;"></span><span style="width:92px;font-size:13px;font-weight:700;">Education</span><div style="flex:1;height:12px;border:2px solid #181410;background:#ece7da;"><div style="height:100%;width:10%;background:#8b5cf6;"></div></div><span style="width:80px;text-align:right;font-family:'Space Mono',monospace;font-size:12px;">120,000</span></div>
+            </div>
+          </div>
+          <div style="width:320px;border:2.5px solid #181410;background:#fbf9f3;box-shadow:6px 6px 0 #181410;padding:20px 22px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;"><div style="font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;">Recent</div><div style="font-size:11px;font-weight:800;color:#2f4bff;">ALL →</div></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:2px solid #e6ded0;"><div style="width:36px;height:36px;border:2.5px solid #181410;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:15px;">🛒</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">Carrefour</div><div style="font-size:11px;font-weight:600;color:#5c554a;">Grocery · Jul 8</div></div><div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;">−85,000</div></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:2px solid #e6ded0;"><div style="width:36px;height:36px;border:2.5px solid #181410;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:15px;">☕</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">Espresso Lab</div><div style="font-size:11px;font-weight:600;color:#5c554a;">Coffee · Jul 8</div></div><div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;">−6,000</div></div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;"><div style="width:36px;height:36px;border:2.5px solid #181410;background:#ece7da;display:flex;align-items:center;justify-content:center;font-size:15px;">🏠</div><div style="flex:1;"><div style="font-size:13px;font-weight:700;">Apartment</div><div style="font-size:11px;font-weight:600;color:#5c554a;">Rent · Jul 5</div></div><div style="font-family:'Space Mono',monospace;font-size:13px;font-weight:700;">−500,000</div></div>
+          </div>
+        </div>
+      </div>
+    </div></div></section>
+  <section class="panel" style="margin-top:56px"><div class="cap">Mobile · app</div><div class="phones"><div style="width:340px;border:3px solid #181410;background:#181410;padding:10px;box-shadow:10px 10px 0 #181410;flex-shrink:0;">
+      <div style="background:#ece7da;overflow:hidden;">
+        <div style="height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:700;color:#181410;border-bottom:2.5px solid #181410;"><span>9:41</span><span>􀙇 􀖇 􀛨</span></div>
+        <div style="padding:16px 16px 22px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div style="font-family:'Archivo',sans-serif;font-weight:900;font-size:17px;text-transform:uppercase;letter-spacing:-.5px;">Pocket</div>
+            <div style="font-size:11px;font-weight:700;background:#fbf9f3;border:2.5px solid #181410;padding:5px 10px;">JULY ▾</div>
+          </div>
+          <div style="border:2.5px solid #181410;background:#fbf9f3;box-shadow:5px 5px 0 #181410;padding:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5c554a;">Remaining</span><span style="font-size:10px;font-weight:800;text-transform:uppercase;background:#c6f24e;border:2px solid #181410;padding:3px 8px;">● On track</span></div>
+            <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:46px;line-height:.86;letter-spacing:-2px;color:#181410;margin-top:12px;">765K</div>
+            <div style="display:inline-block;font-family:'Space Mono',monospace;font-size:11px;color:#fff;background:#2f4bff;border:2px solid #181410;padding:2px 7px;margin-top:10px;">≈ $584 · 38% LEFT</div>
+            <div style="margin-top:16px;display:flex;height:18px;border:2.5px solid #181410;"><div style="width:40%;background:#2f4bff;border-right:2px solid #181410;"></div><div style="width:13%;background:#ffb43a;border-right:2px solid #181410;"></div><div style="width:11%;background:#ff5a3c;border-right:2px solid #181410;"></div><div style="width:10%;background:#8b5cf6;border-right:2px solid #181410;"></div><div style="flex:1;background:repeating-linear-gradient(45deg,#ece7da,#ece7da 5px,#d9d2c2 5px,#d9d2c2 10px);"></div></div>
+          </div>
+          <div style="display:flex;gap:9px;margin-top:14px;">
+            <div style="flex:1;border:2.5px solid #181410;background:#fbf9f3;padding:12px;"><div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#5c554a;">INCOME</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;margin-top:3px;">2,000K</div></div>
+            <div style="flex:1;border:2.5px solid #181410;background:#fbf9f3;padding:12px;"><div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#5c554a;">SPENT</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;margin-top:3px;">1,235K</div></div>
+            <div style="flex:1;border:2.5px solid #181410;background:#c6f24e;padding:12px;"><div style="font-size:9px;font-weight:800;letter-spacing:1px;color:#3d4a12;">/DAY</div><div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;margin-top:3px;">34,772</div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 2px 12px;"><span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;">Recent</span><span style="font-size:11px;font-weight:800;color:#2f4bff;">ALL →</span></div>
+          <div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:2px solid #e6ded0;"><div style="width:32px;height:32px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:14px;">🛒</div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Carrefour</div><div style="font-size:10px;font-weight:600;color:#5c554a;">Grocery · Jul 8</div></div><div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;">−85K</div></div>
+          <div style="display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:2px solid #e6ded0;"><div style="width:32px;height:32px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:14px;">☕</div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Espresso Lab</div><div style="font-size:10px;font-weight:600;color:#5c554a;">Coffee · Jul 8</div></div><div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;">−6K</div></div>
+          <div style="display:flex;align-items:center;gap:11px;padding:9px 0;"><div style="width:32px;height:32px;border:2.5px solid #181410;background:#fbf9f3;display:flex;align-items:center;justify-content:center;font-size:14px;">🏠</div><div style="flex:1;"><div style="font-size:12px;font-weight:700;">Apartment</div><div style="font-size:10px;font-weight:600;color:#5c554a;">Rent · Jul 5</div></div><div style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;">−500K</div></div>
+        </div>
+        <div style="position:relative;height:60px;background:#fbf9f3;border-top:2.5px solid #181410;display:flex;align-items:center;justify-content:space-around;font-size:17px;font-weight:800;">
+          <span style="color:#2f4bff;">◉</span><span style="color:#5c554a;">▦</span><span style="width:44px;"></span><span style="color:#5c554a;">◇</span><span style="color:#5c554a;">⚙</span>
+          <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:52px;height:52px;border:2.5px solid #181410;background:#2f4bff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;box-shadow:4px 4px 0 #181410;">+</div>
+        </div>
+      </div>
+    </div></div></section>
+</body></html>

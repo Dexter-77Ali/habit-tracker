@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Obsidian &amp; Platinum — web + mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#08090C;color:#E9EBF0;font-family:'Space Grotesk',system-ui,sans-serif;
+  padding:40px clamp(16px,4vw,56px) 80px;-webkit-font-smoothing:antialiased}
+.head{max-width:1180px;margin:0 auto 36px}
+.eyebrow{font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;color:#868FA0;font-weight:600;margin-bottom:10px}
+h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.02em;margin-bottom:8px}
+h1 i{font-style:italic;color:#C6CCD8}
+.sub{color:#9AA0AD;font-size:.95rem;max-width:60ch}
+.swatches{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+.sw{display:flex;align-items:center;gap:8px;font-size:.72rem;color:#9AA0AD;border:1px solid #242832;border-radius:999px;padding:5px 11px 5px 6px}
+.sw i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+.panel .cap{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:#5E6470;margin-bottom:14px;font-weight:600}
+/* browser frame */
+.browser{border:1px solid #242832;border-radius:16px;overflow:hidden;box-shadow:0 40px 80px -30px rgba(0,0,0,.8);background:#14161B}
+.browser .bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #242832;background:#0F1115}
+.browser .bar i{width:11px;height:11px;border-radius:50%;background:#333A47;display:inline-block}
+.browser .bar span{margin-left:14px;font-size:.72rem;color:#5E6470}
+.browser iframe{width:100%;height:880px;border:0;display:block;background:#0C0D10}
+/* phone frame */
+.phones{display:flex;justify-content:center}
+.phone{width:390px;max-width:100%;height:790px;border-radius:46px;border:11px solid #16181d;background:#000;
+  position:relative;overflow:hidden;box-shadow:0 50px 90px -30px rgba(0,0,0,.85),0 0 0 1px #2a2e37}
+.phone .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:150px;height:26px;background:#16181d;border-radius:0 0 18px 18px;z-index:2}
+.phone iframe{width:100%;height:100%;border:0;display:block}
+</style>
+</head>
+<body>
+  <div class="head">
+    <div class="eyebrow">Ritual collection · design 03</div>
+    <h1>Obsidian <i>&amp; Platinum</i></h1>
+    <p class="sub">Cool monochrome black-tie. A tuxedo of an interface — graphite surfaces, platinum type, one icy metallic accent. Restraint as luxury.</p>
+    <div class="swatches">
+      <span class="sw"><i style="background:#0C0D10"></i>#0C0D10 base</span>
+      <span class="sw"><i style="background:#14161B"></i>#14161B surface</span>
+      <span class="sw"><i style="background:#C6CCD8"></i>#C6CCD8 platinum</span>
+      <span class="sw"><i style="background:#E9EBF0"></i>#E9EBF0 text</span>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="panel">
+      <div class="cap">Web · desktop</div>
+      <div class="browser">
+        <div class="bar"><i></i><i></i><i></i><span>ritual.app / today</span></div>
+        <iframe src="showcase-app.html?theme=obsidian" title="Obsidian web view" loading="lazy"></iframe>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="cap">Mobile · app</div>
+      <div class="phones">
+        <div class="phone"><div class="notch"></div>
+          <iframe src="showcase-app.html?theme=obsidian" title="Obsidian mobile view" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
