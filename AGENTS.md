@@ -835,7 +835,7 @@ Five approved premium skins — **Aurora, Halo, Meridian, Terra, Bolt** — will
 
 1. **After every change**: security-check the new code, update this file, then `git add -A && git commit && git push` (repo: github.com/Dexter-77Ali/habit-tracker, public).
 2. Before any push: scan the staged set for secrets (`git diff --cached | grep -iE 'sk-|apikey|secret'`) — `.env.local` is gitignored and must stay that way.
-3. APK changes: rebuild, copy to `Desktop\LifeTracker.apk`, then `gh release create vX.Y.Z <apk> --title ... --notes ...` and add a row to README's version table.
+3. APK / version releases: **before building, bump the version to match the new `vX.Y.Z` tag** — `android/app/build.gradle` `versionName "X.Y.Z"` + increment `versionCode`, and `package.json` `version`. The in-app "Check for update" button (Settings → Android only) compares `App.getInfo().version` (= gradle `versionName`) against the latest GitHub release tag, so a stale `versionName` silently breaks update detection. Then rebuild, copy to `Desktop\LifeTracker.apk`, run `gh release create vX.Y.Z <apk> --title ... --notes ...`, and add a row to README's version table. Keep the uploaded asset named `LifeTracker.apk` — the updater downloads the first `*.apk` asset on the release.
 4. `plans/`, `android/app/build/`, `android/.gradle/`, `android/local.properties`, `.vercel/`, `*.apk` are gitignored.
 
 ## Known Constraints / Things to Watch

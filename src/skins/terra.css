@@ -54,6 +54,7 @@ html[data-skin="terra"] .settings-dropdown,
 html[data-skin="terra"] .kebab-dropdown,
 html[data-skin="terra"] .shortcuts-panel,
 html[data-skin="terra"] .modal,
+html[data-skin="terra"] .notes-modal,
 html[data-skin="terra"] .auth-card {
   background: #fffdf8;
   border: 1px solid #e6dcc9;

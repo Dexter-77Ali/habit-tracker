@@ -51,6 +51,7 @@ html[data-skin="bolt"] .pk-card,
 html[data-skin="bolt"] .skin-hero,
 html[data-skin="bolt"] .goal-card,
 html[data-skin="bolt"] .modal,
+html[data-skin="bolt"] .notes-modal,
 html[data-skin="bolt"] .settings-dropdown,
 html[data-skin="bolt"] .kebab-dropdown,
 html[data-skin="bolt"] .shortcuts-panel,
@@ -62,7 +63,8 @@ html[data-skin="bolt"] .badge-shelf-toggle {
   box-shadow: 6px 6px 0 #181410;
   border-radius: 0;
 }
-html[data-skin="bolt"] .modal-overlay .modal { box-shadow: 10px 10px 0 #181410; }
+html[data-skin="bolt"] .modal-overlay .modal,
+html[data-skin="bolt"] .modal-overlay .notes-modal { box-shadow: 10px 10px 0 #181410; }
 
 /* headings/labels: Archivo heavy uppercase; numbers: Space Mono */
 html[data-skin="bolt"] .card-header h3,

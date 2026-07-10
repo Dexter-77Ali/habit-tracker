@@ -3,6 +3,9 @@ import { formatFullDate } from '../utils/dateUtils'
 import { getLevel } from '../utils/levelUtils'
 import { supabase } from '../lib/supabase'
 import { canNotify } from '../utils/notificationUtils'
+import { App as CapacitorApp } from '@capacitor/app'
+import { Browser } from '@capacitor/browser'
+import { isNewer } from '../utils/version'
 import IconDisplay from './IconDisplay'
 
 const THEMES = [
@@ -95,6 +98,7 @@ export default function Header({ streak, dayComplete, allTimeXP, onExport, onImp
                   </div>
                 </div>
               )}
+              {canNotify() && <UpdateCheck />}
               <div className="skin-picker">
                 <span className="skin-picker-label">App style</span>
                 <div className="theme-picker">
@@ -192,6 +196,52 @@ function PasswordChange() {
       </button>
       {msg && <div style={{ fontSize: '0.7rem', color: 'var(--accent)', padding: '0.2rem 0' }}>{msg}</div>}
     </div>
+  )
+}
+
+// Android-only: check GitHub Releases for a newer APK and hand the download to the OS.
+// Full silent install isn't possible on stock Android — the user confirms the install.
+const UPDATE_REPO = 'Dexter-77Ali/habit-tracker'
+
+function UpdateCheck() {
+  const [status, setStatus] = useState('idle') // idle | checking | latest | available | error
+  const [rel, setRel] = useState(null)          // { tag, url }
+
+  const check = async () => {
+    setStatus('checking')
+    try {
+      const { version } = await CapacitorApp.getInfo()
+      const res = await fetch(`https://api.github.com/repos/${UPDATE_REPO}/releases/latest`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      const tag = data.tag_name || ''
+      if (isNewer(tag, version)) {
+        const apk = (data.assets || []).find((a) => a.name?.toLowerCase().endsWith('.apk'))
+        setRel({ tag, url: apk?.browser_download_url || data.html_url })
+        setStatus('available')
+      } else {
+        setStatus('latest')
+      }
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  if (status === 'available') return (
+    <button className="settings-item" onClick={() => rel?.url && Browser.open({ url: rel.url })}>
+      ⬇️ Download {rel.tag} — then tap the file to install
+    </button>
+  )
+
+  const label = status === 'checking' ? '⏳ Checking…'
+    : status === 'latest' ? '✓ Up to date'
+    : status === 'error' ? '⚠️ Check failed — tap to retry'
+    : '⬆️ Check for update'
+
+  return (
+    <button className="settings-item" onClick={check} disabled={status === 'checking'}>
+      {label}
+    </button>
   )
 }
 

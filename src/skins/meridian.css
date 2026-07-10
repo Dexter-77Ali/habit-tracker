@@ -56,6 +56,7 @@ html[data-skin="meridian"] .settings-dropdown,
 html[data-skin="meridian"] .kebab-dropdown,
 html[data-skin="meridian"] .shortcuts-panel,
 html[data-skin="meridian"] .modal,
+html[data-skin="meridian"] .notes-modal,
 html[data-skin="meridian"] .auth-card {
   background: linear-gradient(155deg, #161a22, #111319);
   border: 1px solid rgba(255, 255, 255, .07);
