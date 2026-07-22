@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import IconDisplay from './IconDisplay'
+import TimerControl from './TimerControl'
 
-export default function TaskItem({ task, onToggle, onEdit, onDelete, onOpenNotes, disabled, tagColors = {} }) {
+export default function TaskItem({ task, onToggle, onEdit, onDelete, onOpenNotes, disabled, tagColors = {}, timerRunning = false, timerStartedAt = 0, spentMs = 0, onTimer }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [justChecked, setJustChecked] = useState(false)
@@ -77,6 +78,16 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete, onOpenNotes
             <span key={tag} className="item-tag-dot" style={{ background: tagColors[tag] || '#888' }} title={tag} />
           ))}
         </div>
+      )}
+
+      {(onTimer || spentMs > 0) && (
+        <TimerControl
+          running={timerRunning}
+          startedAt={timerStartedAt}
+          spentMs={spentMs}
+          onToggle={onTimer}
+          disabled={!onTimer}
+        />
       )}
 
       {task.priority && task.priority !== 'none' && (

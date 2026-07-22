@@ -7,6 +7,7 @@ export default function HabitList({
   groups = [], onAddGroup, onEditGroup, onDeleteGroup, onToggleGroupCollapse,
   logs, today, viewedDate, isViewingFuture, tagColors = {},
   focusMode = false, onToggleFocusMode,
+  activeTimer = null, onTimer, timeLog = {},
 }) {
   const [quickName, setQuickName] = useState('')
   const isToday = viewedDate === today
@@ -109,6 +110,10 @@ export default function HabitList({
                     logs={logs}
                     today={today}
                     tagColors={tagColors}
+                    timerRunning={activeTimer?.id === habit.id}
+                    timerStartedAt={activeTimer?.id === habit.id ? activeTimer.startedAt : 0}
+                    spentMs={timeLog[habit.id] || 0}
+                    onTimer={isToday && onTimer ? () => onTimer(habit.id, 'habit') : undefined}
                   />
                 ))}
               </ul>
@@ -142,6 +147,10 @@ export default function HabitList({
                         logs={logs}
                         today={today}
                         tagColors={tagColors}
+                        timerRunning={activeTimer?.id === habit.id}
+                        timerStartedAt={activeTimer?.id === habit.id ? activeTimer.startedAt : 0}
+                        spentMs={timeLog[habit.id] || 0}
+                        onTimer={isToday && onTimer ? () => onTimer(habit.id, 'habit') : undefined}
                       />
                     ))}
                   </ul>

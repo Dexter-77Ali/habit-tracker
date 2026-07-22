@@ -15,6 +15,7 @@ import {
   getTriggerCelebration,
 } from './utils/scoreUtils'
 import { getLevel } from './utils/levelUtils'
+import { sessionMs, MAX_SESSION_MS } from './utils/timeUtils'
 import { getPeriodKey, getEarnedBadges } from './utils/rewardUtils'
 
 import Sidebar from './components/Sidebar'
@@ -79,6 +80,8 @@ export default function App() {
   const [goals, setGoals] = usePersistedStorage('ht_goals', [])
   const [streakFreezes, setStreakFreezes] = usePersistedStorage('ht_streak_freezes', {})
   const [completedChallenges, setCompletedChallenges] = usePersistedStorage('ht_challenges', {})
+  const [timeLogs, setTimeLogs] = usePersistedStorage('ht_time_logs', {})       // { [dateKey]: { [itemId]: ms } }
+  const [activeTimer, setActiveTimer] = usePersistedStorage('ht_active_timer', null) // { id, type, startedAt } | null
 
   useSync(user)
 
@@ -265,6 +268,36 @@ export default function App() {
   }, [today])
 
   // ------------------------------------------------------------------
+  // Item timer (start/stop time tracking; one active timer, credits today)
+  // ------------------------------------------------------------------
+  const stopTimer = useCallback(() => {
+    if (!activeTimer) return
+    const ms = sessionMs(activeTimer.startedAt)
+    if (ms > 0) {
+      const day = getDateKey() // credit the day the session STOPS
+      const id = activeTimer.id
+      setTimeLogs((prev) => ({
+        ...prev,
+        [day]: { ...(prev[day] || {}), [id]: ((prev[day] || {})[id] || 0) + ms },
+      }))
+    }
+    setActiveTimer(null)
+  }, [activeTimer, setTimeLogs, setActiveTimer])
+
+  const toggleTimer = useCallback((id, type) => {
+    if (activeTimer) {
+      stopTimer() // credits the running session; same item = plain stop, other item = switch
+      if (activeTimer.id === id) return
+    }
+    setActiveTimer({ id, type, startedAt: Date.now() })
+  }, [activeTimer, stopTimer, setActiveTimer])
+
+  // Runaway guard: a timer left running (or synced in) past the cap auto-stops with capped credit.
+  useEffect(() => {
+    if (activeTimer && Date.now() - activeTimer.startedAt >= MAX_SESSION_MS) stopTimer()
+  }, [activeTimer, stopTimer])
+
+  // ------------------------------------------------------------------
   // Habit handlers
   // ------------------------------------------------------------------
   const toggleFocusMode = useCallback(() => {
@@ -298,6 +331,7 @@ export default function App() {
     if (isViewingFuture) return
     const habit = habits.find((h) => h.id === habitId)
     if (!habit) return
+    if (activeTimer?.id === habitId) stopTimer() // toggling a timed item ends its session
     const wasChecked = !!(logs[viewedDate] || {})[habitId]
 
     setLogs((prev) => {
@@ -309,7 +343,7 @@ export default function App() {
       ...prev,
       allTimeXP: Math.max(0, prev.allTimeXP + (wasChecked ? -habit.xp : habit.xp)),
     }))
-  }, [viewedDate, isViewingFuture, habits, logs, setLogs, setProfile])
+  }, [viewedDate, isViewingFuture, habits, logs, setLogs, setProfile, activeTimer, stopTimer])
 
   const addHabit = useCallback((data) => {
     setHabits((prev) => [...prev, { id: uuidv4(), createdAt: today, groupId: null, notes: '', tags: [], frequency: 'daily', ...data }])
@@ -354,6 +388,7 @@ export default function App() {
   const toggleTask = useCallback((taskId) => {
     const task = tasks.find((t) => t.id === taskId)
     if (!task) return
+    if (activeTimer?.id === taskId) stopTimer() // toggling a timed item ends its session
     const nowCompleted = !task.completed
     // XP mutation lives OUTSIDE the setTasks updater — a setState inside an updater
     // double-fires under StrictMode and is unsafe under concurrent rendering.
@@ -361,7 +396,7 @@ export default function App() {
     setTasks((prev) => prev.map((t) => t.id !== taskId ? t
       : nowCompleted ? { ...t, completed: true, completedAt: today }
       : { ...t, completed: false, completedAt: null }))
-  }, [today, tasks, setTasks, setProfile])
+  }, [today, tasks, setTasks, setProfile, activeTimer, stopTimer])
 
   const addTask = useCallback((data) => {
     setTasks((prev) => [...prev, { id: uuidv4(), createdAt: today, completed: false, completedAt: null, groupId: null, notes: '', tags: [], ...data }])
@@ -619,7 +654,7 @@ export default function App() {
   // Export / Import
   // ------------------------------------------------------------------
   const handleExport = () => {
-    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges }
+    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges, timeLogs }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -655,6 +690,7 @@ export default function App() {
         if (isItemArray(data.goals)) setGoals(data.goals)
         if (isObj(data.streakFreezes)) setStreakFreezes(data.streakFreezes)
         if (isObj(data.completedChallenges)) setCompletedChallenges(data.completedChallenges)
+        if (isObj(data.timeLogs)) setTimeLogs(data.timeLogs)
         setCelebration('Data imported successfully!')
       } catch {
         alert('Invalid backup file.')
@@ -806,6 +842,9 @@ export default function App() {
                   tagColors={tagColors}
                   focusMode={settings.focusMode}
                   onToggleFocusMode={toggleFocusMode}
+                  activeTimer={activeTimer}
+                  onTimer={toggleTimer}
+                  timeLog={timeLogs[viewedDate] || {}}
                 />
 
                 <TaskList
@@ -826,6 +865,9 @@ export default function App() {
                   today={today}
                   isViewingFuture={isViewingFuture}
                   tagColors={tagColors}
+                  activeTimer={activeTimer}
+                  onTimer={toggleTimer}
+                  timeLog={timeLogs[viewedDate] || {}}
                 />
 
                 <GoalsSummaryCard

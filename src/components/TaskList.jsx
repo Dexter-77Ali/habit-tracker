@@ -7,6 +7,7 @@ export default function TaskList({
   tasks, onToggle, onEdit, onDelete, onAdd, onQuickAdd, onOpenNotes,
   groups = [], onAddGroup, onEditGroup, onDeleteGroup, onToggleGroupCollapse,
   onClearArchived, viewedDate, today, isViewingFuture, tagColors = {},
+  activeTimer = null, onTimer, timeLog = {},
 }) {
   const [archiveCollapsed, setArchiveCollapsed] = useState(true)
   const [quickName, setQuickName] = useState('')
@@ -49,6 +50,10 @@ export default function TaskList({
       onOpenNotes={onOpenNotes}
       disabled={!isToday}
       tagColors={tagColors}
+      timerRunning={activeTimer?.id === task.id}
+      timerStartedAt={activeTimer?.id === task.id ? activeTimer.startedAt : 0}
+      spentMs={timeLog[task.id] || 0}
+      onTimer={isToday && onTimer && !task.completed ? () => onTimer(task.id, 'task') : undefined}
     />
   )
 

@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 const SYNC_KEYS = [
   'ht_habits', 'ht_logs', 'ht_tasks', 'ht_rewards', 'ht_profile',
   'ht_settings', 'ht_groups', 'ht_tags_meta', 'ht_goals',
-  'ht_streak_freezes', 'ht_challenges',
+  'ht_streak_freezes', 'ht_challenges', 'ht_time_logs', 'ht_active_timer',
   // Pocket Tracker (financial — isolated from gamification keys)
   'ht_pocket_income', 'ht_pocket_expenses', 'ht_pocket_categories',
   'ht_pocket_goals', 'ht_pocket_ui',

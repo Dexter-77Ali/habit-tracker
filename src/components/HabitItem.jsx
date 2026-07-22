@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { getDateKey, dateFromKey } from '../utils/dateUtils'
 import { isHabitScheduled } from '../utils/scoreUtils'
 import IconDisplay from './IconDisplay'
+import TimerControl from './TimerControl'
 
 const DAY_ABBR = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
@@ -33,7 +34,7 @@ function calculateHabitStreak(habit, logs, today) {
   return streak
 }
 
-export default function HabitItem({ habit, checked, onToggle, onEdit, onDelete, onOpenNotes, disabled, logs = {}, today, tagColors = {} }) {
+export default function HabitItem({ habit, checked, onToggle, onEdit, onDelete, onOpenNotes, disabled, logs = {}, today, tagColors = {}, timerRunning = false, timerStartedAt = 0, spentMs = 0, onTimer }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [justChecked, setJustChecked] = useState(false)
@@ -158,6 +159,16 @@ export default function HabitItem({ habit, checked, onToggle, onEdit, onDelete, 
           )}
         </div>
       </div>
+
+      {(onTimer || spentMs > 0) && (
+        <TimerControl
+          running={timerRunning}
+          startedAt={timerStartedAt}
+          spentMs={spentMs}
+          onToggle={onTimer}
+          disabled={!onTimer}
+        />
+      )}
 
       {habitStreak > 0 && (
         <span className={`habit-streak ${habitStreak >= 7 ? 'habit-streak--hot' : ''}`} title={`${habitStreak} day streak`}>
