@@ -27,6 +27,19 @@
             </intent-filter>
         </activity>
 
+        <!-- Home-screen widget: today's habits with one-tap check-off -->
+        <receiver
+            android:name=".HabitWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.hussien.lifetracker.WIDGET_TOGGLE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_habits_info" />
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

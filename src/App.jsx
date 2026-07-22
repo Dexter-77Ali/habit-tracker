@@ -43,6 +43,7 @@ import './skins/index.css' // premium skins — must come AFTER App.css (specifi
 
 import { getRandomIcon } from './utils/iconUtils'
 import { scheduleDailyReminder, scheduleHabitReminders, scheduleEveningNudge } from './utils/notificationUtils'
+import { writeWidgetSnapshot, drainWidgetToggles } from './utils/widgetUtils'
 
 const QUICK_ADD_EMOJIS = ['🏃', '📖', '💧', '🧘', '🍎', '✏️', '💊', '🛌', '🎯', '💪']
 
@@ -354,6 +355,36 @@ export default function App() {
       allTimeXP: Math.max(0, prev.allTimeXP + (wasChecked ? -habit.xp : habit.xp)),
     }))
   }, [viewedDate, isViewingFuture, habits, logs, setLogs, setProfile, activeTimer, stopTimer])
+
+  // ------------------------------------------------------------------
+  // Home-screen widget bridge (Android no-op elsewhere)
+  // ------------------------------------------------------------------
+  useEffect(() => {
+    const t = setTimeout(() => writeWidgetSnapshot({ habits, todayLog: logs[today] || {}, streak, today }), 800)
+    return () => clearTimeout(t)
+  }, [habits, logs, streak, today])
+
+  // Widget toggles always credit TODAY (toggleHabit targets viewedDate, which may be a past day)
+  const applyWidgetToggle = useCallback((habitId) => {
+    const habit = habits.find((h) => h.id === habitId)
+    if (!habit) return
+    const wasChecked = !!(logs[today] || {})[habitId]
+    setLogs((prev) => ({ ...prev, [today]: { ...(prev[today] || {}), [habitId]: !(prev[today] || {})[habitId] } }))
+    setProfile((prev) => ({ ...prev, allTimeXP: Math.max(0, prev.allTimeXP + (wasChecked ? -habit.xp : habit.xp)) }))
+  }, [habits, logs, today, setLogs, setProfile])
+
+  useEffect(() => {
+    const drain = async () => {
+      const ids = await drainWidgetToggles()
+      // ponytail: same-id repeats in one batch can misprice XP by one toggle — double-tapping
+      // the widget before opening the app is rare; distinct ids are handled correctly.
+      ids.forEach((id) => applyWidgetToggle(id))
+    }
+    drain()
+    const onVis = () => { if (!document.hidden) drain() }
+    document.addEventListener('visibilitychange', onVis)
+    return () => document.removeEventListener('visibilitychange', onVis)
+  }, [applyWidgetToggle])
 
   const addHabit = useCallback((data) => {
     setHabits((prev) => [...prev, { id: uuidv4(), createdAt: today, groupId: null, notes: '', tags: [], frequency: 'daily', ...data }])
