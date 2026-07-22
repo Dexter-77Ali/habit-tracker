@@ -831,6 +831,12 @@ Five approved premium skins — **Aurora, Halo, Meridian, Terra, Bolt** — will
 - Token specs: `docs/redesign/tokens/<skin>.md`. Approved visual references: `public/showcase-habit-<skin>.html` (dashboard) + `public/showcase-<skin>.html` (Pocket) — review artifacts, fine to keep while building, consider excluding from a release `dist/`.
 - `public/showcase-app.html`, `showcase-obsidian.html`, `showcase-emerald.html` are from an earlier dashboard-only premium track, superseded by this system.
 
+## Time Tracking, Smart Reminders, Home Widget (v0.5.0)
+
+- **Timer**: `ht_time_logs` `{date:{itemId:ms}}` + `ht_active_timer` `{id,type,startedAt}` (both in SYNC_KEYS, export/import). One timer at a time; starting another credits + switches; 12h runaway cap (`timeUtils.js`, self-check via `node src/utils/timeUtils.js`). UI = `TimerControl.jsx` on habit/task rows; toggling a timed item stops + credits it; sessions credit the day they STOP.
+- **Reminders**: `habit.reminderTimes[]` (max 4 "HH:MM", chips editor in AddEditModal) → `scheduleHabitReminders` (hashed ids ≥1000, cancel-stale-then-reschedule, repeating daily). `settings.nudgeTime` = evening sweep (id 78). Web silently no-ops; times set on web sync to phone.
+- **Widget (Android)**: `HabitWidgetProvider` renders `widget_snapshot` (JSON in `CapacitorStorage` SharedPreferences, written by `widgetUtils.js` via `@capacitor/preferences`); taps flip optimistically + queue ids in `widget_pending_toggles`; app drains on resume via `applyWidgetToggle` (always credits TODAY, keeps XP math in JS). `WidgetBridgePlugin.refresh()` redraws after snapshot writes. Emoji icons only in widget (RemoteViews = text).
+
 ## Git / Release Workflow (standing rules)
 
 1. **After every change**: security-check the new code, update this file, then `git add -A && git commit && git push` (repo: github.com/Dexter-77Ali/habit-tracker, public).
