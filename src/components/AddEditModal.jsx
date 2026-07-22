@@ -22,7 +22,9 @@ export default function AddEditModal({ item, mode = 'habit', onSave, onClose, gr
     tags: item?.tags || [],
     frequency: item?.frequency || 'daily',
     frequencyDays: item?.frequencyDays || [1, 3, 5],
+    reminderTimes: item?.reminderTimes || [],
   })
+  const [newReminder, setNewReminder] = useState('')
   const [errors, setErrors] = useState({})
   const [iconTab, setIconTab] = useState('emoji')
   const [customIcons, setCustomIcons] = usePersistedStorage('ht_custom_icons', [])
@@ -59,6 +61,7 @@ export default function AddEditModal({ item, mode = 'habit', onSave, onClose, gr
       if (form.frequency === 'custom') {
         data.frequencyDays = form.frequencyDays
       }
+      data.reminderTimes = form.reminderTimes
     }
     if (isTask) {
       data.dueDate = form.dueDate || null
@@ -263,6 +266,47 @@ export default function AddEditModal({ item, mode = 'habit', onSave, onClose, gr
                 </div>
               )}
               {errors.frequency && <p className="form-error">{errors.frequency}</p>}
+            </div>
+          )}
+
+          {!isTask && (
+            <div className="form-group">
+              <label className="form-label">Reminders <span className="form-hint">(phone notifications, up to 4)</span></label>
+              {form.reminderTimes.length > 0 && (
+                <div className="reminder-chip-row">
+                  {form.reminderTimes.map((t) => (
+                    <span key={t} className="reminder-chip">
+                      🔔 {t}
+                      <button
+                        type="button"
+                        className="reminder-chip-x"
+                        aria-label={`Remove ${t} reminder`}
+                        onClick={() => setForm((prev) => ({ ...prev, reminderTimes: prev.reminderTimes.filter((x) => x !== t) }))}
+                      >✕</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {form.reminderTimes.length < 4 && (
+                <div className="reminder-add-row">
+                  <input
+                    type="time"
+                    className="form-input reminder-time-input"
+                    value={newReminder}
+                    onChange={(e) => setNewReminder(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    disabled={!newReminder}
+                    onClick={() => {
+                      if (!newReminder || form.reminderTimes.includes(newReminder)) return
+                      setForm((prev) => ({ ...prev, reminderTimes: [...prev.reminderTimes, newReminder].sort() }))
+                      setNewReminder('')
+                    }}
+                  >+ Add time</button>
+                </div>
+              )}
             </div>
           )}
 

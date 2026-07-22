@@ -809,6 +809,20 @@
 }
 .timer-badge--live { color: var(--primary); font-weight: 700; }
 
+/* ── Per-habit reminder editor (AddEditModal) ─────────────────── */
+.reminder-chip-row { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-2); }
+.reminder-chip {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  font-size: var(--text-sm); color: var(--text);
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-full); padding: 2px var(--space-2) 2px var(--space-3);
+  font-variant-numeric: tabular-nums;
+}
+.reminder-chip-x { background: none; border: none; color: var(--text-muted); font-size: var(--text-xs); padding: 2px 4px; }
+.reminder-chip-x:hover { color: var(--danger); }
+.reminder-add-row { display: flex; gap: var(--space-2); align-items: center; }
+.reminder-time-input { max-width: 140px; }
+
 .habit-xp {
   font-family: var(--font-display);
   font-size: var(--text-sm);

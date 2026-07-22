@@ -26,7 +26,7 @@ const SKINS = [
   { id: 'halo',     label: 'Halo',     color: '#6d5efc' },
 ]
 
-export default function Header({ streak, dayComplete, allTimeXP, onExport, onImport, theme, onSetTheme, skin = 'classic', onSetSkin, shortcutsOpen, onToggleShortcuts, user, onSignOut, settingsOpen, onSetSettingsOpen, reminderTime, onSetReminderTime }) {
+export default function Header({ streak, dayComplete, allTimeXP, onExport, onImport, theme, onSetTheme, skin = 'classic', onSetSkin, shortcutsOpen, onToggleShortcuts, user, onSignOut, settingsOpen, onSetSettingsOpen, reminderTime, onSetReminderTime, nudgeTime, onSetNudgeTime }) {
   const level = getLevel(allTimeXP)
   const setSettingsOpen = onSetSettingsOpen // lifted to App so the mobile "More" nav button can open it
   const settingsRef = useRef(null)
@@ -94,6 +94,22 @@ export default function Header({ streak, dayComplete, allTimeXP, onExport, onImp
                     />
                     {reminderTime && (
                       <button className="settings-reminder-off" onClick={() => onSetReminderTime(null)} title="Turn off reminder">✕</button>
+                    )}
+                  </div>
+                </div>
+              )}
+              {canNotify() && (
+                <div className="settings-reminder">
+                  <span className="settings-reminder-label">🌙 Evening nudge</span>
+                  <div className="settings-reminder-row">
+                    <input
+                      type="time"
+                      className="settings-reminder-input"
+                      value={nudgeTime || ''}
+                      onChange={(e) => onSetNudgeTime(e.target.value || null)}
+                    />
+                    {nudgeTime && (
+                      <button className="settings-reminder-off" onClick={() => onSetNudgeTime(null)} title="Turn off nudge">✕</button>
                     )}
                   </div>
                 </div>

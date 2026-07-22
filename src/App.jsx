@@ -42,7 +42,7 @@ import './App.css'
 import './skins/index.css' // premium skins — must come AFTER App.css (specificity)
 
 import { getRandomIcon } from './utils/iconUtils'
-import { scheduleDailyReminder } from './utils/notificationUtils'
+import { scheduleDailyReminder, scheduleHabitReminders, scheduleEveningNudge } from './utils/notificationUtils'
 
 const QUICK_ADD_EMOJIS = ['🏃', '📖', '💧', '🧘', '🍎', '✏️', '💊', '🛌', '🎯', '💪']
 
@@ -128,6 +128,16 @@ export default function App() {
   useEffect(() => {
     scheduleDailyReminder(settings.reminderTime ?? null) // native no-op on web
   }, [settings.reminderTime])
+
+  useEffect(() => {
+    scheduleEveningNudge(settings.nudgeTime ?? null) // native no-op on web
+  }, [settings.nudgeTime])
+
+  // Per-habit reminders reschedule whenever habits change (debounced; native no-op on web)
+  useEffect(() => {
+    const t = setTimeout(() => scheduleHabitReminders(habits), 1500)
+    return () => clearTimeout(t)
+  }, [habits])
 
   // ------------------------------------------------------------------
   // Tags - derive allTags and auto-assign colors
@@ -768,6 +778,8 @@ export default function App() {
           onSetSettingsOpen={setSettingsOpen}
           reminderTime={settings.reminderTime ?? null}
           onSetReminderTime={(t) => setSettings((s) => ({ ...s, reminderTime: t }))}
+          nudgeTime={settings.nudgeTime ?? null}
+          onSetNudgeTime={(t) => setSettings((s) => ({ ...s, nudgeTime: t }))}
         />
         )}
 
