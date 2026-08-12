@@ -19,6 +19,9 @@ import { sessionMs, MAX_SESSION_MS } from './utils/timeUtils'
 import { rollCrit, comboBonus, comboMult, rollChest, crossedMilestone } from './utils/rewardEngine'
 import { isHabitScheduled } from './utils/scoreUtils'
 import ChestCard from './components/ChestCard'
+import WeeklyQuests from './components/WeeklyQuests'
+import SeasonCard from './components/SeasonCard'
+import { scheduleStreakRiskAlert } from './utils/notificationUtils'
 import { getPeriodKey, getEarnedBadges } from './utils/rewardUtils'
 
 import Sidebar from './components/Sidebar'
@@ -88,6 +91,8 @@ export default function App() {
   const [activeTimer, setActiveTimer] = usePersistedStorage('ht_active_timer', null) // { id, type, startedAt } | null
   const [bonusXp, setBonusXp] = usePersistedStorage('ht_bonus_xp', {})          // { [dateKey]: { [itemId]: bonus } } — crit+combo, refund-safe
   const [chests, setChests] = usePersistedStorage('ht_chests', {})              // { [dateKey]: { opened, reward } }
+  const [questsClaimed, setQuestsClaimed] = usePersistedStorage('ht_weekly_quests', {}) // { [weekKey]: [questId] }
+  const [seasons, setSeasons] = usePersistedStorage('ht_seasons', {})           // { [monthKey]: { claimed: [tierId] } }
 
   useSync(user)
 
@@ -388,6 +393,38 @@ export default function App() {
       setProfile((prev) => ({ ...prev, allTimeXP: Math.max(0, prev.allTimeXP - habit.xp - bonus) }))
     }
   }, [viewedDate, isViewingFuture, habits, logs, setLogs, setProfile, activeTimer, stopTimer, bonusXp, setBonusXp])
+
+  // ------------------------------------------------------------------
+  // Weekly quests + monthly season tiers (auto-award, duplicate-guarded)
+  // ------------------------------------------------------------------
+  const onQuestComplete = useCallback((wk, questId, xp, label) => {
+    if ((questsClaimed[wk] || []).includes(questId)) return
+    setQuestsClaimed((prev) => {
+      const list = prev[wk] || []
+      if (list.includes(questId)) return prev
+      return { ...prev, [wk]: [...list, questId] }
+    })
+    setProfile((p) => ({ ...p, allTimeXP: p.allTimeXP + xp }))
+    setCelebration(`🗺️ Quest complete: ${label} (+${xp} XP)`)
+  }, [questsClaimed, setQuestsClaimed, setProfile])
+
+  const onTierReached = useCallback((monthKey, tier) => {
+    if ((seasons[monthKey]?.claimed || []).includes(tier.id)) return
+    setSeasons((prev) => {
+      const claimed = prev[monthKey]?.claimed || []
+      if (claimed.includes(tier.id)) return prev
+      return { ...prev, [monthKey]: { claimed: [...claimed, tier.id] } }
+    })
+    setProfile((p) => ({ ...p, allTimeXP: p.allTimeXP + tier.bonus }))
+    setCelebration(tier.id === 'gold'
+      ? { text: `${tier.icon} GOLD SEASON TIER — +${tier.bonus} XP!`, epic: true }
+      : `${tier.icon} Season tier ${tier.label} reached (+${tier.bonus} XP)`)
+  }, [seasons, setSeasons, setProfile])
+
+  // Streak-at-risk: 21:00 one-shot while today incomplete + streak worth saving (native no-op on web)
+  useEffect(() => {
+    scheduleStreakRiskAlert(!dayComplete && streak >= 3, streak)
+  }, [dayComplete, streak])
 
   // ------------------------------------------------------------------
   // Daily chest (one per completed day)
@@ -762,7 +799,7 @@ export default function App() {
   // Export / Import
   // ------------------------------------------------------------------
   const handleExport = () => {
-    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges, timeLogs, bonusXp, chests }
+    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges, timeLogs, bonusXp, chests, questsClaimed, seasons }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -801,6 +838,8 @@ export default function App() {
         if (isObj(data.timeLogs)) setTimeLogs(data.timeLogs)
         if (isObj(data.bonusXp)) setBonusXp(data.bonusXp)
         if (isObj(data.chests)) setChests(data.chests)
+        if (isObj(data.questsClaimed)) setQuestsClaimed(data.questsClaimed)
+        if (isObj(data.seasons)) setSeasons(data.seasons)
         setCelebration('Data imported successfully!')
       } catch {
         alert('Invalid backup file.')
@@ -991,6 +1030,28 @@ export default function App() {
                   onViewAll={() => setCurrentPage('goals')}
                   onAdd={openAddGoal}
                 />
+
+                {viewedDate === today && (
+                  <WeeklyQuests
+                    logs={logs}
+                    habits={habits}
+                    tasks={tasks}
+                    timeLogs={timeLogs}
+                    includeWeekends={settings.includeWeekends}
+                    claimedByWeek={questsClaimed}
+                    onQuestComplete={onQuestComplete}
+                  />
+                )}
+
+                {viewedDate === today && (
+                  <SeasonCard
+                    monthKey={today.slice(0, 7)}
+                    monthLabel={new Date().toLocaleDateString('en-US', { month: 'long' })}
+                    monthEarned={monthEarned}
+                    claimedTiers={seasons[today.slice(0, 7)]?.claimed || []}
+                    onTierReached={onTierReached}
+                  />
+                )}
               </section>
 
               <aside className="scores-section">

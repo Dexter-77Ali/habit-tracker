@@ -875,6 +875,27 @@
   100% { transform: translateY(90px) rotate(540deg); opacity: 0; }
 }
 
+/* ── Weekly quests ────────────────────────────────────────────── */
+.quest-title, .season-title { font-family: var(--font-display); font-size: var(--text-sm); letter-spacing: 1px; color: var(--text-muted); }
+.quest-count { font-size: var(--text-sm); color: var(--gold); font-weight: 700; }
+.quest-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.quest-item { display: grid; grid-template-columns: 1fr auto; gap: var(--space-1) var(--space-3); align-items: center; }
+.quest-row { display: contents; }
+.quest-label { font-size: var(--text-sm); color: var(--text); }
+.quest-item--done .quest-label { color: var(--success); text-decoration: line-through; opacity: 0.75; }
+.quest-xp { font-size: var(--text-xs); color: var(--gold); font-weight: 700; white-space: nowrap; }
+.quest-track { grid-column: 1; height: 5px; border-radius: var(--radius-full); background: var(--surface-2); overflow: hidden; }
+.quest-fill { height: 100%; border-radius: var(--radius-full); background: var(--gradient-primary); transition: width var(--transition-slow); }
+.quest-progress { grid-column: 2; font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; text-align: right; }
+
+/* ── Season card ──────────────────────────────────────────────── */
+.season-tiers { display: flex; gap: var(--space-1); }
+.season-tier { font-size: 1rem; opacity: 0.3; filter: grayscale(1); }
+.season-tier--earned { opacity: 1; filter: none; }
+.season-track { height: 6px; border-radius: var(--radius-full); background: var(--surface-2); overflow: hidden; margin: var(--space-2) 0 var(--space-1); }
+.season-fill { height: 100%; border-radius: var(--radius-full); background: linear-gradient(90deg, var(--gold), var(--orange)); transition: width var(--transition-slow); }
+.season-progress { font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
 .habit-xp {
   font-family: var(--font-display);
   font-size: var(--text-sm);

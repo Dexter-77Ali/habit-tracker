@@ -3,6 +3,7 @@ import { LocalNotifications } from '@capacitor/local-notifications'
 
 const REMINDER_ID = 77
 const NUDGE_ID = 78
+const RISK_ID = 79
 const HABIT_ID_BASE = 1000 // per-habit reminder ids live at >= 1000, 4 slots per habit
 
 export const canNotify = () => Capacitor.isNativePlatform()
@@ -41,6 +42,28 @@ export async function scheduleHabitReminders(habits) {
     })
   }
   if (notifications.length) await LocalNotifications.schedule({ notifications })
+}
+
+/** Streak-at-risk: one-shot 21:00 alert today, only while the day is incomplete and a streak is on the line. */
+export async function scheduleStreakRiskAlert(shouldAlert, streak = 0) {
+  if (!canNotify()) return
+  try {
+    await LocalNotifications.cancel({ notifications: [{ id: RISK_ID }] })
+  } catch { /* nothing scheduled */ }
+  if (!shouldAlert) return
+  const at = new Date()
+  at.setHours(21, 0, 0, 0)
+  if (at <= new Date()) return // past 21:00 — evening nudge covers the rest of tonight
+  const { display } = await LocalNotifications.requestPermissions()
+  if (display !== 'granted') return
+  await LocalNotifications.schedule({
+    notifications: [{
+      id: RISK_ID,
+      title: `🔥 ${streak}-day streak at risk!`,
+      body: 'Tonight it breaks unless you finish your habits. One tap saves it.',
+      schedule: { at, allowWhileIdle: true },
+    }],
+  })
 }
 
 /** Evening re-nudge: one daily sweep reminder for still-open habits. time "HH:MM" | null to disable. */
