@@ -16,6 +16,9 @@ import {
 } from './utils/scoreUtils'
 import { getLevel } from './utils/levelUtils'
 import { sessionMs, MAX_SESSION_MS } from './utils/timeUtils'
+import { rollCrit, comboBonus, comboMult, rollChest, crossedMilestone } from './utils/rewardEngine'
+import { isHabitScheduled } from './utils/scoreUtils'
+import ChestCard from './components/ChestCard'
 import { getPeriodKey, getEarnedBadges } from './utils/rewardUtils'
 
 import Sidebar from './components/Sidebar'
@@ -83,6 +86,8 @@ export default function App() {
   const [completedChallenges, setCompletedChallenges] = usePersistedStorage('ht_challenges', {})
   const [timeLogs, setTimeLogs] = usePersistedStorage('ht_time_logs', {})       // { [dateKey]: { [itemId]: ms } }
   const [activeTimer, setActiveTimer] = usePersistedStorage('ht_active_timer', null) // { id, type, startedAt } | null
+  const [bonusXp, setBonusXp] = usePersistedStorage('ht_bonus_xp', {})          // { [dateKey]: { [itemId]: bonus } } — crit+combo, refund-safe
+  const [chests, setChests] = usePersistedStorage('ht_chests', {})              // { [dateKey]: { opened, reward } }
 
   useSync(user)
 
@@ -238,8 +243,13 @@ export default function App() {
       badgeCount: earnedBadges.length,
     }
     if (prev) {
-      const msg = getTriggerCelebration(prev, next)
-      if (msg) setCelebration(msg)
+      const milestone = crossedMilestone(prev.streak, next.streak)
+      if (milestone) {
+        setCelebration({ text: `🏆 ${milestone}-DAY STREAK — legendary! Keep the chain alive.`, epic: true })
+      } else {
+        const msg = getTriggerCelebration(prev, next)
+        if (msg) setCelebration(msg)
+      }
     }
     prevScores.current = next
   }, [dayComplete, weekComplete, monthComplete, streak, level.level, earnedBadges.length])
@@ -326,9 +336,13 @@ export default function App() {
     const max = settings.maxFreezesPerMonth || 2
     const monthKey = getMonthKey(dateKey)
     const usedThisMonth = Object.keys(streakFreezes).filter((k) => streakFreezes[k] && k.startsWith(monthKey)).length
-    if (usedThisMonth >= max) return
+    if (usedThisMonth >= max) {
+      // over the monthly allowance — spend a chest-earned bonus freeze if any
+      if ((profile.bonusFreezes || 0) <= 0) return
+      setProfile((p) => ({ ...p, bonusFreezes: Math.max(0, (p.bonusFreezes || 0) - 1) }))
+    }
     setStreakFreezes((prev) => ({ ...prev, [dateKey]: true }))
-  }, [settings.maxFreezesPerMonth, streakFreezes, setStreakFreezes])
+  }, [settings.maxFreezesPerMonth, streakFreezes, setStreakFreezes, profile.bonusFreezes, setProfile])
 
   const unfreezeDay = useCallback((dateKey) => {
     setStreakFreezes((prev) => {
@@ -350,11 +364,46 @@ export default function App() {
       return { ...prev, [viewedDate]: { ...dayLog, [habitId]: !dayLog[habitId] } }
     })
 
-    setProfile((prev) => ({
-      ...prev,
-      allTimeXP: Math.max(0, prev.allTimeXP + (wasChecked ? -habit.xp : habit.xp)),
-    }))
-  }, [viewedDate, isViewingFuture, habits, logs, setLogs, setProfile, activeTimer, stopTimer])
+    if (!wasChecked) {
+      // variable reward: crit roll + combo bonus for chaining habits today
+      const dayLog = logs[viewedDate] || {}
+      const doneBefore = habits.filter((h) => h.id !== habitId && dayLog[h.id] && isHabitScheduled(h, viewedDate)).length
+      const crit = rollCrit()
+      const bonus = (crit ? habit.xp * (crit - 1) : 0) + comboBonus(habit.xp, doneBefore)
+      if (bonus > 0) {
+        setBonusXp((prev) => ({ ...prev, [viewedDate]: { ...(prev[viewedDate] || {}), [habitId]: bonus } }))
+      }
+      if (crit) setCelebration(`💥 CRIT ×${crit}! ${habit.name} paid +${habit.xp + bonus} XP`)
+      setProfile((prev) => ({ ...prev, allTimeXP: prev.allTimeXP + habit.xp + bonus }))
+    } else {
+      // refund base + whatever bonus this completion earned
+      const bonus = (bonusXp[viewedDate] || {})[habitId] || 0
+      if (bonus > 0) {
+        setBonusXp((prev) => {
+          const day = { ...(prev[viewedDate] || {}) }
+          delete day[habitId]
+          return { ...prev, [viewedDate]: day }
+        })
+      }
+      setProfile((prev) => ({ ...prev, allTimeXP: Math.max(0, prev.allTimeXP - habit.xp - bonus) }))
+    }
+  }, [viewedDate, isViewingFuture, habits, logs, setLogs, setProfile, activeTimer, stopTimer, bonusXp, setBonusXp])
+
+  // ------------------------------------------------------------------
+  // Daily chest (one per completed day)
+  // ------------------------------------------------------------------
+  const openChest = useCallback(() => {
+    if (chests[today]?.opened) return
+    const reward = rollChest()
+    setChests((prev) => ({ ...prev, [today]: { opened: true, reward } }))
+    if (reward.type === 'freeze') {
+      setProfile((p) => ({ ...p, bonusFreezes: (p.bonusFreezes || 0) + 1 }))
+      setCelebration('🎁 Chest: +1 streak freeze ❄️ banked!')
+    } else {
+      setProfile((p) => ({ ...p, allTimeXP: p.allTimeXP + reward.amount }))
+      setCelebration(reward.amount >= 300 ? { text: `🎁 JACKPOT CHEST — +${reward.amount} XP!`, epic: true } : `🎁 Chest: +${reward.amount} XP!`)
+    }
+  }, [chests, today, setChests, setProfile])
 
   // ------------------------------------------------------------------
   // Home-screen widget bridge (Android no-op elsewhere)
@@ -433,11 +482,29 @@ export default function App() {
     const nowCompleted = !task.completed
     // XP mutation lives OUTSIDE the setTasks updater — a setState inside an updater
     // double-fires under StrictMode and is unsafe under concurrent rendering.
-    setProfile((p) => ({ ...p, allTimeXP: nowCompleted ? p.allTimeXP + task.xp : Math.max(0, p.allTimeXP - task.xp) }))
+    let bonus = 0
+    if (nowCompleted) {
+      const crit = rollCrit()
+      if (crit) {
+        bonus = task.xp * (crit - 1)
+        setBonusXp((prev) => ({ ...prev, [today]: { ...(prev[today] || {}), [taskId]: bonus } }))
+        setCelebration(`💥 CRIT ×${crit}! ${task.name} paid +${task.xp + bonus} XP`)
+      }
+    } else {
+      bonus = (bonusXp[today] || {})[taskId] || 0
+      if (bonus > 0) {
+        setBonusXp((prev) => {
+          const day = { ...(prev[today] || {}) }
+          delete day[taskId]
+          return { ...prev, [today]: day }
+        })
+      }
+    }
+    setProfile((p) => ({ ...p, allTimeXP: nowCompleted ? p.allTimeXP + task.xp + bonus : Math.max(0, p.allTimeXP - task.xp - bonus) }))
     setTasks((prev) => prev.map((t) => t.id !== taskId ? t
       : nowCompleted ? { ...t, completed: true, completedAt: today }
       : { ...t, completed: false, completedAt: null }))
-  }, [today, tasks, setTasks, setProfile, activeTimer, stopTimer])
+  }, [today, tasks, setTasks, setProfile, activeTimer, stopTimer, bonusXp, setBonusXp])
 
   const addTask = useCallback((data) => {
     setTasks((prev) => [...prev, { id: uuidv4(), createdAt: today, completed: false, completedAt: null, groupId: null, notes: '', tags: [], ...data }])
@@ -695,7 +762,7 @@ export default function App() {
   // Export / Import
   // ------------------------------------------------------------------
   const handleExport = () => {
-    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges, timeLogs }
+    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges, timeLogs, bonusXp, chests }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -732,6 +799,8 @@ export default function App() {
         if (isObj(data.streakFreezes)) setStreakFreezes(data.streakFreezes)
         if (isObj(data.completedChallenges)) setCompletedChallenges(data.completedChallenges)
         if (isObj(data.timeLogs)) setTimeLogs(data.timeLogs)
+        if (isObj(data.bonusXp)) setBonusXp(data.bonusXp)
+        if (isObj(data.chests)) setChests(data.chests)
         setCelebration('Data imported successfully!')
       } catch {
         alert('Invalid backup file.')
@@ -852,6 +921,9 @@ export default function App() {
             )}
 
             <main className="dashboard">
+              {viewedDate === today && dayComplete && (
+                <ChestCard chest={chests[today]} onOpen={openChest} />
+              )}
               {viewedDate === today && (
                 <DailyChallenges
                   habits={habits}
@@ -888,6 +960,7 @@ export default function App() {
                   activeTimer={activeTimer}
                   onTimer={toggleTimer}
                   timeLog={timeLogs[viewedDate] || {}}
+                  comboCount={habits.filter((h) => (logs[today] || {})[h.id] && isHabitScheduled(h, today)).length}
                 />
 
                 <TaskList

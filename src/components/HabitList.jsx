@@ -8,6 +8,7 @@ export default function HabitList({
   logs, today, viewedDate, isViewingFuture, tagColors = {},
   focusMode = false, onToggleFocusMode,
   activeTimer = null, onTimer, timeLog = {},
+  comboCount = 0,
 }) {
   const [quickName, setQuickName] = useState('')
   const isToday = viewedDate === today
@@ -43,7 +44,14 @@ export default function HabitList({
   return (
     <div className="habit-list-card card">
       <div className="card-header">
-        <h2>{isToday ? "Today's Habits" : 'Habits'}</h2>
+        <h2>
+          {isToday ? "Today's Habits" : 'Habits'}
+          {isToday && comboCount > 0 && (
+            <span className="combo-chip" title={`Combo: next habit pays +${Math.min(comboCount * 10, 100)}% bonus XP`}>
+              ⚡×{(1 + Math.min(0.1 * comboCount, 1)).toFixed(1)}
+            </span>
+          )}
+        </h2>
         <div className="card-header-actions">
           {isToday && onToggleFocusMode && (
             <button

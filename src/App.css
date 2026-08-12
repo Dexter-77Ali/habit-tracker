@@ -823,6 +823,58 @@
 .reminder-add-row { display: flex; gap: var(--space-2); align-items: center; }
 .reminder-time-input { max-width: 140px; }
 
+/* ── Reward engine: chest, combo, epic celebrations ──────────── */
+.chest-card {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: center; gap: var(--space-3);
+  padding: var(--space-4); border-radius: var(--radius-lg);
+  border: 1px dashed color-mix(in srgb, var(--gold) 50%, transparent);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+  color: var(--text); font-size: var(--text-base); font-family: inherit; width: 100%;
+}
+.chest-card--ready { cursor: pointer; transition: transform var(--transition-fast); }
+.chest-card--ready:hover { transform: translateY(-1px); border-color: var(--gold); }
+.chest-card--opened { opacity: 0.8; cursor: default; }
+.chest-emoji { font-size: 1.4rem; }
+.chest-emoji--shake { animation: chest-shake 1.6s ease-in-out infinite; display: inline-block; }
+@keyframes chest-shake {
+  0%, 84%, 100% { transform: rotate(0); }
+  88% { transform: rotate(-12deg); }
+  92% { transform: rotate(10deg); }
+  96% { transform: rotate(-6deg); }
+}
+
+.combo-chip {
+  margin-left: var(--space-2);
+  font-size: var(--text-xs); font-weight: 700; color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+  border-radius: var(--radius-full); padding: 1px var(--space-2);
+  vertical-align: middle; white-space: nowrap;
+}
+
+.celebration-toast--epic {
+  border-color: var(--gold);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--gold) 35%, transparent), var(--shadow-lg);
+  overflow: hidden;
+}
+.confetti { position: absolute; inset: 0; pointer-events: none; }
+.confetti-bit {
+  position: absolute; top: -8px; width: 6px; height: 10px; opacity: 0.9;
+  animation: confetti-fall 1.6s linear infinite;
+}
+.confetti-bit--0 { left: 8%;  background: var(--gold);    animation-delay: 0s; }
+.confetti-bit--1 { left: 24%; background: var(--primary); animation-delay: 0.3s; }
+.confetti-bit--2 { left: 40%; background: var(--cyan);    animation-delay: 0.15s; }
+.confetti-bit--3 { left: 56%; background: var(--orange);  animation-delay: 0.45s; }
+.confetti-bit--4 { left: 72%; background: var(--accent);  animation-delay: 0.25s; }
+.confetti-bit--5 { left: 88%; background: var(--danger);  animation-delay: 0.55s; }
+.confetti-bit:nth-child(odd) { animation-duration: 2s; }
+@keyframes confetti-fall {
+  0% { transform: translateY(-10px) rotate(0); }
+  100% { transform: translateY(90px) rotate(540deg); opacity: 0; }
+}
+
 .habit-xp {
   font-family: var(--font-display);
   font-size: var(--text-sm);
