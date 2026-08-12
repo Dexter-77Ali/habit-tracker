@@ -19,6 +19,7 @@ import { sessionMs, MAX_SESSION_MS } from './utils/timeUtils'
 import { rollCrit, comboBonus, comboMult, rollChest, crossedMilestone } from './utils/rewardEngine'
 import { isHabitScheduled } from './utils/scoreUtils'
 import ChestCard from './components/ChestCard'
+import CommandPalette from './components/CommandPalette'
 import WeeklyQuests from './components/WeeklyQuests'
 import SeasonCard from './components/SeasonCard'
 import { scheduleStreakRiskAlert } from './utils/notificationUtils'
@@ -107,6 +108,7 @@ export default function App() {
   const [celebration, setCelebration] = useState(null)
   const [shortcutsOpen, setShortcutsOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [paletteOpen, setPaletteOpen] = useState(false)
 
   const today = getDateKey()
   const [viewedDate, setViewedDate] = useState(today)
@@ -476,9 +478,10 @@ export default function App() {
     setHabits((prev) => [...prev, { id: uuidv4(), createdAt: today, groupId: null, notes: '', tags: [], frequency: 'daily', ...data }])
   }, [today, setHabits])
 
-  const quickAddHabit = useCallback((name) => {
+  const quickAddHabit = useCallback((parsed) => {
     const icon = getRandomIcon(QUICK_ADD_EMOJIS)
-    addHabit({ name, xp: 10, icon })
+    const { chips: _chips, ...fields } = typeof parsed === 'string' ? { name: parsed } : parsed
+    addHabit({ xp: 10, icon, ...fields })
   }, [addHabit])
 
   const editHabit = useCallback((id, data) => {
@@ -547,9 +550,10 @@ export default function App() {
     setTasks((prev) => [...prev, { id: uuidv4(), createdAt: today, completed: false, completedAt: null, groupId: null, notes: '', tags: [], ...data }])
   }, [today, setTasks])
 
-  const quickAddTask = useCallback((name) => {
+  const quickAddTask = useCallback((parsed) => {
     const icon = getRandomIcon(QUICK_ADD_EMOJIS)
-    addTask({ name, xp: 10, icon, priority: 'none' })
+    const { chips: _chips, ...fields } = typeof parsed === 'string' ? { name: parsed } : parsed
+    addTask({ xp: 10, icon, priority: 'none', ...fields })
   }, [addTask])
 
   const editTask = useCallback((id, data) => {
@@ -861,9 +865,14 @@ export default function App() {
   // ------------------------------------------------------------------
   useEffect(() => {
     const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen((v) => !v)
+        return
+      }
       const tag = document.activeElement?.tagName?.toLowerCase()
       if (tag === 'input' || tag === 'textarea' || tag === 'select') return
-      if (modalState.open || rewardModal.open || groupModal.open || notesModal.open || goalModal.open) return
+      if (modalState.open || rewardModal.open || groupModal.open || notesModal.open || goalModal.open || paletteOpen) return
 
       switch (e.key) {
         case 'n': openAddHabit(); e.preventDefault(); break
@@ -876,7 +885,7 @@ export default function App() {
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [modalState.open, rewardModal.open, groupModal.open, notesModal.open, goalModal.open, navigatePrev, navigateNext])
+  }, [modalState.open, rewardModal.open, groupModal.open, notesModal.open, goalModal.open, paletteOpen, navigatePrev, navigateNext])
 
   const visibleHabits = habits.filter((h) => h.createdAt <= viewedDate)
 
@@ -1122,6 +1131,21 @@ export default function App() {
           <PocketTracker onExit={() => setCurrentPage('dashboard')} />
         )}
       </div>
+
+      {paletteOpen && (
+        <CommandPalette
+          habits={habits}
+          tasks={tasks}
+          todayLog={logs[today] || {}}
+          onToggleHabit={applyWidgetToggle}
+          onToggleTask={toggleTask}
+          onTimer={toggleTimer}
+          onNavigate={setCurrentPage}
+          onQuickAddHabit={(name) => quickAddHabit(name)}
+          onQuickAddTask={(name) => quickAddTask(name)}
+          onClose={() => setPaletteOpen(false)}
+        />
+      )}
 
       {modalState.open && (
         <AddEditModal

@@ -42,8 +42,30 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete, onOpenNotes
   const tags = task.tags || []
   const hasNotes = !!(task.notes)
 
+  // swipe right = toggle complete, swipe left = start/stop timer
+  const touchRef = useRef(null)
+  const [swipeX, setSwipeX] = useState(0)
+  const onTouchStart = (e) => { touchRef.current = e.touches[0].clientX }
+  const onTouchMove = (e) => {
+    if (touchRef.current === null) return
+    const dx = e.touches[0].clientX - touchRef.current
+    setSwipeX(Math.max(-100, Math.min(dx, 100)))
+  }
+  const onTouchEnd = () => {
+    if (swipeX > 80 && !disabled) handleToggle()
+    else if (swipeX < -80 && onTimer) onTimer()
+    setSwipeX(0)
+    touchRef.current = null
+  }
+
   return (
-    <li className={`habit-item ${task.completed ? 'habit-item--checked' : ''} ${isOverdue ? 'task-item--overdue' : ''} ${disabled ? 'habit-item--disabled' : ''}`}>
+    <li
+      className={`habit-item ${task.completed ? 'habit-item--checked' : ''} ${isOverdue ? 'task-item--overdue' : ''} ${disabled ? 'habit-item--disabled' : ''}`}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      style={swipeX !== 0 ? { transform: `translateX(${swipeX}px)`, transition: 'none' } : undefined}
+    >
       <button
         className={`habit-checkbox ${task.completed ? 'habit-checkbox--checked' : ''} ${justChecked ? 'habit-checkbox--pop' : ''}`}
         onClick={handleToggle}

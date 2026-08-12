@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { getDateKey } from '../utils/dateUtils'
 import TaskItem from './TaskItem'
 import GroupHeader from './GroupHeader'
+import { parseQuickAdd } from '../utils/nlParse'
 
 export default function TaskList({
   tasks, onToggle, onEdit, onDelete, onAdd, onQuickAdd, onOpenNotes,
@@ -13,9 +14,11 @@ export default function TaskList({
   const [quickName, setQuickName] = useState('')
   const isToday = viewedDate === today
 
+  const parsed = quickName.trim() ? parseQuickAdd(quickName, { mode: 'task' }) : null
+
   const handleQuickAdd = (e) => {
-    if (e.key === 'Enter' && quickName.trim()) {
-      onQuickAdd(quickName.trim())
+    if (e.key === 'Enter' && parsed?.name) {
+      onQuickAdd(parsed)
       setQuickName('')
     }
   }
@@ -77,11 +80,16 @@ export default function TaskList({
         <div className="quick-add-bar">
           <input
             className="quick-add-input"
-            placeholder="> enter task name..."
+            placeholder="> task name... (try: report tomorrow p1 #work)"
             value={quickName}
             onChange={(e) => setQuickName(e.target.value)}
             onKeyDown={handleQuickAdd}
           />
+          {parsed?.chips?.length > 0 && (
+            <div className="nl-preview">
+              {parsed.chips.map((c) => <span key={c} className="nl-chip">{c}</span>)}
+            </div>
+          )}
         </div>
       )}
 

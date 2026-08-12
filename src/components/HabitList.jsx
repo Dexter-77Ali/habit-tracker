@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import HabitItem from './HabitItem'
 import GroupHeader from './GroupHeader'
+import { parseQuickAdd } from '../utils/nlParse'
 
 export default function HabitList({
   habits, todayLog, onToggle, onEdit, onDelete, onAdd, onQuickAdd, onOpenNotes,
@@ -14,9 +15,11 @@ export default function HabitList({
   const isToday = viewedDate === today
   const isFocusActive = focusMode && isToday
 
+  const parsed = quickName.trim() ? parseQuickAdd(quickName, { mode: 'habit' }) : null
+
   const handleQuickAdd = (e) => {
-    if (e.key === 'Enter' && quickName.trim()) {
-      onQuickAdd(quickName.trim())
+    if (e.key === 'Enter' && parsed?.name) {
+      onQuickAdd(parsed)
       setQuickName('')
     }
   }
@@ -75,11 +78,16 @@ export default function HabitList({
         <div className="quick-add-bar">
           <input
             className="quick-add-input"
-            placeholder="> enter habit name..."
+            placeholder="> habit name... (try: gym 7am mon/wed #health)"
             value={quickName}
             onChange={(e) => setQuickName(e.target.value)}
             onKeyDown={handleQuickAdd}
           />
+          {parsed?.chips?.length > 0 && (
+            <div className="nl-preview">
+              {parsed.chips.map((c) => <span key={c} className="nl-chip">{c}</span>)}
+            </div>
+          )}
         </div>
       )}
 

@@ -1,6 +1,55 @@
 import { getDateKey, dateFromKey } from '../utils/dateUtils'
 import { calculateDailyXP, isHabitScheduled } from '../utils/scoreUtils'
 
+// GitHub-style completion heatmap: last 26 weeks, intensity = % of scheduled habits done.
+function YearHeatmap({ habits, logs, today }) {
+  const weeks = []
+  const end = dateFromKey(today)
+  // align to the Sunday on/before (26 weeks ago)
+  const start = new Date(end)
+  start.setDate(end.getDate() - 7 * 25 - end.getDay())
+  for (let w = 0; w < 26; w++) {
+    const col = []
+    for (let d = 0; d < 7; d++) {
+      const day = new Date(start)
+      day.setDate(start.getDate() + w * 7 + d)
+      const dk = getDateKey(day)
+      if (dk > today) { col.push(null); continue }
+      let scheduled = 0, done = 0
+      for (const h of habits) {
+        if (h.createdAt > dk || !isHabitScheduled(h, dk)) continue
+        scheduled++
+        if ((logs[dk] || {})[h.id]) done++
+      }
+      col.push({ dk, level: scheduled === 0 ? 0 : Math.ceil((done / scheduled) * 4) })
+    }
+    weeks.push(col)
+  }
+  return (
+    <div className="analytics-section">
+      <h3>Consistency — 26 Weeks</h3>
+      <div className="heatmap" role="img" aria-label="Habit completion heatmap, last 26 weeks">
+        {weeks.map((col, i) => (
+          <div className="heatmap-col" key={i}>
+            {col.map((cell, j) => (
+              <span
+                key={j}
+                className={`heatmap-cell ${cell ? `heatmap-cell--l${cell.level}` : 'heatmap-cell--future'}`}
+                title={cell ? cell.dk : ''}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="heatmap-legend">
+        <span>less</span>
+        {[0, 1, 2, 3, 4].map((l) => <span key={l} className={`heatmap-cell heatmap-cell--l${l}`} />)}
+        <span>more</span>
+      </div>
+    </div>
+  )
+}
+
 export default function AnalyticsPage({ habits, tasks, logs, tagColors, allTags, includeWeekends }) {
   const today = getDateKey()
   const now = new Date()
@@ -139,6 +188,8 @@ export default function AnalyticsPage({ habits, tasks, logs, tagColors, allTags,
   return (
     <div className="analytics-page">
       <h2 className="analytics-title">Category Analytics — {monthLabel}</h2>
+
+      <YearHeatmap habits={habits} logs={logs} today={today} />
 
       <TrendChart data={trendData} />
 
