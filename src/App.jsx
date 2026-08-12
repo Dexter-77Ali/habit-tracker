@@ -20,6 +20,9 @@ import { rollCrit, comboBonus, comboMult, rollChest, crossedMilestone } from './
 import { isHabitScheduled } from './utils/scoreUtils'
 import ChestCard from './components/ChestCard'
 import CommandPalette from './components/CommandPalette'
+import NowBar from './components/NowBar'
+import PetCard from './components/PetCard'
+import Onboarding from './components/Onboarding'
 import WeeklyQuests from './components/WeeklyQuests'
 import SeasonCard from './components/SeasonCard'
 import { scheduleStreakRiskAlert } from './utils/notificationUtils'
@@ -94,6 +97,7 @@ export default function App() {
   const [chests, setChests] = usePersistedStorage('ht_chests', {})              // { [dateKey]: { opened, reward } }
   const [questsClaimed, setQuestsClaimed] = usePersistedStorage('ht_weekly_quests', {}) // { [weekKey]: [questId] }
   const [seasons, setSeasons] = usePersistedStorage('ht_seasons', {})           // { [monthKey]: { claimed: [tierId] } }
+  const [pet, setPet] = usePersistedStorage('ht_pet', { name: 'Pip' })
 
   useSync(user)
 
@@ -803,7 +807,7 @@ export default function App() {
   // Export / Import
   // ------------------------------------------------------------------
   const handleExport = () => {
-    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges, timeLogs, bonusXp, chests, questsClaimed, seasons }
+    const data = { habits, logs, tasks, rewards, profile, settings, groups, tagsMeta, goals, streakFreezes, completedChallenges, timeLogs, bonusXp, chests, questsClaimed, seasons, pet }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -844,6 +848,7 @@ export default function App() {
         if (isObj(data.chests)) setChests(data.chests)
         if (isObj(data.questsClaimed)) setQuestsClaimed(data.questsClaimed)
         if (isObj(data.seasons)) setSeasons(data.seasons)
+        if (isObj(data.pet)) setPet(data.pet)
         setCelebration('Data imported successfully!')
       } catch {
         alert('Invalid backup file.')
@@ -896,8 +901,27 @@ export default function App() {
     return <AuthPage onSignIn={signIn} onSignUp={signUp} onGoogleSignIn={signInWithGoogle} />
   }
 
+  const showOnboarding = !settings.onboarded && profile.allTimeXP === 0 && Object.keys(logs).length === 0
+
+  const finishOnboarding = (result) => {
+    if (result) {
+      if (result.removeNames.length) {
+        setHabits((prev) => prev.filter((h) => !result.removeNames.includes(h.name)))
+      }
+      for (const s of result.newHabits) addHabit({ ...s })
+      if (result.reminder) setSettings((prev) => ({ ...prev, reminderTime: result.reminder }))
+    }
+    setSettings((prev) => ({ ...prev, onboarded: true }))
+  }
+
   return (
     <div className="app-layout">
+      {showOnboarding && (
+        <Onboarding
+          existingNames={habits.map((h) => h.name)}
+          onFinish={finishOnboarding}
+        />
+      )}
       <Sidebar
         currentPage={currentPage}
         onNavigate={setCurrentPage}
@@ -969,10 +993,25 @@ export default function App() {
             )}
 
             <main className="dashboard">
+              {viewedDate === today && (
+                <NowBar
+                  activeTimer={activeTimer}
+                  habits={visibleHabits}
+                  tasks={tasks}
+                  todayLog={logs[today] || {}}
+                  today={today}
+                  dayComplete={dayComplete}
+                  chestReady={dayComplete && !chests[today]?.opened}
+                  onToggleHabit={applyWidgetToggle}
+                  onStopTimer={stopTimer}
+                />
+              )}
               {viewedDate === today && dayComplete && (
                 <ChestCard chest={chests[today]} onOpen={openChest} />
               )}
-              {viewedDate === today && (
+              {viewedDate === today && (completedChallenges[today] || []).length >= 3 ? (
+                <div className="challenges-done-line">▣ All daily challenges complete</div>
+              ) : viewedDate === today && (
                 <DailyChallenges
                   habits={habits}
                   groups={groups}
@@ -1059,6 +1098,15 @@ export default function App() {
                     monthEarned={monthEarned}
                     claimedTiers={seasons[today.slice(0, 7)]?.claimed || []}
                     onTierReached={onTierReached}
+                  />
+                )}
+
+                {viewedDate === today && (
+                  <PetCard
+                    logs={logs}
+                    today={today}
+                    pet={pet}
+                    onRename={(name) => setPet((p) => ({ ...p, name }))}
                   />
                 )}
               </section>

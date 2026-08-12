@@ -875,6 +875,55 @@
   100% { transform: translateY(90px) rotate(540deg); opacity: 0; }
 }
 
+/* ── Now bar (progressive dashboard) ──────────────────────────── */
+.now-bar {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--glow-border); border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+.now-label { font-family: var(--font-display); font-size: var(--text-xs); letter-spacing: 2px; color: var(--primary); }
+.now-item { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--text); min-width: 0; }
+.now-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40vw; }
+.now-hint { color: var(--text-muted); }
+.now-ticker { color: var(--primary); font-weight: 700; font-variant-numeric: tabular-nums; }
+.now-btn {
+  font-size: var(--text-xs); font-family: inherit; color: var(--text-muted);
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-full);
+  padding: 2px var(--space-2); white-space: nowrap;
+}
+.now-btn:hover { color: var(--text); border-color: var(--primary); }
+.now-btn--go { color: var(--primary); border-color: color-mix(in srgb, var(--primary) 40%, transparent); }
+.now-done { margin-left: auto; font-size: var(--text-xs); color: var(--success); }
+.challenges-done-line { grid-column: 1 / -1; font-size: var(--text-sm); color: var(--success); opacity: 0.85; padding: var(--space-1) var(--space-2); }
+
+/* ── Pet companion ────────────────────────────────────────────── */
+.pet-card { display: flex; align-items: center; gap: var(--space-4); }
+.pet-icon { font-size: 2.2rem; }
+.pet-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.pet-name { background: none; border: none; font-family: inherit; font-size: var(--text-base); font-weight: 700; color: var(--text); text-align: left; padding: 0; }
+.pet-stage { color: var(--text-muted); font-weight: 400; font-size: var(--text-sm); }
+.pet-name-input { max-width: 200px; padding: 2px var(--space-2); font-size: var(--text-sm); }
+.pet-mood { font-size: var(--text-sm); color: var(--text-muted); }
+.pet-track { height: 5px; border-radius: var(--radius-full); background: var(--surface-2); overflow: hidden; margin-top: var(--space-1); }
+.pet-fill { height: 100%; border-radius: var(--radius-full); background: var(--gradient-success); transition: width var(--transition-slow); }
+.pet-progress { font-size: var(--text-xs); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+/* ── Onboarding ───────────────────────────────────────────────── */
+.onboarding-title { font-family: var(--font-display); font-size: var(--text-xl); margin-bottom: var(--space-2); }
+.onboarding-sub { color: var(--text-muted); font-size: var(--text-base); margin-bottom: var(--space-4); }
+.onboarding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-bottom: var(--space-4); }
+.onboarding-pick {
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3); border-radius: var(--radius); font-family: inherit; font-size: var(--text-sm);
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); text-align: left;
+}
+.onboarding-pick--on { color: var(--text); border-color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, transparent); }
+.onboarding-pick-icon { font-size: 1.1rem; }
+.onboarding-time { max-width: 160px; margin-bottom: var(--space-4); }
+@media (max-width: 480px) { .onboarding-grid { grid-template-columns: 1fr; } }
+
 /* ── NL quick-add preview chips ───────────────────────────────── */
 .nl-preview { display: flex; flex-wrap: wrap; gap: var(--space-1); padding: var(--space-1) 0 0; }
 .nl-chip {
